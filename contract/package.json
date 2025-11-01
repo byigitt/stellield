@@ -1,0 +1,48 @@
+{
+  "name": "stellar-solana-yield-aggregator",
+  "version": "1.0.0",
+  "description": "Cross-chain yield aggregator bridging Stellar and Solana via CCTP",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "typecheck": "tsgo -b",
+    "example:deposit": "ts-node examples/deposit.ts",
+    "example:withdraw": "ts-node examples/withdraw.ts",
+    "example:balances": "ts-node examples/check-balances.ts",
+    "solana:getkey": "ts-node scripts/get-solana-key.ts",
+    "extract-hash": "ts-node scripts/extract-message-hash.ts"
+  },
+  "keywords": [
+    "stellar",
+    "solana",
+    "cctp",
+    "defi",
+    "yield",
+    "cross-chain"
+  ],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.11.0",
+  "dependencies": {
+    "@coral-xyz/anchor": "^0.30.1",
+    "@marinade.finance/marinade-ts-sdk": "5.0.17",
+    "@solana/web3.js": "^1.95.8",
+    "@stellar/stellar-sdk": "^13.0.0",
+    "@types/bn.js": "^5.2.0",
+    "axios": "^1.7.9",
+    "bn.js": "^5.2.2",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.7",
+    "js-sha3": "^0.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@typescript/native-preview": "7.0.0-dev.20251101.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  }
+}
