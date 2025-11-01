@@ -50,4 +50,8 @@ temp
 # AI
 CLAUDE.md
 AGENTS.md
-claude/
+
+.claude/
+
+# Rust
+target/
