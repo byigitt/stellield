@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import DepositDialog from "./deposit-dialog";
 import {
   Select,
   SelectContent,
@@ -30,6 +31,7 @@ export default function PortfolioSimulator() {
   const [allocation, setAllocation] = useState([30]);
   const [riskTolerance, setRiskTolerance] = useState("moderate");
   const [simulationAmount, setSimulationAmount] = useState("");
+  const [depositDialogOpen, setDepositDialogOpen] = useState(false);
 
   const portfolioMetrics = {
     expectedAPY: 12.5,
@@ -249,9 +251,17 @@ export default function PortfolioSimulator() {
               </div>
             </div>
 
-            <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
-              Run Simulation
-            </Button>
+            <div className="flex gap-2">
+              <Button className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
+                Run Simulation
+              </Button>
+              <Button
+                onClick={() => setDepositDialogOpen(true)}
+                className="bg-white/5 border border-white/10 hover:bg-white/10 text-white"
+              >
+                Deposit to Yield
+              </Button>
+            </div>
 
             {/* Warning for simulation */}
             <div className="flex items-start space-x-2 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20">
@@ -275,6 +285,9 @@ export default function PortfolioSimulator() {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Deposit Dialog */}
+      <DepositDialog open={depositDialogOpen} onOpenChange={setDepositDialogOpen} />
     </div>
   );
 }
