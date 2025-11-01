@@ -3,6 +3,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { toast } from "sonner";
+import { useWalletBalance } from "@/hooks/use-wallet-balance";
+import { useEthPrice } from "@/hooks/use-eth-price";
 import { Button } from "@/components/ui/button";
 import {
   ChevronDown,
@@ -44,9 +48,18 @@ const navItems = [
 
 export default function StellarHeader() {
   const pathname = usePathname();
-  const [isConnected, setIsConnected] = useState(false);
-  const [walletAddress, setWalletAddress] = useState("");
+  const { ready, authenticated, user, login, logout } = usePrivy();
+  const { wallets } = useWallets();
   const [mounted, setMounted] = useState(false);
+  
+  const connectedWallet = wallets && wallets.length > 0 ? wallets[0] : null;
+  const walletAddress = connectedWallet?.address ? 
+    `${connectedWallet.address.slice(0, 6)}...${connectedWallet.address.slice(-4)}` : 
+    "";
+  
+  // Fetch wallet balance and ETH price
+  const { balanceFormatted, isLoading: isLoadingBalance } = useWalletBalance(connectedWallet?.address);
+  const { price: ethPrice } = useEthPrice();
 
   const riskDistribution = [
     {
@@ -83,21 +96,14 @@ export default function StellarHeader() {
     setMounted(true);
   }, []);
 
-  const connectWallet = async () => {
-    setIsConnected(true);
-    setWalletAddress("GBXZ...3FD4");
-  };
-
-  const disconnectWallet = () => {
-    setIsConnected(false);
-    setWalletAddress("");
-  };
-
   const copyAddress = () => {
-    if (walletAddress) {
-      navigator.clipboard.writeText(walletAddress);
+    if (connectedWallet?.address) {
+      navigator.clipboard.writeText(connectedWallet.address);
+      toast.success("Address copied to clipboard!");
     }
   };
+
+  const balanceUSD = (parseFloat(balanceFormatted) * ethPrice).toFixed(2);
 
   return (
     <header className="glass-panel border-b border-white/[0.05] sticky top-0 z-50">
@@ -259,9 +265,10 @@ export default function StellarHeader() {
 
             {/* Wallet Connection */}
             {mounted &&
-              (!isConnected ? (
+              (!authenticated || !connectedWallet ? (
                 <Button
-                  onClick={connectWallet}
+                  onClick={login}
+                  disabled={!ready}
                   className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-6 flex items-center space-x-2 shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200"
                 >
                   <Wallet className="w-4 h-4" />
@@ -273,7 +280,9 @@ export default function StellarHeader() {
                     <Button className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-4 shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] transition-all duration-200">
                       <div className="flex items-center space-x-2">
                         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                          <span className="text-xs font-bold">S</span>
+                          <span className="text-xs font-bold">
+                            {walletAddress.slice(0, 2).toUpperCase()}
+                          </span>
                         </div>
                         <span className="text-sm font-medium">
                           {walletAddress}
@@ -282,13 +291,56 @@ export default function StellarHeader() {
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="glass-card border-white/10 w-48">
+                  <DropdownMenuContent className="glass-card border-white/10 w-56">
+                    {/* User Info */}
+                    {user?.email?.address && (
+                      <>
+                        <div className="px-3 py-2">
+                          <div className="text-xs text-gray-400">Email</div>
+                          <div className="text-sm font-medium text-white truncate">
+                            {user.email.address}
+                          </div>
+                        </div>
+                        <DropdownMenuSeparator className="bg-white/10" />
+                      </>
+                    )}
+                    
+                    {/* Wallet Info */}
+                    <div className="px-3 py-2">
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs text-gray-400">Wallet</div>
+                        <div className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400">
+                          {connectedWallet?.walletClientType === "privy" ? "Embedded" : "External"}
+                        </div>
+                      </div>
+                      <div className="text-sm font-medium text-white mt-1">
+                        {walletAddress}
+                      </div>
+                      {connectedWallet?.connectorType && connectedWallet.connectorType !== "embedded" && (
+                        <div className="text-xs text-gray-500 mt-0.5 capitalize">
+                          via {connectedWallet.connectorType}
+                        </div>
+                      )}
+                    </div>
+                    <DropdownMenuSeparator className="bg-white/10" />
+                    
+                    {/* Balance */}
                     <div className="px-3 py-2">
                       <div className="text-xs text-gray-400">Balance</div>
-                      <div className="text-sm font-medium text-white">
-                        1,234.56 XLM
-                      </div>
-                      <div className="text-xs text-gray-500">≈ $148.15 USD</div>
+                      {isLoadingBalance ? (
+                        <div className="text-sm font-medium text-white">
+                          Loading...
+                        </div>
+                      ) : (
+                        <>
+                          <div className="text-sm font-medium text-white">
+                            {balanceFormatted} ETH
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            ≈ ${balanceUSD} USD
+                          </div>
+                        </>
+                      )}
                     </div>
                     <DropdownMenuSeparator className="bg-white/10" />
                     <DropdownMenuItem onClick={copyAddress}>
@@ -301,7 +353,7 @@ export default function StellarHeader() {
                     </DropdownMenuItem>
                     <DropdownMenuSeparator className="bg-white/10" />
                     <DropdownMenuItem
-                      onClick={disconnectWallet}
+                      onClick={logout}
                       className="text-red-400"
                     >
                       <LogOut className="w-4 h-4 mr-2" />
