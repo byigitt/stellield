@@ -34,10 +34,10 @@ import { Info } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Yields", href: "/yields", active: true },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Bridge", href: "/bridge" },
-  { label: "Analytics", href: "/analytics" },
+  { label: "Yields", href: "/dashboard/yields", active: true },
+  { label: "Portfolio", href: "/dashboard/portfolio" },
+  { label: "Bridge", href: "/dashboard/bridge" },
+  { label: "Analytics", href: "/dashboard/analytics" },
   { label: "Docs", href: "/docs" },
 ];
 
