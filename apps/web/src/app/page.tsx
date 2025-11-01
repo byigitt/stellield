@@ -1,45 +1,36 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
-import { trpc } from "@/utils/trpc";
-
-const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
-
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
- `;
+import StellarYieldOpportunities from "@/components/stellar-yield-opportunities";
+import PortfolioSimulator from "@/components/portfolio-simulator";
+import BridgeInsights from "@/components/bridge-insights";
+import StellarProtocols from "@/components/stellar-protocols";
 
 export default function Home() {
-	const healthCheck = useQuery(trpc.healthCheck.queryOptions());
-
 	return (
-		<div className="container mx-auto max-w-3xl px-4 py-2">
-			<pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
-			<div className="grid gap-6">
-				<section className="rounded-lg border p-4">
-					<h2 className="mb-2 font-medium">API Status</h2>
-					<div className="flex items-center gap-2">
-						<div
-							className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`}
-						/>
-						<span className="text-sm text-muted-foreground">
-							{healthCheck.isLoading
-								? "Checking..."
-								: healthCheck.data
-									? "Connected"
-									: "Disconnected"}
-						</span>
+		<div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#151932] to-[#1a1f3a]">
+			{/* Main Content */}
+			<div className="container mx-auto px-4 py-6">
+				{/* Yield Opportunities Section */}
+				<div className="mb-8">
+					<StellarYieldOpportunities />
+				</div>
+
+				{/* Main Dashboard Layout */}
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+					{/* Left Column - Stellar Protocols List */}
+					<div className="lg:col-span-1">
+						<StellarProtocols />
 					</div>
-				</section>
+
+					{/* Middle Column - Portfolio Simulator */}
+					<div className="lg:col-span-1">
+						<PortfolioSimulator />
+					</div>
+
+					{/* Right Column - Bridge Insights & Risk Metrics */}
+					<div className="lg:col-span-1">
+						<BridgeInsights />
+					</div>
+				</div>
 			</div>
 		</div>
 	);

@@ -17,8 +17,10 @@ export default async function DashboardPage() {
 
 	return (
 		<div>
-			<h1>Dashboard</h1>
-			<p>Welcome {session.user.name}</p>
+			<div className="mb-6">
+				<h1 className="text-3xl font-bold text-white mb-2">Stellar Yield Dashboard</h1>
+				<p className="text-gray-400">Welcome back, {session.user.name}! Monitor your Stellar yield opportunities and portfolio performance.</p>
+			</div>
 			<Dashboard session={session} />
 		</div>
 	);
