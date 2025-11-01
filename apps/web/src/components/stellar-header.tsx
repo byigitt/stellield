@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   ChevronDown,
@@ -34,14 +35,14 @@ import { Info } from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
-  { label: "Yields", href: "/yields", active: true },
-  { label: "Portfolio", href: "/portfolio" },
-  { label: "Bridge", href: "/bridge" },
-  { label: "Analytics", href: "/analytics" },
-  { label: "Docs", href: "/docs" },
+  { label: "Yields", href: "/dashboard/yields" },
+  { label: "Portfolio", href: "/dashboard/portfolio" },
+  { label: "Bridge", href: "/dashboard/bridge" },
+  { label: "Analytics", href: "/dashboard/analytics" }
 ];
 
 export default function StellarHeader() {
+  const pathname = usePathname();
   const [isConnected, setIsConnected] = useState(false);
   const [walletAddress, setWalletAddress] = useState("");
   const [mounted, setMounted] = useState(false);
@@ -120,19 +121,22 @@ export default function StellarHeader() {
 
             {/* Navigation */}
             <nav className="hidden md:flex items-center space-x-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.label}
-                  href={item.href as any}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    item.active
-                      ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-white/10"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href as any}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      isActive
+                        ? "bg-gradient-to-r from-blue-500/20 to-purple-500/20 text-white border border-white/10"
+                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
             </nav>
           </div>
 

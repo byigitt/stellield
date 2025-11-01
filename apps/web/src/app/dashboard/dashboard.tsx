@@ -1,10 +1,8 @@
 "use client";
-import { authClient } from "@/lib/auth-client";
 import { useQuery } from "@tanstack/react-query";
 import { trpc } from "@/utils/trpc";
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   TrendingUp,
@@ -27,13 +25,7 @@ import PortfolioSimulator from "@/components/portfolio-simulator";
 import BridgeInsights from "@/components/bridge-insights";
 import StellarProtocols from "@/components/stellar-protocols";
 
-export default function Dashboard({
-	session,
-}: {
-	session: typeof authClient.$Infer.Session;
-}) {
-	const privateData = useQuery(trpc.privateData.queryOptions());
-	const [timeframe, setTimeframe] = useState("24h");
+export default function Dashboard() {
 	const [mounted, setMounted] = useState(false);
 
 	useEffect(() => {
@@ -82,7 +74,7 @@ export default function Dashboard({
 								)}
 								{stats.tvlChange}
 							</span>
-							<span className="text-gray-500 ml-2">vs last {timeframe}</span>
+							<span className="text-gray-500 ml-2">vs last 24h</span>
 						</div>
 					</Card>
 
@@ -101,7 +93,7 @@ export default function Dashboard({
 								)}
 								{stats.apyChange}
 							</span>
-							<span className="text-gray-500 ml-2">vs last {timeframe}</span>
+							<span className="text-gray-500 ml-2">vs last 24h</span>
 						</div>
 					</Card>
 

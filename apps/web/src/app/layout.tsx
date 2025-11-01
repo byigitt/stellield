@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../index.css";
 import Providers from "@/components/providers";
-import StellarHeader from "@/components/stellar-header";
+import HeaderWrapper from "@/components/header-wrapper";
 
 const geistSans = Geist({
 	variable: "--font-geist-sans",
@@ -31,7 +31,7 @@ export default function RootLayout({
 			>
 				<Providers>
 					<div className="min-h-screen bg-gradient-to-br from-[#0a0e27] via-[#151932] to-[#1a1f3a]">
-						<StellarHeader />
+						<HeaderWrapper />
 						{children}
 					</div>
 				</Providers>
