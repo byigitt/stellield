@@ -7,12 +7,20 @@
     "typecheck": "tsgo -b",
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server",
     "dev": "tsx watch src/index.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test:solana": "tsx src/test-native-solana.ts",
+    "test:scenario-a": "tsx src/test-scenario-a.ts",
+    "test:cctp": "tsx -e \"import { createCCTPService } from './src/services/cctp-bridge.service.js'; const s = createCCTPService(); console.log('CCTP Routes:', s.getSupportedRoutes());\""
   },
   "dependencies": {
+    "@circle-fin/adapter-solana": "^1.0.1",
+    "@circle-fin/adapter-viem-v2": "^1.0.1",
+    "@circle-fin/bridge-kit": "^1.1.0",
     "@elysiajs/cors": "^1.3.3",
     "@elysiajs/node": "^1.3.1",
     "@elysiajs/trpc": "^1.1.0",
+    "@solana/spl-token": "^0.4.14",
+    "@solana/web3.js": "^1.98.4",
     "@stellar-hackathon/api": "workspace:*",
     "@stellar-hackathon/auth": "workspace:*",
     "@stellar-hackathon/db": "workspace:*",
@@ -21,6 +29,7 @@
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "elysia": "catalog:",
+    "viem": "^2.38.6",
     "zod": "catalog:"
   },
   "devDependencies": {

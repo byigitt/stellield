@@ -39,6 +39,24 @@ interface BridgeRoute {
 
 const bridgeRoutes: BridgeRoute[] = [
   {
+    name: "Circle CCTP",
+    from: "Stellar",
+    to: "Solana",
+    estimatedFee: "$0.00",
+    estimatedTime: "~5 min",
+    liquidity: "Infinite (Burn & Mint)",
+    supported: true,
+  },
+  {
+    name: "Circle CCTP",
+    from: "Stellar",
+    to: "Arbitrum",
+    estimatedFee: "$0.00",
+    estimatedTime: "~5 min",
+    liquidity: "Infinite (Burn & Mint)",
+    supported: true,
+  },
+  {
     name: "Soroban Bridge",
     from: "Stellar",
     to: "Ethereum",
@@ -54,21 +72,12 @@ const bridgeRoutes: BridgeRoute[] = [
     estimatedFee: "$1.80",
     estimatedTime: "~3 min",
     liquidity: "$120M",
-    supported: true,
-  },
-  {
-    name: "Allbridge",
-    from: "Stellar",
-    to: "BSC",
-    estimatedFee: "$0.95",
-    estimatedTime: "~2 min",
-    liquidity: "$30M",
-    supported: true,
+    supported: false,
   },
 ];
 
 export default function BridgeInsights() {
-  const [selectedBridge, setSelectedBridge] = useState("soroban");
+  const [selectedBridge, setSelectedBridge] = useState("cctp");
   const [bridgeAmount, setBridgeAmount] = useState("");
 
   return (
@@ -137,9 +146,9 @@ export default function BridgeInsights() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="soroban">Soroban Bridge (Official)</SelectItem>
-              <SelectItem value="wormhole">Wormhole</SelectItem>
-              <SelectItem value="allbridge">Allbridge</SelectItem>
+              <SelectItem value="cctp">Circle CCTP (Recommended)</SelectItem>
+              <SelectItem value="soroban">Soroban Bridge</SelectItem>
+              <SelectItem value="wormhole">Wormhole (Deprecated)</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -171,9 +180,19 @@ export default function BridgeInsights() {
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
                   <div className="text-sm font-medium text-white">{route.name}</div>
+                  {route.name === "Circle CCTP" && (
+                    <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded">
+                      $0 Fees
+                    </span>
+                  )}
                   {route.name === "Soroban Bridge" && (
                     <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">
                       Official
+                    </span>
+                  )}
+                  {!route.supported && (
+                    <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded">
+                      Deprecated
                     </span>
                   )}
                 </div>
@@ -205,29 +224,29 @@ export default function BridgeInsights() {
         <div className="glass-panel rounded-lg p-3 mb-4">
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-400">Bridge Fee</span>
-              <span className="text-white">$2.50</span>
+              <span className="text-gray-400">Bridge Fee (CCTP)</span>
+              <span className="text-green-400 font-medium">$0.00</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-400">Gas Cost</span>
-              <span className="text-white">~$0.15</span>
+              <span className="text-white">~$0.10</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-400">Slippage</span>
-              <span className="text-white">0.1%</span>
+              <span className="text-gray-400">Circle Attestation</span>
+              <span className="text-white">Free</span>
             </div>
             <div className="pt-2 border-t border-white/10 flex justify-between">
               <span className="text-gray-400">Total Cost</span>
-              <span className="text-white font-medium">$2.65</span>
+              <span className="text-green-400 font-medium">~$0.10</span>
             </div>
           </div>
         </div>
 
-        {/* Warning */}
-        <div className="flex items-start space-x-2 p-3 bg-yellow-500/10 rounded-lg border border-yellow-500/20 mb-4">
-          <AlertCircle className="w-4 h-4 text-yellow-500 mt-0.5" />
-          <div className="text-xs text-yellow-400">
-            Bridge estimations are approximate. Actual costs may vary based on network conditions.
+        {/* CCTP Info Banner */}
+        <div className="flex items-start space-x-2 p-3 bg-green-500/10 rounded-lg border border-green-500/20 mb-4">
+          <Info className="w-4 h-4 text-green-500 mt-0.5" />
+          <div className="text-xs text-green-400">
+            <strong>Circle CCTP:</strong> Native USDC transfers with burn & mint mechanism. No bridge fees, only gas costs.
           </div>
         </div>
 
