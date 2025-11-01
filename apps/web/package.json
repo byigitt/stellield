@@ -9,6 +9,7 @@
     "typecheck": "tsgo -b"
   },
   "dependencies": {
+    "@fontsource/host-grotesk": "^5.2.8",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "catalog:",
     "@radix-ui/react-accordion": "^1.2.12",
