@@ -184,4 +184,40 @@ body {
   .text-gradient {
     @apply bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent;
   }
+
+  /* Grid overlay pattern - full page */
+  .landing-grid-overlay {
+    position: relative;
+  }
+
+  .landing-grid-overlay::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 300px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 100px 100px;
+    mask-image: 
+      linear-gradient(to bottom, 
+        transparent 0%, 
+        transparent 100vh,
+        black 120vh,
+        black calc(100% - 300px),
+        transparent 100%
+      );
+    -webkit-mask-image: 
+      linear-gradient(to bottom, 
+        transparent 0%, 
+        transparent 100vh,
+        black 120vh,
+        black calc(100% - 300px),
+        transparent 100%
+      );
+    pointer-events: none;
+    z-index: 1;
+  }
 }
