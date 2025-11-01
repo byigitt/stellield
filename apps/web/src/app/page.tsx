@@ -593,7 +593,7 @@ export default function Home() {
                   <span className="text-white font-bold text-xl">S</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg font-semibold text-white">Stellar</span>
+                  <span className="text-lg font-semibold text-white">Stellield</span>
                   <span className="text-xs text-gray-400 -mt-1">Yield Aggregator</span>
                 </div>
               </div>
@@ -700,7 +700,7 @@ export default function Home() {
           </div>
 
           <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-            <p>© 2025 Stellar Yield Aggregator. All rights reserved.</p>
+            <p>© 2025 Stellield. All rights reserved.</p>
             <div className="flex items-center gap-6 mt-4 md:mt-0">
               <Link href="#" className="hover:text-white transition-colors">
                 Privacy Policy

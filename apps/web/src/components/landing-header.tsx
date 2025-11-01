@@ -46,7 +46,7 @@ export default function LandingHeader() {
               <div className="w-10 h-10 relative">
                 <Image
                   src="/logo-main.png"
-                  alt="Stellar Logo"
+                  alt="Stellield Logo"
                   width={40}
                   height={40}
                   className="object-contain"
@@ -54,7 +54,7 @@ export default function LandingHeader() {
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-semibold text-white">
-                  Stellar
+                  Stellield
                 </span>
                 <span className="text-xs text-gray-400 -mt-1">
                   Yield Aggregator
