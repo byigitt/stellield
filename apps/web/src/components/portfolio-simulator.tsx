@@ -185,7 +185,7 @@ export default function PortfolioSimulator() {
 
       {/* Simulation Tabs */}
       <Tabs defaultValue="optimize" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 glass-panel">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="optimize">AI Optimize</TabsTrigger>
           <TabsTrigger value="manual">Manual</TabsTrigger>
           <TabsTrigger value="compare">Compare</TabsTrigger>
