@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Github, ExternalLink } from "lucide-react";
 
@@ -42,9 +43,14 @@ export default function LandingHeader() {
           {/* Logo */}
           <div className="flex items-center space-x-8">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center relative">
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-400 to-purple-500 blur-lg opacity-50"></div>
-                <span className="text-white font-bold text-xl relative">S</span>
+              <div className="w-10 h-10 relative">
+                <Image
+                  src="/logo-main.png"
+                  alt="Stellar Logo"
+                  width={40}
+                  height={40}
+                  className="object-contain"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-xl font-semibold text-white">
@@ -108,7 +114,7 @@ export default function LandingHeader() {
             {/* Launch App Button */}
             <Link href="/dashboard">
               <Button
-                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white hover:from-blue-600 hover:to-purple-700 px-6"
+                className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-6 shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200"
               >
                 Launch App
               </Button>

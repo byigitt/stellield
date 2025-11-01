@@ -198,7 +198,7 @@ export default function StellarYieldOpportunities() {
 
             {/* Action Button */}
             <Button
-              className="w-full bg-gradient-to-r from-blue-500/80 to-purple-600/80 hover:from-blue-600 hover:to-purple-700 text-white backdrop-blur-sm"
+              className="w-full bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200"
               size="sm"
             >
               View Details

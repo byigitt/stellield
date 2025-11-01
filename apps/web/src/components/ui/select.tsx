@@ -122,7 +122,7 @@ function SelectItem({
         "relative flex w-full cursor-pointer items-center gap-2 rounded-md py-2 pr-8 pl-3 text-sm outline-hidden select-none",
         "text-gray-300 transition-all duration-150",
         "hover:bg-white/10 hover:text-white",
-        "focus:bg-gradient-to-r focus:from-blue-500/20 focus:to-purple-500/20 focus:text-white",
+        "focus:bg-white/10 focus:text-white",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         "*:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",

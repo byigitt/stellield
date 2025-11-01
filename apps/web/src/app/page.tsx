@@ -30,66 +30,71 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Animated background gradient orbs */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000" />
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden -mt-16 pt-16">
+        {/* Background Image with Shadow Effects */}
+        <div className="absolute inset-0 -top-16">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-950/40 via-slate-950 to-black"></div>
+          <div 
+            className="absolute inset-0 opacity-60"
+            style={{
+              backgroundImage: 'url(/landing-page-bg.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
+          {/* Enhanced shadow layers */}
+          <div className="absolute inset-0 shadow-[inset_0_0_200px_100px_rgba(0,0,0,0.9)]"></div>
+          <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black via-black/50 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-96 bg-gradient-to-r from-black via-black/50 to-transparent"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-96 bg-gradient-to-l from-black via-black/50 to-transparent"></div>
         </div>
-        
-        {/* Curved light effect at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-blue-500/10 to-transparent" style={{
-          clipPath: "ellipse(80% 100% at 50% 100%)"
-        }} />
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8 text-sm text-blue-300">
+          <div className="max-w-5xl mx-auto text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8 text-sm text-blue-300 border border-blue-500/20">
               <Sparkles className="w-4 h-4" />
               <span>Powered by Stellar Network</span>
             </div>
             
-            <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
               <span className="text-white">The Decentralized</span>
               <br />
-              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Fixed Income Layer
               </span>
             </h1>
             
-            <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
               Unlock sustainable yields on Stellar with AI-powered aggregation
               <br />
-              from everywhere, into one simple platform.
+              from everywhere into one simple platform.
             </p>
             
-            <div className="flex items-center justify-center gap-4">
+            <div className="flex items-center justify-center gap-4 mb-24">
               <Link href="/dashboard">
-                <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 h-14 text-lg">
+                <Button size="lg" className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-8 py-4 h-auto text-base font-semibold rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 transition-all duration-200">
                   Launch App
-                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="glass-panel border-white/10 hover:bg-white/5 h-14 px-8 text-lg">
-                Learn More
-              </Button>
             </div>
 
             {/* Stats Section */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-24">
-              <div className="glass-card p-6 rounded-2xl">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <div className="glass-card p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10">
                 <div className="text-3xl md:text-4xl font-bold text-white mb-2">9.4%</div>
                 <div className="text-sm text-gray-400">Average APY</div>
               </div>
-              <div className="glass-card p-6 rounded-2xl">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2">$120M</div>
-                <div className="text-sm text-gray-400">Total Value</div>
+              <div className="glass-card p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">$124.68M</div>
+                <div className="text-sm text-gray-400">Total Value Locked</div>
               </div>
-              <div className="glass-card p-6 rounded-2xl">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2">4,988,537.10</div>
+              <div className="glass-card p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10">
+                <div className="text-3xl md:text-4xl font-bold text-white mb-2">4,988,537</div>
                 <div className="text-sm text-gray-400">LST Staked</div>
               </div>
-              <div className="glass-card p-6 rounded-2xl">
+              <div className="glass-card p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10">
                 <div className="text-3xl md:text-4xl font-bold text-white mb-2">$2,562</div>
                 <div className="text-sm text-gray-400">Per Holder</div>
               </div>
@@ -98,69 +103,74 @@ export default function Home() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+        <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
           <ChevronDown className="w-6 h-6 text-gray-400 animate-bounce" />
         </div>
       </section>
 
       {/* Treehouse Ecosystem Section */}
-      <section className="py-32 relative">
-        <div className="container mx-auto px-4">
+      <section className="py-32 relative bg-black overflow-hidden">
+        {/* Background Image with Shadow Effects */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-950/40 via-slate-950 to-black"></div>
+          <div 
+            className="absolute inset-0 opacity-50"
+            style={{
+              // backgroundImage: 'url(/landing-section-all-in-xlm.png)',
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
+          {/* Enhanced shadow layers */}
+          <div className="absolute inset-0 shadow-[inset_0_0_200px_100px_rgba(0,0,0,0.8)]"></div>
+          <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black via-black/50 to-transparent"></div>
+          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Stellar Ecosystem
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Treehouse Ecosystem
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-2">
               A comprehensive DeFi infrastructure built on Stellar, connecting liquidity,
-              <br />
+            </p>
+            <p className="text-lg text-gray-400 max-w-3xl mx-auto mb-8">
               staking, lending, and yield optimization in one unified platform.
             </p>
-            <Button className="mt-8 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
+            <Button className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-8 py-6 h-auto rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 transition-all duration-200">
               Explore Ecosystem
             </Button>
           </div>
 
-          {/* Central Token Visual */}
-          <div className="relative max-w-2xl mx-auto my-20">
-            <div className="relative w-64 h-64 mx-auto">
-              {/* Central coin */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/30 to-purple-600/30 backdrop-blur-xl border border-white/10 flex items-center justify-center">
-                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                    <Sparkles className="w-12 h-12 text-white" />
-                  </div>
-                </div>
-              </div>
-              
-              {/* Glow effect */}
-              <div className="absolute inset-0 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-600/20 blur-3xl" />
-            </div>
+          {/* Spacer for background image */}
+          <div className="h-[600px] md:h-[700px]"></div>
 
-            {/* Ecosystem features around the token */}
-            <div className="grid grid-cols-3 gap-8 mt-16">
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-xl border border-white/10 flex items-center justify-center">
-                  <Network className="w-8 h-8 text-blue-400" />
-                </div>
-                <h3 className="text-white font-semibold mb-2">Liquidity</h3>
-                <p className="text-sm text-gray-400">Deep liquidity pools</p>
+          {/* Bottom feature cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-16">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-700/20 backdrop-blur-xl border border-blue-400/30 flex items-center justify-center">
+                <Network className="w-8 h-8 text-blue-400" />
               </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-xl border border-white/10 flex items-center justify-center">
-                  <Lock className="w-8 h-8 text-blue-400" />
-                </div>
-                <h3 className="text-white font-semibold mb-2">Staking</h3>
-                <p className="text-sm text-gray-400">Secure validation</p>
+              <h3 className="text-white font-semibold mb-2">Liquidity</h3>
+              <p className="text-sm text-gray-400">Deep liquidity pools across protocols</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-purple-500/20 to-purple-700/20 backdrop-blur-xl border border-purple-400/30 flex items-center justify-center">
+                <Lock className="w-8 h-8 text-purple-400" />
               </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500/20 to-purple-600/20 backdrop-blur-xl border border-white/10 flex items-center justify-center">
-                  <TrendingUp className="w-8 h-8 text-blue-400" />
-                </div>
-                <h3 className="text-white font-semibold mb-2">Yields</h3>
-                <p className="text-sm text-gray-400">Optimized returns</p>
+              <h3 className="text-white font-semibold mb-2">Staking</h3>
+              <p className="text-sm text-gray-400">Secure validation and rewards</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500/20 to-blue-700/20 backdrop-blur-xl border border-blue-400/30 flex items-center justify-center">
+                <TrendingUp className="w-8 h-8 text-blue-400" />
               </div>
+              <h3 className="text-white font-semibold mb-2">Yields</h3>
+              <p className="text-sm text-gray-400">Optimized returns automatically</p>
             </div>
           </div>
         </div>
@@ -168,67 +178,83 @@ export default function Home() {
 
       {/* Earn Real Yield Section */}
       <section className="py-32 relative overflow-hidden">
-        <div className="container mx-auto px-4">
+        {/* Background with gradient */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-950/30 via-slate-950 to-black"></div>
+          <div className="absolute inset-0 shadow-[inset_0_0_150px_80px_rgba(0,0,0,0.8)]"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Earn Real Yield with{" "}
-              <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 LST
               </span>
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-400 max-w-3xl mx-auto">
               Maximize your returns through liquid staking tokens with compounding rewards
               <br />
               and full liquidity across the Stellar ecosystem.
             </p>
           </div>
 
-          {/* Flow diagram */}
-          <div className="relative max-w-5xl mx-auto">
-            <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 0 }}>
+          {/* Flow visualization with curved connections */}
+          <div className="relative max-w-6xl mx-auto">
+            {/* SVG for curved connection lines */}
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
               <defs>
-                <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="rgb(59, 130, 246)" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="rgb(147, 51, 234)" stopOpacity="0.3" />
+                <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(59, 130, 246, 0.3)" />
+                  <stop offset="50%" stopColor="rgba(147, 51, 234, 0.5)" />
+                  <stop offset="100%" stopColor="rgba(236, 72, 153, 0.3)" />
                 </linearGradient>
               </defs>
-              {/* Curved connection lines */}
+              {/* Curved connection lines between cards */}
               <path
-                d="M 150 100 Q 250 150, 350 100"
-                stroke="url(#lineGradient)"
+                d="M 200 150 Q 400 100, 600 150"
+                stroke="url(#flowGradient)"
                 strokeWidth="2"
                 fill="none"
+                opacity="0.5"
+              />
+              <path
+                d="M 600 150 Q 800 100, 1000 150"
+                stroke="url(#flowGradient)"
+                strokeWidth="2"
+                fill="none"
+                opacity="0.5"
               />
             </svg>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-              <div className="glass-card p-8 rounded-2xl text-center">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+              <div className="glass-card p-8 rounded-2xl text-center backdrop-blur-xl bg-gradient-to-br from-blue-500/10 to-purple-900/5 border border-blue-500/20 hover:border-purple-500/40 transition-all duration-300">
+                <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/50">
                   <Database className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">Deposit Assets</h3>
-                <p className="text-gray-400">
-                  Start earning by depositing XLM or other supported assets
+                <p className="text-gray-400 text-sm">
+                  Start earning by depositing XLM or other supported assets into the protocol
                 </p>
               </div>
 
-              <div className="glass-card p-8 rounded-2xl text-center">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+              <div className="glass-card p-8 rounded-2xl text-center backdrop-blur-xl bg-gradient-to-br from-purple-500/10 to-pink-900/5 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
+                <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/50">
                   <Zap className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">Auto-Compound</h3>
-                <p className="text-gray-400">
-                  Rewards automatically compound for maximum efficiency
+                <p className="text-gray-400 text-sm">
+                  Rewards automatically compound for maximum efficiency and exponential growth
                 </p>
               </div>
 
-              <div className="glass-card p-8 rounded-2xl text-center">
-                <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+              <div className="glass-card p-8 rounded-2xl text-center backdrop-blur-xl bg-gradient-to-br from-blue-500/10 to-purple-900/5 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+                <div className="w-16 h-16 mx-auto mb-6 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/50">
                   <TrendingUp className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">Earn Yield</h3>
-                <p className="text-gray-400">
-                  Receive sustainable yields from multiple sources
+                <p className="text-gray-400 text-sm">
+                  Receive sustainable yields from multiple DeFi protocols and strategies
                 </p>
               </div>
             </div>
@@ -237,13 +263,19 @@ export default function Home() {
       </section>
 
       {/* LST 2.0 Section */}
-      <section className="py-32">
-        <div className="container mx-auto px-4">
+      <section className="py-32 relative overflow-hidden">
+        {/* Background with gradient */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-blue-950/30 via-slate-950 to-black"></div>
+          <div className="absolute inset-0 shadow-[inset_0_0_150px_80px_rgba(0,0,0,0.8)]"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-20">
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               LST 2.0: Put Your Assets to Work
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-400 max-w-3xl mx-auto">
               Next-generation liquid staking with enhanced capital efficiency
               <br />
               and seamless DeFi integration across Stellar.
@@ -252,14 +284,14 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Stake Card */}
-            <div className="glass-card p-8 rounded-2xl relative overflow-hidden group hover:scale-105 transition-transform duration-300">
+            <div className="glass-card p-8 rounded-2xl relative overflow-hidden group hover:scale-105 transition-transform duration-300 backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/0 border border-white/10">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full blur-2xl" />
               <div className="relative">
-                <div className="w-16 h-16 mb-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-blue-600/30 border border-blue-400/30 flex items-center justify-center">
+                <div className="w-16 h-16 mb-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-blue-600/30 border border-blue-400/30 flex items-center justify-center shadow-lg shadow-blue-500/30">
                   <Lock className="w-8 h-8 text-blue-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">Stake</h3>
-                <p className="text-gray-400 mb-6">
+                <p className="text-gray-400 mb-6 text-sm">
                   Stake your XLM and receive liquid staking tokens (LST) instantly. 
                   Your assets remain liquid while earning rewards.
                 </p>
@@ -281,14 +313,14 @@ export default function Home() {
             </div>
 
             {/* Earn Card */}
-            <div className="glass-card p-8 rounded-2xl relative overflow-hidden group hover:scale-105 transition-transform duration-300">
+            <div className="glass-card p-8 rounded-2xl relative overflow-hidden group hover:scale-105 transition-transform duration-300 backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/0 border border-white/10">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-transparent rounded-full blur-2xl" />
               <div className="relative">
-                <div className="w-16 h-16 mb-6 rounded-xl bg-gradient-to-br from-purple-500/30 to-purple-600/30 border border-purple-400/30 flex items-center justify-center">
+                <div className="w-16 h-16 mb-6 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-600/30 border border-purple-400/30 flex items-center justify-center shadow-lg shadow-purple-500/30">
                   <TrendingUp className="w-8 h-8 text-purple-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">Earn</h3>
-                <p className="text-gray-400 mb-6">
+                <p className="text-gray-400 mb-6 text-sm">
                   Earn yield from multiple sources: staking rewards, DeFi protocols,
                   and lending pools. Rewards auto-compound daily.
                 </p>
@@ -310,14 +342,14 @@ export default function Home() {
             </div>
 
             {/* Hub Card */}
-            <div className="glass-card p-8 rounded-2xl relative overflow-hidden group hover:scale-105 transition-transform duration-300">
+            <div className="glass-card p-8 rounded-2xl relative overflow-hidden group hover:scale-105 transition-transform duration-300 backdrop-blur-xl bg-gradient-to-br from-white/5 to-white/0 border border-white/10">
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-500/20 to-transparent rounded-full blur-2xl" />
               <div className="relative">
-                <div className="w-16 h-16 mb-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-purple-600/30 border border-blue-400/30 flex items-center justify-center">
+                <div className="w-16 h-16 mb-6 rounded-xl bg-gradient-to-br from-blue-500/30 to-purple-600/30 border border-blue-400/30 flex items-center justify-center shadow-lg shadow-purple-500/30">
                   <Network className="w-8 h-8 text-blue-400" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-4">Hub</h3>
-                <p className="text-gray-400 mb-6">
+                <p className="text-gray-400 mb-6 text-sm">
                   Connect to multiple DeFi protocols across Stellar. Use your LST
                   as collateral or provide liquidity seamlessly.
                 </p>
@@ -327,7 +359,7 @@ export default function Home() {
                     <span>Cross-protocol integration</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm text-gray-300">
-                    <Check className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
+                    <Check className="w-5 h-5 text-purple-400 mt-0.5 flex-shrink-0" />
                     <span>LST as collateral</span>
                   </li>
                   <li className="flex items-start gap-2 text-sm text-gray-300">
@@ -342,8 +374,14 @@ export default function Home() {
       </section>
 
       {/* Security Section */}
-      <section className="py-32 relative">
-        <div className="container mx-auto px-4">
+      <section className="py-32 relative overflow-hidden">
+        {/* Background with gradient */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-950/30 via-slate-950 to-black"></div>
+          <div className="absolute inset-0 shadow-[inset_0_0_150px_80px_rgba(0,0,0,0.8)]"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
               Best-in-Class Security
@@ -408,8 +446,14 @@ export default function Home() {
       </section>
 
       {/* Key Principles Section */}
-      <section className="py-32">
-        <div className="container mx-auto px-4">
+      <section className="py-32 relative overflow-hidden">
+        {/* Background with gradient */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-950/20 via-slate-950 to-black"></div>
+          <div className="absolute inset-0 shadow-[inset_0_0_150px_80px_rgba(0,0,0,0.8)]"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
               Key Principles
@@ -457,8 +501,14 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-32">
-        <div className="container mx-auto px-4">
+      <section className="py-32 relative overflow-hidden">
+        {/* Background with gradient */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-950/25 via-slate-950 to-black"></div>
+          <div className="absolute inset-0 shadow-[inset_0_0_150px_80px_rgba(0,0,0,0.8)]"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto">
             <h2 className="text-5xl md:text-6xl font-bold text-white mb-12 text-center">
               FAQ
@@ -510,8 +560,14 @@ export default function Home() {
       </section>
 
       {/* Backed By Section */}
-      <section className="py-32">
-        <div className="container mx-auto px-4">
+      <section className="py-32 relative overflow-hidden">
+        {/* Background with gradient */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-indigo-950/20 via-slate-950 to-black"></div>
+          <div className="absolute inset-0 shadow-[inset_0_0_150px_80px_rgba(0,0,0,0.8)]"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <h2 className="text-3xl font-bold text-white mb-12 text-center">
             Backed By
           </h2>
@@ -543,8 +599,13 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-12 mt-32">
-        <div className="container mx-auto px-4">
+      <footer className="relative border-t border-white/5 py-12 mt-32 overflow-hidden">
+        {/* Background with gradient */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900/40 via-slate-950 to-black"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
             {/* Brand */}
             <div className="col-span-1">

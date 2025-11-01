@@ -50,9 +50,9 @@ function TabsTrigger({
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50",
         "disabled:pointer-events-none disabled:opacity-50",
         "data-[state=active]:text-white",
-        "data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500/20 data-[state=active]:to-purple-500/20",
+        "data-[state=active]:bg-white/10",
         "data-[state=active]:border data-[state=active]:border-white/20",
-        "data-[state=active]:shadow-[0_2px_8px_0_rgba(59,130,246,0.15)]",
+        "data-[state=active]:shadow-[0_2px_8px_0_rgba(0,0,0,0.2)]",
         "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}

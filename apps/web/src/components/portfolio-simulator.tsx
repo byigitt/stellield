@@ -252,7 +252,7 @@ export default function PortfolioSimulator() {
             </div>
 
             <div className="flex gap-2">
-              <Button className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white">
+              <Button className="flex-1 bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200">
                 Run Simulation
               </Button>
               <Button
