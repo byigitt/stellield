@@ -1,0 +1,37 @@
+{
+	"name": "@stellar-hackathon/bridge",
+	"version": "0.1.0",
+	"description": "Ethereum Solidity CCTP Bridge for cross-chain USDC transfers",
+	"scripts": {
+		"compile": "hardhat compile",
+		"test": "hardhat test",
+		"verify": "hardhat verify",
+		"deploy:sepolia": "hardhat run scripts/deploy.ts --network sepolia",
+		"check:balance": "hardhat run scripts/check-balance.ts --network sepolia"
+	},
+	"keywords": [
+		"ethereum",
+		"solidity",
+		"cctp",
+		"bridge",
+		"usdc",
+		"testnet"
+	],
+	"devDependencies": {
+		"@nomicfoundation/hardhat-ethers": "^3.0.8",
+		"@nomicfoundation/hardhat-toolbox": "^5.0.0",
+		"@nomicfoundation/hardhat-verify": "^2.0.11",
+		"@typechain/ethers-v6": "^0.5.1",
+		"@typechain/hardhat": "^9.1.0",
+		"@types/node": "^22.10.2",
+		"hardhat": "^2.22.18",
+		"ts-node": "^10.9.2",
+		"typechain": "^8.3.2",
+		"typescript": "^5.7.2"
+	},
+	"dependencies": {
+		"@openzeppelin/contracts": "^5.2.0",
+		"dotenv": "^16.4.7",
+		"ethers": "^6.15.0"
+	}
+}
