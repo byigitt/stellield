@@ -29,6 +29,7 @@ export class StateManager {
       updatedAt: now,
       stellarTxHashes: {},
       solanaTxSignatures: {},
+      ethereumTxHashes: {},
       amounts: {
         xlmDeposit: amount,
       },
@@ -115,6 +116,25 @@ export class StateManager {
     state.updatedAt = new Date();
 
     logger.debug('Solana tx signature updated', { id, type, signature });
+  }
+
+  /**
+   * Update ethereum transaction hash
+   */
+  updateEthereumTx(
+    id: string,
+    type: keyof TransactionState['ethereumTxHashes'],
+    hash: string
+  ): void {
+    const state = this.states.get(id);
+    if (!state) {
+      throw new Error(`Transaction ${id} not found`);
+    }
+
+    state.ethereumTxHashes[type] = hash;
+    state.updatedAt = new Date();
+
+    logger.debug('Ethereum tx hash updated', { id, type, hash });
   }
 
   /**

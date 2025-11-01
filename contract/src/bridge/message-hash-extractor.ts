@@ -6,7 +6,7 @@
  * emitted in the MessageSent event from the CCTP TokenMessenger contract.
  */
 
-import { keccak256 } from 'js-sha3';
+import { ethers } from 'ethers';
 import { logger } from '../utils/logger';
 
 export interface MessageSentEvent {
@@ -57,19 +57,16 @@ export class MessageHashExtractor {
    * @returns The keccak256 hash as a hex string (without 0x prefix)
    */
   calculateMessageHash(messageBytes: string): string {
-    // Remove 0x prefix if present
-    const cleanHex = messageBytes.startsWith('0x') 
-      ? messageBytes.slice(2) 
-      : messageBytes;
+    // Ensure message bytes has 0x prefix
+    const hexString = messageBytes.startsWith('0x')
+      ? messageBytes
+      : '0x' + messageBytes;
 
-    // Convert hex string to buffer
-    const buffer = Buffer.from(cleanHex, 'hex');
+    // Calculate keccak256 hash using ethers
+    const hash = ethers.keccak256(hexString);
 
-    // Calculate keccak256 hash
-    const hash = keccak256(buffer);
-    
-    // Return hash as hex string (Circle API expects this format without 0x prefix)
-    return hash;
+    // Return hash as hex string without 0x prefix (Circle API expects this format)
+    return hash.startsWith('0x') ? hash.slice(2) : hash;
   }
 
   /**
@@ -104,15 +101,40 @@ export class MessageHashExtractor {
       // Parse Soroban contract events
       // The CCTP contract emits a MessageSent event with the message bytes
       
-      // This is a placeholder - actual implementation would parse the XDR
-      logger.debug('Parsing Stellar/Soroban events');
+      logger.debug('Parsing Stellar/Soroban events', { txData });
       
-      // TODO: Implement actual Soroban event parsing
-      // You would need to:
-      // 1. Decode the result_meta_xdr
-      // 2. Find the MessageSent event in contract events
-      // 3. Extract the message bytes from the event data
+      // Parse contract events from transaction result
+      // Stellar SDK provides transaction result with contract events
+      if (txData.result_meta_xdr) {
+        // XDR parsing would be needed here
+        // Example structure after parsing:
+        // txData.result_meta_xdr -> decode -> events -> find MessageSent
+        
+        logger.warn('⚠️  Soroban XDR event parsing not yet implemented');
+        logger.warn('⚠️  Need to decode result_meta_xdr and extract contract events');
+        
+        // Real implementation would:
+        // const xdr = StellarSdk.xdr.TransactionMeta.fromXDR(txData.result_meta_xdr, 'base64');
+        // const events = extractContractEvents(xdr);
+        // const messageSentEvent = events.find(e => e.topic.includes('MessageSent'));
+        // const messageBytes = messageSentEvent.data.message;
+        // return { message: messageBytes };
+      }
       
+      // Check if events are already parsed (some Stellar SDKs provide this)
+      if (txData.events) {
+        const messageSentEvent = txData.events.find((e: any) => 
+          e.type === 'contract' && 
+          (e.topic?.includes('MessageSent') || e.contractId)
+        );
+        
+        if (messageSentEvent && messageSentEvent.value?.message) {
+          logger.info('Found MessageSent event in parsed events');
+          return { message: messageSentEvent.value.message };
+        }
+      }
+      
+      logger.warn('No MessageSent event found in Stellar transaction');
       return null;
     } catch (error) {
       logger.error('Failed to extract from Stellar events', error);

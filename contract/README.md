@@ -13,7 +13,7 @@ This project demonstrates a complete cross-chain yield strategy:
 
 - ✅ Stellar wallet management and transactions
 - ✅ XLM to USDC swapping via Mercury Protocol
-- ✅ Cross-chain USDC bridging using Circle's CCTP
+- ✅ Cross-chain USDC bridging (CCTP-ready architecture - see [CCTP-STATUS.md](./CCTP-STATUS.md))
 - ✅ Solana wallet management and transactions
 - ✅ Liquid staking on Marinade Finance (mSOL)
 - ✅ Complete orchestration of deposit and withdrawal flows

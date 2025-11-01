@@ -1,9 +1,9 @@
 /**
- * Main entry point for the Stellar-Solana Cross-Chain Yield Aggregator
+ * Main entry point for Stellar-Ethereum Cross-Chain Yield Bridge
  */
 
-import { DepositOrchestrator } from './orchestrator/deposit';
-import { WithdrawOrchestrator } from './orchestrator/withdraw';
+import { EthYieldOrchestrator } from './orchestrator/eth-yield';
+import { StellarToEthOrchestrator } from './orchestrator/stellar-to-eth';
 import { logger, LogLevel } from './utils/logger';
 
 // Set log level from environment or default to INFO
@@ -11,13 +11,12 @@ const logLevel = (process.env.LOG_LEVEL as LogLevel) || LogLevel.INFO;
 logger.setLogLevel(logLevel);
 
 // Export main components
-export { DepositOrchestrator, WithdrawOrchestrator };
+export { EthYieldOrchestrator, StellarToEthOrchestrator };
 export { StellarClient } from './stellar/client';
 export { StellarSwap } from './stellar/swap';
 export { StellarCCTPBurn } from './stellar/cctp-burn';
-export { SolanaClient } from './solana/client';
-export { SolanaCCTPMint } from './solana/cctp-mint';
-export { MarinadeStaking } from './solana/marinade';
+export { EthereumClient } from './ethereum/client';
+export { AaveV3Service } from './ethereum/aave';
 export { CircleAttestationService } from './bridge/attestation';
 export { StateManager } from './orchestrator/state';
 export * from './types';
@@ -27,18 +26,21 @@ export * from './types';
  */
 async function main() {
   try {
-    logger.info('Stellar-Solana Cross-Chain Yield Aggregator');
-    logger.info('===========================================');
+    logger.info('Stellar-Ethereum Cross-Chain Yield Bridge');
+    logger.info('==========================================');
     logger.info('');
-    logger.info('This is a PoC for cross-chain yield generation.');
+    logger.info('This is a PoC for cross-chain yield generation with Aave V3.');
     logger.info('');
     logger.info('Flow:');
-    logger.info('1. Deposit: XLM → USDC (Stellar DEX) → Bridge (CCTP) → Solana → Stake (Marinade)');
-    logger.info('2. Withdraw: Unstake (Marinade) → Solana → Bridge (CCTP) → USDC → XLM (Stellar DEX)');
+    logger.info('1. XLM → USDC (Stellar swap)');
+    logger.info('2. USDC burn on Stellar → Bridge (CCTP) → USDC mint on Ethereum');
+    logger.info('3. Supply USDC to Aave V3 → Earn yield');
+    logger.info('4. Withdraw from Aave V3 → USDC burn on Ethereum');
+    logger.info('5. Bridge back → USDC mint on Stellar → USDC → XLM');
     logger.info('');
     logger.info('See examples/ directory for usage examples.');
     logger.info('');
-    logger.info('Run: pnpm example:deposit or pnpm example:withdraw');
+    logger.info('Run: pnpm demo or pnpm demo:bridge');
   } catch (error) {
     logger.error('Error in main', error);
     process.exit(1);
@@ -49,4 +51,3 @@ async function main() {
 if (require.main === module) {
   main();
 }
-

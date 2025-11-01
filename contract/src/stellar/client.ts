@@ -264,16 +264,26 @@ export class StellarClient {
    * Get USDC asset for Stellar
    */
   getUSDCAsset(): StellarSdk.Asset {
-    const [code, issuer] = config.stellar.usdcAddress.split(':');
-    return new StellarSdk.Asset(code, issuer);
+    // Handle both formats: "USDC:ISSUER" and just "ISSUER"
+    const parts = config.stellar.usdcAddress.split(':');
+    if (parts.length === 2) {
+      return new StellarSdk.Asset(parts[0], parts[1]);
+    }
+    // Default to USDC code with the provided issuer
+    return new StellarSdk.Asset('USDC', config.stellar.usdcAddress);
   }
 
   /**
    * Parse USDC address into code and issuer
    */
   parseUSDCAddress(): { code: string; issuer: string } {
-    const [code, issuer] = config.stellar.usdcAddress.split(':');
-    return { code, issuer };
+    // Handle both formats: "USDC:ISSUER" and just "ISSUER"
+    const parts = config.stellar.usdcAddress.split(':');
+    if (parts.length === 2) {
+      return { code: parts[0], issuer: parts[1] };
+    }
+    // Default to USDC code with the provided issuer
+    return { code: 'USDC', issuer: config.stellar.usdcAddress };
   }
 }
 

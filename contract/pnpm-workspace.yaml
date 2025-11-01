@@ -1,4 +1,5 @@
 onlyBuiltDependencies:
+  - '@stellar/stellar-sdk'
   - bigint-buffer
   - bufferutil
   - utf-8-validate
