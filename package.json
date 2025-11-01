@@ -13,6 +13,7 @@
     "dev:native": "turbo -F native dev",
     "dev:web": "turbo -F web dev",
     "dev:server": "turbo -F server dev",
+    "dev:docs": "turbo -F docs dev",
     "db:push": "turbo -F @stellar-hackathon/db db:push",
     "db:studio": "turbo -F @stellar-hackathon/db db:studio",
     "db:generate": "turbo -F @stellar-hackathon/db db:generate",
