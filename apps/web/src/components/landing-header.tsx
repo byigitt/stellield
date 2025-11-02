@@ -33,7 +33,7 @@ const navItems = [
   { label: "About Us", href: "/#about", external: false },
   { label: "Features", href: "/#features", external: false },
   { label: "How It Works", href: "/#how-it-works", external: false },
-  { label: "Docs", href: "#", external: true },
+  { label: "Docs", href: "/docs", external: true },
 ];
 
 export default function LandingHeader() {
