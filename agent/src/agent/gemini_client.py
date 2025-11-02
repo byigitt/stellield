@@ -101,8 +101,10 @@ class GeminiClient:
         formatted = []
         
         for i, opp in enumerate(opportunities[:limit], 1):
+            pool_id = opp.pool or f"{opp.project}-{opp.symbol}"
             formatted.append(f"""
 {i}. {opp.project} - {opp.symbol} ({opp.chain})
+   - Pool ID: {pool_id}
    - APY: {opp.apy:.2f}% (Base: {opp.apy_base or 0:.2f}%, Reward: {opp.apy_reward or 0:.2f}%)
    - TVL: ${opp.tvl_usd:,.0f} USD
    - Risk Tier: {opp.risk_tier.value if opp.risk_tier else 'N/A'} (Score: {opp.risk_score:.2f})
@@ -114,6 +116,84 @@ class GeminiClient:
 """.strip())
         
         return "\n\n".join(formatted)
+    
+    def _normalize_recommendation_fields(self, recommendation: Dict[str, Any]) -> Dict[str, Any]:
+        """
+        Normalize field names from Gemini response to match our schema.
+        Gemini sometimes uses different field names (e.g., 'protocol' instead of 'project').
+        """
+        # Map of Gemini field names -> our field names
+        field_mappings = {
+            # Top-level fields
+            "executive_summary": "summary",
+            "top_3_risks": "key_risks",
+            "top_3_opportunities": "opportunities",
+            "confidence_level": "confidence_score",
+            
+            # Allocation fields
+            "protocol": "project",
+            "asset": "symbol",
+            "amount_usd": "allocation_usd",
+            "percentage": "allocation_percentage",
+            "apy": "expected_apy",
+            "rationale": "reasoning",
+        }
+        
+        # Normalize top-level fields
+        normalized = {}
+        for key, value in recommendation.items():
+            new_key = field_mappings.get(key, key)
+            normalized[new_key] = value
+        
+        # Normalize allocation fields
+        if "allocations" in normalized and isinstance(normalized["allocations"], list):
+            normalized_allocations = []
+            for alloc in normalized["allocations"]:
+                normalized_alloc = {}
+                for key, value in alloc.items():
+                    new_key = field_mappings.get(key, key)
+                    normalized_alloc[new_key] = value
+                
+                # Ensure pool_id exists (fallback to project-symbol)
+                if "pool_id" not in normalized_alloc:
+                    project = normalized_alloc.get("project", "")
+                    symbol = normalized_alloc.get("symbol", "")
+                    normalized_alloc["pool_id"] = f"{project}-{symbol}"
+                
+                normalized_allocations.append(normalized_alloc)
+            
+            normalized["allocations"] = normalized_allocations
+        
+        # Ensure required fields have defaults
+        if "total_allocated_usd" not in normalized and "allocations" in normalized:
+            normalized["total_allocated_usd"] = sum(
+                alloc.get("allocation_usd", 0) for alloc in normalized["allocations"]
+            )
+        
+        if "weighted_expected_apy" not in normalized and "allocations" in normalized:
+            total = normalized.get("total_allocated_usd", 0)
+            if total > 0:
+                weighted_apy = sum(
+                    alloc.get("allocation_usd", 0) * alloc.get("expected_apy", 0)
+                    for alloc in normalized["allocations"]
+                ) / total
+                normalized["weighted_expected_apy"] = weighted_apy
+            else:
+                normalized["weighted_expected_apy"] = 0
+        
+        if "overall_risk_grade" not in normalized:
+            normalized["overall_risk_grade"] = "B"
+        
+        if "diversification_score" not in normalized:
+            # Simple diversification score based on number of allocations
+            alloc_count = len(normalized.get("allocations", []))
+            normalized["diversification_score"] = min(alloc_count * 20, 100)
+        
+        if "rationale" not in normalized:
+            normalized["rationale"] = normalized.get("summary", "")
+        
+        logger.info(f"Normalized {len(field_mappings)} field mappings in recommendation")
+        return normalized
     
     def _build_recommendation_prompt(
         self,
@@ -155,14 +235,51 @@ USER CONTEXT:
 OPPORTUNITIES ({len(opportunities)} available):
 {opportunities_str}
 
+CRITICAL: Return a JSON object with this EXACT structure:
+{{
+  "allocations": [
+    {{
+      "pool_id": "from the opportunity list above",
+      "project": "exact project name from list",
+      "chain": "exact chain name from list",
+      "symbol": "exact symbol from list",
+      "allocation_percentage": percentage as float (0-100),
+      "allocation_usd": dollar amount,
+      "expected_apy": APY as float,
+      "risk_tier": "A, B, C, or D",
+      "reasoning": "why this allocation"
+    }}
+  ],
+  "total_allocated_usd": {amount_usd},
+  "weighted_expected_apy": weighted average APY across all allocations,
+  "overall_risk_grade": "A+, A, B+, B, C+, C, D+, or D",
+  "diversification_score": score 0-100,
+  "summary": "executive summary of portfolio strategy",
+  "key_risks": ["risk 1", "risk 2", "risk 3"],
+  "opportunities": ["opportunity 1", "opportunity 2", "opportunity 3"],
+  "rationale": "detailed rationale for portfolio construction",
+  "projected_returns": {{
+    "1d_usd": value,
+    "7d_usd": value,
+    "30d_usd": value,
+    "365d_usd": value
+  }},
+  "estimated_fees": {{
+    "bridge_usd": value,
+    "swap_usd": value,
+    "gas_usd": value
+  }},
+  "confidence_score": 0-100
+}}
+
 REQUIREMENTS:
 1. Recommend 3-5 allocations totaling 100% of capital
-2. Diversify across protocols, chains, risk tiers, and asset types
-3. Match risk tolerance - explain rationale for each allocation
-4. Calculate projected returns (1d, 7d, 30d, 365d in USD)
-5. Estimate fees (bridge, swap, gas)
-6. Provide executive summary, top 3 risks, top 3 opportunities
-7. Rate confidence 0-100
+2. Use ONLY opportunities from the numbered list above
+3. Copy project, chain, and symbol names EXACTLY as shown
+4. For pool_id, use the project name if pool ID not available
+5. Diversify across protocols, chains, risk tiers
+6. Match risk tolerance
+7. Calculate all numeric fields accurately
 """
         
         return prompt
@@ -226,6 +343,14 @@ REQUIREMENTS:
             response_text = response.text.strip()
             recommendation = json.loads(response_text)
             
+            # Handle potential wrapper objects (e.g., {"portfolio_recommendation": {...}})
+            if "portfolio_recommendation" in recommendation:
+                logger.info("Unwrapping 'portfolio_recommendation' from Gemini response")
+                recommendation = recommendation["portfolio_recommendation"]
+            
+            # Normalize field names (Gemini sometimes uses different names)
+            recommendation = self._normalize_recommendation_fields(recommendation)
+            
             # Validate against our schema (optional but recommended)
             try:
                 validated = RecommendationSchema(**recommendation)
@@ -233,6 +358,7 @@ REQUIREMENTS:
                 recommendation = validated.model_dump()
             except Exception as validation_error:
                 logger.warning(f"Schema validation warning: {validation_error}")
+                logger.debug(f"Raw response: {json.dumps(recommendation, indent=2)}")
                 # Continue with unvalidated data if validation fails
             
             logger.info(

@@ -180,16 +180,22 @@ class RecommendationEngine:
     ) -> Recommendation:
         """Build Recommendation object from AI response."""
         
-        # Create opportunity lookup
-        opp_lookup = {
-            f"{opp.project}-{opp.symbol}": opp
-            for opp in opportunities
-        }
+        # Create opportunity lookup with multiple strategies
+        opp_lookup = {}
         
-        # Also try pool ID lookup
         for opp in opportunities:
+            # Strategy 1: pool ID (if available)
             if opp.pool:
                 opp_lookup[opp.pool] = opp
+            
+            # Strategy 2: project-symbol combination
+            key = f"{opp.project}-{opp.symbol}"
+            opp_lookup[key] = opp
+            
+            # Strategy 3: lowercase variations for fuzzy matching
+            opp_lookup[key.lower()] = opp
+            opp_lookup[opp.project.lower()] = opp
+            opp_lookup[opp.symbol.lower()] = opp
         
         # Parse allocations
         allocations = []
@@ -199,21 +205,38 @@ class RecommendationEngine:
             project = alloc_data.get("project", "")
             symbol = alloc_data.get("symbol", "")
             
-            # Try different lookup strategies
-            opportunity = (
-                opp_lookup.get(pool_id) or
-                opp_lookup.get(f"{project}-{symbol}") or
-                next(
-                    (o for o in opportunities
-                     if o.project == project and o.symbol == symbol),
-                    None
-                )
-            )
+            # Try different lookup strategies in order of specificity
+            opportunity = None
+            
+            # 1. Try exact pool_id
+            if pool_id and pool_id in opp_lookup:
+                opportunity = opp_lookup[pool_id]
+            
+            # 2. Try project-symbol combo
+            if not opportunity and project and symbol:
+                key = f"{project}-{symbol}"
+                opportunity = opp_lookup.get(key) or opp_lookup.get(key.lower())
+            
+            # 3. Try case-insensitive project match
+            if not opportunity and project:
+                opportunity = opp_lookup.get(project.lower())
+            
+            # 4. Fuzzy search through all opportunities
+            if not opportunity:
+                for opp in opportunities:
+                    if (project and symbol and 
+                        opp.project.lower() == project.lower() and 
+                        opp.symbol.lower() == symbol.lower()):
+                        opportunity = opp
+                        break
+                    elif project and opp.project.lower() == project.lower():
+                        opportunity = opp
+                        break
             
             if not opportunity:
                 logger.warning(
                     f"Could not find opportunity for allocation: "
-                    f"{project} {symbol}"
+                    f"pool_id={pool_id}, project={project}, symbol={symbol}"
                 )
                 continue
             
