@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Stellar Yield Aggregator",
+	title: "Stellield - Yield Aggregator",
 	description: "AI-Powered Yield Discovery and Risk Analysis for Stellar Network",
 	icons: {
 		icon: "/logo-main.png",
