@@ -257,6 +257,9 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
   
   // tRPC mutation hook for starting yield flow
   const startYieldFlowMutation = trpc.stellar.startYieldFlow.useMutation();
+  
+  // tRPC utils for imperative queries
+  const trpcUtils = trpc.useUtils();
 
   const totalFlowDuration = useMemo(
     () => FLOW_BLUEPRINT.reduce((acc, step) => acc + step.duration, 0),
@@ -491,7 +494,7 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
 
     const pollInterval = setInterval(async () => {
       try {
-        const status = await trpc.stellar.getFlowStatus.query({ flowId: currentFlowId });
+        const status = await trpcUtils.stellar.getFlowStatus.fetch({ flowId: currentFlowId });
         setBackendFlowStatus(status);
       } catch (error) {
         console.error('Failed to poll flow status:', error);
@@ -499,7 +502,7 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
     }, 1000);
 
     return () => clearInterval(pollInterval);
-  }, [currentFlowId, flowStatus]);
+  }, [currentFlowId, flowStatus, trpcUtils]);
 
   // Sync backend flow status with UI
   useEffect(() => {
