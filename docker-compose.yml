@@ -80,10 +80,10 @@ services:
       
       # Better Auth
       BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
-      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-https://api.yourdomain.com}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-https://api.stellield.baris.world}
       
       # CORS
-      CORS_ORIGIN: ${CORS_ORIGIN:-https://yourdomain.com}
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://stellield.baris.world}
       
       # Agent API
       AGENT_API_URL: ${AGENT_API_URL:-http://agent:8000}
@@ -123,16 +123,23 @@ services:
     build:
       context: .
       dockerfile: docker/web.Dockerfile
+      args:
+        NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:-https://api.stellield.baris.world}
+        NEXT_PUBLIC_AGENT_API_URL: ${NEXT_PUBLIC_AGENT_API_URL:-https://agent.stellield.baris.world}
+        NEXT_PUBLIC_PRIVY_APP_ID: ${NEXT_PUBLIC_PRIVY_APP_ID}
     container_name: stellar-web
     restart: unless-stopped
     ports:
       - "3001:3001"
     environment:
       # Server URL
-      NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:-https://api.yourdomain.com}
+      NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:-https://api.stellield.baris.world}
       
       # Agent API URL
-      NEXT_PUBLIC_AGENT_API_URL: ${NEXT_PUBLIC_AGENT_API_URL:-https://agent.yourdomain.com}
+      NEXT_PUBLIC_AGENT_API_URL: ${NEXT_PUBLIC_AGENT_API_URL:-https://agent.stellield.baris.world}
+      
+      # Privy App ID
+      NEXT_PUBLIC_PRIVY_APP_ID: ${NEXT_PUBLIC_PRIVY_APP_ID}
       
       NODE_ENV: production
       PORT: 3001

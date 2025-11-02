@@ -26,6 +26,16 @@ COPY packages ./packages
 # Generate Prisma Client
 RUN pnpm --filter @stellar-hackathon/db db:generate
 
+# Accept build arguments for Next.js public env vars
+ARG NEXT_PUBLIC_SERVER_URL
+ARG NEXT_PUBLIC_AGENT_API_URL
+ARG NEXT_PUBLIC_PRIVY_APP_ID
+
+# Set as environment variables for the build
+ENV NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL}
+ENV NEXT_PUBLIC_AGENT_API_URL=${NEXT_PUBLIC_AGENT_API_URL}
+ENV NEXT_PUBLIC_PRIVY_APP_ID=${NEXT_PUBLIC_PRIVY_APP_ID}
+
 # Set standalone output for Next.js
 ENV NEXT_OUTPUT=standalone
 
