@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { createPublicClient, http, formatEther } from "viem";
-import { mainnet } from "viem/chains";
+import { sepolia } from "viem/chains";
 
 interface UseWalletBalanceResult {
   balance: string;
@@ -27,9 +27,13 @@ export function useWalletBalance(address?: string): UseWalletBalanceResult {
       setError(null);
 
       try {
+        const rpcUrl =
+          process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL ||
+          sepolia.rpcUrls.default?.http?.[0];
+
         const publicClient = createPublicClient({
-          chain: mainnet,
-          transport: http(),
+          chain: sepolia,
+          transport: rpcUrl ? http(rpcUrl) : http(),
         });
 
         const result = await publicClient.getBalance({

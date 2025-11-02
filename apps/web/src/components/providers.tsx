@@ -3,9 +3,26 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { PrivyProvider } from "@privy-io/react-auth";
+import { sepolia } from "viem/chains";
 import { queryClient } from "@/utils/trpc";
 import { ThemeProvider } from "./theme-provider";
 import { Toaster } from "./ui/sonner";
+
+const resolvedSepoliaRpcUrl =
+	process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL ||
+	sepolia.rpcUrls.default?.http?.[0];
+
+const sepoliaChain = {
+	...sepolia,
+	rpcUrls: {
+		default: {
+			...sepolia.rpcUrls.default,
+			http: resolvedSepoliaRpcUrl
+				? [resolvedSepoliaRpcUrl]
+				: sepolia.rpcUrls.default?.http ?? [],
+		},
+	},
+} as const;
 
 export default function Providers({ children }: { children: React.ReactNode }) {
 	return (
@@ -17,6 +34,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 					accentColor: "#676FFF",
 					logo: "/logo-main.png",
 				},
+				defaultChain: sepoliaChain,
+				supportedChains: [sepoliaChain],
 				embeddedWallets: {
 					createOnLogin: "users-without-wallets",
 				},

@@ -49,10 +49,9 @@ function calculateRiskScore(pool: DefiLlamaPool) {
 	else if (apy >= 8) score -= 0.5;
 
 	const volatilityCandidates = [
-		Math.abs(pool.apyPct30D ?? 0),
 		Math.abs(pool.apyPct7D ?? 0),
-		Math.abs(pool.apyPct1D ?? 0),
-	].filter((v) => v !== null && !Number.isNaN(v)) as number[];
+		Math.abs((pool.apy ?? 0) - (pool.apyMean30d ?? pool.apy ?? 0)),
+	].filter((v) => Number.isFinite(v) && v > 0) as number[];
 
 	if (volatilityCandidates.length > 0) {
 		const volatility = Math.max(...volatilityCandidates);

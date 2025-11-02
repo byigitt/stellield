@@ -1,7 +1,30 @@
 "use client";
 
-import React, { useState } from "react";
-import { X, Info, ChevronDown, Check } from "lucide-react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import {
+  X,
+  Info,
+  ChevronDown,
+  Check,
+  Search,
+  Repeat2,
+  Flame,
+  Timer,
+  Coins,
+  PiggyBank,
+  Sparkles,
+  Wallet,
+  ArrowLeftRight,
+  BadgeCheck,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +39,8 @@ import {
 } from "@/components/ui/tooltip";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
+import { useWalletBalance } from "@/hooks/use-wallet-balance";
+import { useEthPrice } from "@/hooks/use-eth-price";
 
 interface DepositDialogProps {
   open: boolean;
@@ -44,18 +69,300 @@ interface Step {
   status: StepStatus;
 }
 
+interface YieldFlowState {
+  id: string;
+  status: StepStatus;
+}
+
+interface YieldFlowContext {
+  walletLabel: string;
+  walletAddress?: string;
+  depositUSDC: number;
+  depositXLM: number;
+  postSwapUSDC: number;
+  forwardSlippageUSDC: number;
+  forwardBridgeFeeUSDC: number;
+  mintedUSDC: number;
+  interestUSDC: number;
+  withdrawUSDC: number;
+  returnBridgeFeeUSDC: number;
+  returnSlippageUSDC: number;
+  exitFeeUSDC: number;
+  finalUSDC: number;
+  finalXLM: number;
+  netUSDCChange: number;
+  netXLMChange: number;
+  apy: number;
+  attestationMinutes: number;
+}
+
+interface YieldFlowDescriptor {
+  id: string;
+  duration: number;
+  icon: LucideIcon;
+  title: (ctx: YieldFlowContext) => string;
+  description: (ctx: YieldFlowContext) => string;
+  highlight?: (ctx: YieldFlowContext) => string | null;
+}
+
+const formatCurrency = (value: number, maximumFractionDigits = 2) =>
+  new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits,
+  }).format(value);
+
+const formatToken = (value: number, symbol: string, maximumFractionDigits = 2) =>
+  `${value.toLocaleString("en-US", {
+    minimumFractionDigits: value >= 1 ? 0 : Math.min(4, maximumFractionDigits),
+    maximumFractionDigits,
+  })} ${symbol}`;
+
+const formatCurrencyDelta = (value: number, maximumFractionDigits = 2) => {
+  const absolute = formatCurrency(Math.abs(value), maximumFractionDigits);
+  return `${value >= 0 ? "+" : "-"}${absolute}`;
+};
+
+const formatPercent = (value: number, maximumFractionDigits = 2) =>
+  `${(value * 100).toFixed(maximumFractionDigits)}%`;
+
+const FLOW_BLUEPRINT: readonly YieldFlowDescriptor[] = [
+  {
+    id: "analyze",
+    duration: 1200,
+    icon: Search,
+    title: () => "Routing Intelligence",
+    description: ctx =>
+      `Scanning Stellar order books for ${formatCurrency(ctx.depositUSDC)} funding from ${ctx.walletLabel}.`,
+    highlight: ctx =>
+      `Slippage guard set at ${formatCurrency(ctx.forwardSlippageUSDC, 2)} to protect execution`,
+  },
+  {
+    id: "swap",
+    duration: 1600,
+    icon: Repeat2,
+    title: () => "Swap XLM → USDC",
+    description: ctx =>
+      `Executing swap for ${formatToken(ctx.depositXLM, "XLM", 2)} with minimum ${formatCurrency(ctx.postSwapUSDC)} out.`,
+    highlight: ctx =>
+      `Forward bridge fee ${formatCurrency(ctx.forwardBridgeFeeUSDC, 2)} applied post-swap`,
+  },
+  {
+    id: "burn-stellar",
+    duration: 1500,
+    icon: Flame,
+    title: () => "Burn on Stellar",
+    description: ctx =>
+      `Retiring ${formatCurrency(ctx.postSwapUSDC)} on Stellar to initiate Circle CCTP message.`,
+  },
+  {
+    id: "attestation-forward",
+    duration: 1800,
+    icon: Timer,
+    title: () => "Circle Attestation",
+    description: ctx =>
+      `Waiting ~${ctx.attestationMinutes} minutes for attestation signature (fast-forwarded in demo).`,
+  },
+  {
+    id: "mint-ethereum",
+    duration: 1500,
+    icon: Coins,
+    title: () => "Mint on Ethereum",
+    description: ctx =>
+      `Claiming ${formatCurrency(ctx.mintedUSDC)} USDC on Sepolia for ${ctx.walletLabel}.`,
+  },
+  {
+    id: "supply-aave",
+    duration: 1500,
+    icon: PiggyBank,
+    title: () => "Supply to Aave V3",
+    description: ctx =>
+      `Supplying ${formatCurrency(ctx.mintedUSDC)} into Aave to start earning ${formatPercent(ctx.apy)} APY.`,
+  },
+  {
+    id: "yield-sim",
+    duration: 1700,
+    icon: Sparkles,
+    title: () => "Simulate 30 Days",
+    description: ctx =>
+      `Projecting 30 days of yield at ${formatPercent(ctx.apy)} based on current on-chain rates.`,
+    highlight: ctx =>
+      `Projected interest: ${formatCurrency(ctx.interestUSDC, 2)} USDC`,
+  },
+  {
+    id: "withdraw-aave",
+    duration: 1500,
+    icon: Wallet,
+    title: () => "Withdraw with Yield",
+    description: ctx =>
+      `Withdrawing ${formatCurrency(ctx.withdrawUSDC)} (principal + interest) back to the bridge layer.`,
+  },
+  {
+    id: "burn-eth",
+    duration: 1500,
+    icon: Flame,
+    title: () => "Burn on Ethereum",
+    description: ctx =>
+      `Burning ${formatCurrency(ctx.withdrawUSDC)} on Ethereum to send value back to Stellar.`,
+  },
+  {
+    id: "attestation-return",
+    duration: 1800,
+    icon: BadgeCheck,
+    title: () => "Return Attestation",
+    description: ctx =>
+      `Circle confirms availability for ${formatCurrency(ctx.finalUSDC)} to mint on Stellar.`,
+  },
+  {
+    id: "swap-back",
+    duration: 1600,
+    icon: ArrowLeftRight,
+    title: () => "Swap USDC → XLM",
+    description: ctx =>
+      `Finishing cycle: swapping ${formatCurrency(ctx.finalUSDC)} back to ${formatToken(ctx.finalXLM, "XLM", 2)}.`,
+    highlight: ctx =>
+      `Net change: ${formatCurrencyDelta(ctx.netUSDCChange, 2)} (${formatToken(ctx.netXLMChange, "XLM", 2)})`,
+  },
+];
+
+const FLOW_STEP_IDS = FLOW_BLUEPRINT.map(step => step.id);
+
+const buildInitialFlowState = (): YieldFlowState[] =>
+  FLOW_STEP_IDS.map((id, index) => ({
+    id,
+    status: index === 0 ? "active" : "pending",
+  }));
+
+const buildInitialSteps = (): Step[] => [
+  { id: "amount", label: "Enter an Amount", status: "active" },
+  { id: "approve", label: "Approve", status: "pending" },
+  { id: "deposit", label: "Deposit", status: "pending" },
+];
+
 export default function DepositDialog({ open, onOpenChange }: DepositDialogProps) {
-  const [depositAmount, setDepositAmount] = useState("");
+  const { wallets } = useWallets();
+  const { authenticated } = usePrivy();
+  const [depositAmount, setDepositAmount] = useState(MOCK_DATA.minDeposit.toString());
   const [currentStep, setCurrentStep] = useState(0);
-  const [steps, setSteps] = useState<Step[]>([
-    { id: "amount", label: "Enter an Amount", status: "active" },
-    { id: "approve", label: "Approve", status: "pending" },
-    { id: "deposit", label: "Deposit", status: "pending" },
-  ]);
+  const [steps, setSteps] = useState<Step[]>(buildInitialSteps);
+  const [flowSteps, setFlowSteps] = useState<YieldFlowState[]>(buildInitialFlowState);
+  const [flowStatus, setFlowStatus] = useState<"idle" | "running" | "completed">("idle");
+  const timersRef = useRef<number[]>([]);
+
+  const totalFlowDuration = useMemo(
+    () => FLOW_BLUEPRINT.reduce((acc, step) => acc + step.duration, 0),
+    []
+  );
+
+  const connectedWallet = wallets && wallets.length > 0 ? wallets[0] : undefined;
+  const walletAddress = connectedWallet?.address;
+  const walletLabel = walletAddress
+    ? `${walletAddress.slice(0, 6)}…${walletAddress.slice(-4)}`
+    : authenticated
+    ? "Connected Wallet"
+    : "Demo Wallet";
+  const {
+    balance: walletBalance,
+    balanceFormatted: walletBalanceFormatted,
+    isLoading: isWalletBalanceLoading,
+  } = useWalletBalance(walletAddress);
+  const { price: ethPrice } = useEthPrice();
+  const walletBalanceEth = Number.parseFloat(walletBalance);
+  const walletBalanceUsd =
+    Number.isFinite(walletBalanceEth) && Number.isFinite(ethPrice)
+      ? (walletBalanceEth * ethPrice).toFixed(2)
+      : "0.00";
+  const walletBalanceLabel = connectedWallet
+    ? isWalletBalanceLoading
+      ? "Loading…"
+      : `${walletBalanceFormatted} ETH (Sepolia • ≈ $${walletBalanceUsd})`
+    : "Connect a wallet to view balance";
+
+  const parsedDeposit = parseFloat(depositAmount || "0");
+  const depositUSDC = Number.isFinite(parsedDeposit) && parsedDeposit > 0 ? parsedDeposit : MOCK_DATA.minDeposit;
+
+  const apy = 0.0345;
+  const estimatedXlmUsd = 0.11;
+  const forwardSlippageBps = 5; // 0.05%
+  const returnSlippageBps = 5; // 0.05%
+  const bridgeFeeBps = 2; // 0.02%
+  const returnBridgeFeeBps = 2; // 0.02%
+  const attestationMinutes = 12;
+
+  const depositXLM = depositUSDC / estimatedXlmUsd;
+  const forwardSlippageUSDC = (depositUSDC * forwardSlippageBps) / 10_000;
+  const postSwapUSDC = depositUSDC - forwardSlippageUSDC;
+  const forwardBridgeFeeUSDC = (postSwapUSDC * bridgeFeeBps) / 10_000;
+  const mintedUSDC = postSwapUSDC - forwardBridgeFeeUSDC;
+  const interestUSDC = mintedUSDC * apy * (30 / 365);
+  const withdrawUSDC = mintedUSDC + interestUSDC;
+  const returnBridgeFeeUSDC = (withdrawUSDC * returnBridgeFeeBps) / 10_000;
+  const returnSlippageUSDC = (withdrawUSDC * returnSlippageBps) / 10_000;
+  const exitFeeUSDC = (withdrawUSDC * MOCK_DATA.exitFee) / 100;
+  const finalUSDC = withdrawUSDC - returnBridgeFeeUSDC - returnSlippageUSDC - exitFeeUSDC;
+  const finalXLM = finalUSDC / estimatedXlmUsd;
+  const netUSDCChange = finalUSDC - depositUSDC;
+  const netXLMChange = finalXLM - depositXLM;
+
+  const flowContext: YieldFlowContext = useMemo(
+    () => ({
+      walletLabel,
+      walletAddress,
+      depositUSDC,
+      depositXLM,
+      postSwapUSDC,
+      forwardSlippageUSDC,
+      forwardBridgeFeeUSDC,
+      mintedUSDC,
+      interestUSDC,
+      withdrawUSDC,
+      returnBridgeFeeUSDC,
+      returnSlippageUSDC,
+      exitFeeUSDC,
+      finalUSDC,
+      finalXLM,
+      netUSDCChange,
+      netXLMChange,
+      apy,
+      attestationMinutes,
+    }),
+    [
+      walletLabel,
+      walletAddress,
+      depositUSDC,
+      depositXLM,
+      postSwapUSDC,
+      forwardSlippageUSDC,
+      forwardBridgeFeeUSDC,
+      mintedUSDC,
+      interestUSDC,
+      withdrawUSDC,
+      returnBridgeFeeUSDC,
+      returnSlippageUSDC,
+      exitFeeUSDC,
+      finalUSDC,
+      finalXLM,
+      netUSDCChange,
+      netXLMChange,
+      apy,
+      attestationMinutes,
+    ]
+  );
 
   const handleMaxClick = () => {
-    // Mock balance - in real app this would come from wallet
-    setDepositAmount("10000");
+    if (!connectedWallet) {
+      setDepositAmount(MOCK_DATA.minDeposit.toString());
+      return;
+    }
+
+    const maxUsd = Number.parseFloat(walletBalanceUsd);
+    if (!Number.isFinite(maxUsd) || maxUsd <= 0) {
+      setDepositAmount(MOCK_DATA.minDeposit.toString());
+      return;
+    }
+
+    setDepositAmount(maxUsd.toFixed(2));
   };
 
   const handleDepositChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,21 +373,128 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
     }
   };
 
-  const handleNextStep = () => {
+  const clearFlowTimers = useCallback(() => {
+    timersRef.current.forEach(window.clearTimeout);
+    timersRef.current = [];
+  }, []);
+
+  const startYieldFlow = useCallback(() => {
+    clearFlowTimers();
+    setFlowSteps(buildInitialFlowState());
+    setFlowStatus("running");
+
+    let cumulativeDelay = 0;
+
+    FLOW_BLUEPRINT.forEach((_, index) => {
+      if (index === 0) return;
+      cumulativeDelay += FLOW_BLUEPRINT[index - 1].duration;
+
+      const timer = window.setTimeout(() => {
+        setFlowSteps(prev =>
+          prev.map((step, stepIndex) => {
+            if (stepIndex < index) {
+              return { ...step, status: "completed" };
+            }
+            if (stepIndex === index) {
+              return { ...step, status: "active" };
+            }
+            return { ...step, status: "pending" };
+          })
+        );
+      }, cumulativeDelay);
+
+      timersRef.current.push(timer);
+    });
+
+    const finalizeTimer = window.setTimeout(() => {
+      setFlowSteps(prev => prev.map(step => ({ ...step, status: "completed" })));
+      setFlowStatus("completed");
+    }, totalFlowDuration);
+
+    timersRef.current.push(finalizeTimer);
+  }, [clearFlowTimers, totalFlowDuration]);
+
+  const resetFlowState = useCallback(() => {
+    clearFlowTimers();
+    setFlowSteps(buildInitialFlowState());
+    setFlowStatus("idle");
+    setSteps(buildInitialSteps());
+    setCurrentStep(0);
+  }, [clearFlowTimers]);
+
+  const handlePrimaryAction = () => {
     if (currentStep < steps.length - 1) {
-      const newSteps = [...steps];
-      newSteps[currentStep].status = "completed";
-      newSteps[currentStep + 1].status = "active";
-      setSteps(newSteps);
+      setSteps(prev => {
+        const next = [...prev];
+        next[currentStep] = { ...next[currentStep], status: "completed" };
+        next[currentStep + 1] = { ...next[currentStep + 1], status: "active" };
+        return next;
+      });
       setCurrentStep(currentStep + 1);
+      return;
     }
+
+    setSteps(prev =>
+      prev.map((step, index) =>
+        index <= currentStep ? { ...step, status: "completed" } : step,
+      ),
+    );
+
+    if (flowStatus === "running") return;
+    startYieldFlow();
   };
+
+  useEffect(() => {
+    if (!open) {
+      resetFlowState();
+    }
+    return () => {
+      clearFlowTimers();
+    };
+  }, [open, clearFlowTimers, resetFlowState]);
 
   const receiptTokenAmount = depositAmount
     ? (parseFloat(depositAmount) * parseFloat(MOCK_DATA.exchangeRate)).toFixed(4)
     : "0";
 
-  const isButtonDisabled = !depositAmount || parseFloat(depositAmount) < MOCK_DATA.minDeposit;
+  const isDepositValid = depositAmount && parseFloat(depositAmount) >= MOCK_DATA.minDeposit;
+  const isPrimaryActionDisabled =
+    !isDepositValid ||
+    (currentStep === steps.length - 1 && flowStatus === "running");
+
+  const primaryActionLabel =
+    currentStep < steps.length - 1
+      ? steps[currentStep].label
+      : flowStatus === "running"
+      ? "Running Yield Simulation..."
+      : flowStatus === "completed"
+      ? "Replay Yield Simulation"
+      : "Start Yield Simulation";
+
+  const displaySteps = useMemo(() => {
+    const stateById = new Map(flowSteps.map(step => [step.id, step.status]));
+    return FLOW_BLUEPRINT.map(descriptor => {
+      const status = stateById.get(descriptor.id) ?? "pending";
+      return {
+        id: descriptor.id,
+        status,
+        icon: descriptor.icon,
+        title: descriptor.title(flowContext),
+        description: descriptor.description(flowContext),
+        highlight: descriptor.highlight?.(flowContext) ?? null,
+      };
+    });
+  }, [flowSteps, flowContext]);
+
+  const completedFlowSteps = displaySteps.filter(step => step.status === "completed").length;
+  const activeFlowStep = displaySteps.find(step => step.status === "active");
+  const activeIndex = displaySteps.findIndex(step => step.status === "active");
+  const flowProgress = Math.min(
+    100,
+    displaySteps.length ? (completedFlowSteps / displaySteps.length) * 100 : 0
+  );
+  const displayStepNumber = activeIndex >= 0 ? activeIndex + 1 : displaySteps.length;
+  const ActiveIcon = activeFlowStep?.icon;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -182,7 +596,111 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
           </div>
 
           {/* Right Panel - Deposit Form */}
-          <div className="space-y-6 p-8 flex-1 min-w-0">
+          <div className="space-y-4 p-6 flex-1 min-w-0">
+            {/* Yield Flow Visualizer - Only show when simulation is running */}
+            {flowStatus === "running" && (
+              <div className="max-w-[520px]">
+                <div className="rounded-2xl border border-gray-700/80 bg-gray-800/40 p-5 shadow-[0_20px_40px_rgba(15,23,42,0.25)]">
+                  <div className="flex items-start justify-between">
+                    <div>
+                      <p className="text-[11px] uppercase tracking-wide text-blue-400">Smart Routing</p>
+                      <h3 className="text-lg font-semibold text-white">Yield Flow Projection</h3>
+                    </div>
+                    <div className="text-right text-xs text-gray-400">
+                      Step {displayStepNumber} / {displaySteps.length}
+                    </div>
+                  </div>
+
+                  <div className="mt-4 h-2 rounded-full bg-gray-700/70">
+                    <div
+                      className="h-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-blue-400 transition-all duration-500"
+                      style={{ width: `${Math.max(flowProgress, flowProgress > 0 ? 10 : 6)}%` }}
+                    />
+                  </div>
+
+                  {activeFlowStep && ActiveIcon && (
+                    <div className="mt-4 rounded-xl border border-blue-500/40 bg-blue-500/10 px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-blue-400/40 bg-blue-500/20">
+                          <ActiveIcon className="h-5 w-5 text-blue-300" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-white">{activeFlowStep.title}</p>
+                          <p className="text-xs text-blue-100/80">{activeFlowStep.description}</p>
+                        </div>
+                      </div>
+                      {activeFlowStep.highlight && (
+                        <p className="mt-3 text-[11px] font-medium text-blue-200/90">
+                          {activeFlowStep.highlight}
+                        </p>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="mt-4 space-y-3 max-h-60 overflow-y-auto pr-1">
+                    {displaySteps.map(step => {
+                      const Icon = step.icon;
+                      const isActive = step.status === "active";
+                      const isCompleted = step.status === "completed";
+                      
+                      return (
+                        <div
+                          key={step.id}
+                          className={cn(
+                            "flex items-start gap-3 rounded-xl border px-3 py-2",
+                            isCompleted
+                              ? "border-green-500/40 bg-green-500/5"
+                              : isActive
+                              ? "border-blue-500/50 bg-blue-500/10 shadow-[0_0_25px_rgba(56,189,248,0.25)]"
+                              : "border-gray-700/60 bg-gray-800/40"
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              "flex h-9 w-9 items-center justify-center rounded-full border",
+                              isCompleted
+                                ? "border-green-500/60 bg-green-500/15 text-green-400"
+                                : isActive
+                                ? "border-blue-500/60 bg-blue-500/25 text-blue-200"
+                                : "border-gray-600/60 bg-gray-700/30 text-gray-500"
+                            )}
+                          >
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className={cn(
+                              "text-sm font-medium",
+                              isCompleted || isActive ? "text-white" : "text-gray-400"
+                            )}>{step.title}</p>
+                            <p className={cn(
+                              "text-[11px]",
+                              isCompleted || isActive ? "text-gray-400" : "text-gray-500"
+                            )}>{step.description}</p>
+                          </div>
+                          <span
+                            className={cn(
+                              "text-[10px] font-semibold uppercase tracking-wide",
+                              isCompleted
+                                ? "text-green-400"
+                                : isActive
+                                ? "text-blue-300"
+                                : "text-gray-600"
+                            )}
+                          >
+                            {isCompleted ? "Done" : isActive ? "Now" : "Queued"}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-4 text-[11px] text-gray-500">
+                    Route stitched: Stellar DEX → Circle CCTP → Ethereum Sepolia → Aave V3 → Return • Projected net {formatCurrencyDelta(flowContext.netUSDCChange, 2)}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Progress Steps */}
             <div className="relative mb-4 max-w-[480px]">
               <div className="flex items-start justify-between">
@@ -240,7 +758,10 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
 
             {/* Deposit Input */}
             <div className="space-y-2 max-w-[480px]">
-              <label className="text-gray-400 text-sm">Enter to Deposit</label>
+              <label className="text-gray-400 text-sm flex items-center justify-between">
+                <span>Enter to Deposit</span>
+                <span className="text-[11px] uppercase tracking-wide text-blue-400">Smart Routing</span>
+              </label>
               <div className="relative">
                 <div className="bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-3 flex items-center justify-between min-h-[64px]">
                   <input
@@ -267,21 +788,64 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
                   </div>
                 </div>
               </div>
+              
+              {/* Smart Routing Preview - Inline */}
+              {depositAmount && parseFloat(depositAmount) > 0 && (
+                <div className="mt-2 rounded-lg border border-blue-500/30 bg-blue-500/5 p-2 space-y-1.5">
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="text-gray-400">Route</span>
+                    <span className="text-blue-300 font-mono text-[9px]">Stellar → CCTP → ETH → Aave</span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-1.5 text-xs">
+                    <div className="bg-white/5 rounded px-1.5 py-1">
+                      <div className="text-gray-500 text-[9px]">Bridge Fee</div>
+                      <div className="text-white text-[11px] font-medium">{formatCurrency(forwardBridgeFeeUSDC + returnBridgeFeeUSDC, 2)}</div>
+                    </div>
+                    <div className="bg-white/5 rounded px-1.5 py-1">
+                      <div className="text-gray-500 text-[9px]">Slippage</div>
+                      <div className="text-white text-[11px] font-medium">{formatCurrency(forwardSlippageUSDC + returnSlippageUSDC, 2)}</div>
+                    </div>
+                    <div className="bg-emerald-500/10 rounded px-1.5 py-1">
+                      <div className="text-gray-500 text-[9px]">30d Yield</div>
+                      <div className="text-emerald-300 text-[11px] font-medium">{formatCurrency(interestUSDC, 2)}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between pt-1 border-t border-white/10">
+                    <span className="text-gray-400 text-[10px]">Net Return</span>
+                    <span className={cn(
+                      "text-xs font-semibold",
+                      netUSDCChange >= 0 ? "text-emerald-400" : "text-red-400"
+                    )}>
+                      {formatCurrencyDelta(netUSDCChange, 2)}
+                    </span>
+                  </div>
+                </div>
+              )}
+              
               <div className="flex justify-end">
-                <span className="text-gray-500 text-xs">Balance: 0</span>
+                <span className="text-gray-500 text-xs">
+                  Balance: {walletBalanceLabel}
+                </span>
               </div>
             </div>
 
             {/* Arrow Down */}
-            <div className="flex justify-start py-3 max-w-[480px]">
-              <svg className="w-5 h-5 text-gray-600 ml-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex justify-start py-2 max-w-[480px]">
+              <svg className="w-4 h-4 text-gray-600 ml-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
               </svg>
             </div>
 
             {/* Receipt Token */}
             <div className="space-y-2 max-w-[480px]">
-              <label className="text-gray-400 text-sm">Receipt Token</label>
+              <label className="text-gray-400 text-sm flex items-center justify-between">
+                <span>Receipt Token</span>
+                {depositAmount && parseFloat(depositAmount) > 0 && (
+                  <span className="text-[11px] text-emerald-400">
+                    APY {formatPercent(apy)}
+                  </span>
+                )}
+              </label>
               <div className="bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-3 flex items-center justify-between min-h-[64px]">
                 <span className="text-white text-2xl flex-1 min-w-0 truncate">
                   {receiptTokenAmount}
@@ -293,13 +857,41 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
                   <span className="text-white text-sm font-medium">yUSDC_USDC</span>
                 </div>
               </div>
+              
+              {/* Smart Routing Output Preview */}
+              {depositAmount && parseFloat(depositAmount) > 0 && (
+                <div className="mt-2 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-2 space-y-1.5">
+                  <div className="grid grid-cols-2 gap-1.5 text-xs">
+                    <div className="bg-white/5 rounded px-1.5 py-1">
+                      <div className="text-gray-500 text-[9px]">You Supply</div>
+                      <div className="text-white text-[11px] font-medium">{formatCurrency(mintedUSDC, 2)}</div>
+                    </div>
+                    <div className="bg-white/5 rounded px-1.5 py-1">
+                      <div className="text-gray-500 text-[9px]">Interest (30d)</div>
+                      <div className="text-emerald-300 text-[11px] font-medium">+{formatCurrency(interestUSDC, 2)}</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between pt-1 border-t border-white/10">
+                    <span className="text-gray-400 text-[10px]">Total Est.</span>
+                    <span className="text-emerald-400 text-xs font-semibold">
+                      {formatCurrency(withdrawUSDC, 2)}
+                    </span>
+                  </div>
+                  <div className="text-[9px] text-gray-500 text-center">
+                    Aave V3 • Auto-compound
+                  </div>
+                </div>
+              )}
+              
               <div className="flex justify-end">
-                <span className="text-gray-500 text-xs">Balance: 0</span>
+                <span className="text-gray-500 text-xs">
+                  Balance: {walletBalanceLabel}
+                </span>
               </div>
             </div>
 
             {/* Exchange Rate */}
-            <div className="flex justify-between items-center text-sm max-w-[480px]">
+            <div className="flex justify-between items-center text-xs max-w-[480px]">
               <span className="text-gray-400">Exchange Rate:</span>
               <span className="text-white">
                 1 USDC = {MOCK_DATA.exchangeRate} yUSDC_USDC
@@ -309,24 +901,23 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
             {/* Action Button */}
             <div className="max-w-[480px]">
               <Button
-                onClick={handleNextStep}
-                disabled={isButtonDisabled}
+                onClick={handlePrimaryAction}
+                disabled={isPrimaryActionDisabled}
                 className={cn(
-                  "w-full py-5 text-base font-medium transition-all",
-                  isButtonDisabled
+                  "w-full py-3 text-sm font-medium transition-all",
+                  isPrimaryActionDisabled
                     ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                     : currentStep === 0
                     ? "bg-gray-700 hover:bg-gray-600 text-white"
                     : "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white"
                 )}
               >
-                {currentStep === 0 ? "Enter an Amount" : steps[currentStep].label}
+                {primaryActionLabel}
               </Button>
             </div>
-
             {/* Min Deposit Warning */}
             {depositAmount && parseFloat(depositAmount) < MOCK_DATA.minDeposit && (
-              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg max-w-[480px]">
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg max-w-[520px]">
                 <p className="text-red-400 text-xs">
                   Minimum deposit amount is {MOCK_DATA.minDeposit.toLocaleString()} USDC
                 </p>

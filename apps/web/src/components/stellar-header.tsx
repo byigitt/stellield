@@ -38,13 +38,21 @@ import {
 } from "@/components/ui/popover";
 import { Card } from "@/components/ui/card";
 import { Info } from "lucide-react";
-import {
-  fetchDefiLlamaPools,
-} from "@/lib/data-sources";
-import {
-  computeRiskDistribution,
-  RISK_COLOR_SCHEME,
-} from "@/lib/metrics";
+import { fetchDefiLlamaPools } from "@/lib/data-sources";
+import { computeRiskDistribution, RISK_COLOR_SCHEME } from "@/lib/metrics";
+import { sepolia } from "viem/chains";
+
+const normalizeChainId = (value?: string | number | null) => {
+  if (typeof value === "number") {
+    return value;
+  }
+  if (typeof value === "string") {
+    const radix = value.startsWith("0x") ? 16 : 10;
+    const parsed = Number.parseInt(value, radix);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+  return undefined;
+};
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
@@ -61,10 +69,29 @@ export default function StellarHeader() {
   const [mounted, setMounted] = useState(false);
   
   const connectedWallet = wallets && wallets.length > 0 ? wallets[0] : null;
-  const walletAddress = connectedWallet?.address ? 
-    `${connectedWallet.address.slice(0, 6)}...${connectedWallet.address.slice(-4)}` : 
-    "";
-  
+  const walletAddress = connectedWallet?.address
+    ? `${connectedWallet.address.slice(0, 6)}...${connectedWallet.address.slice(-4)}`
+    : "";
+  const walletChainId = normalizeChainId(connectedWallet?.chainId);
+  const isOnSepolia = walletChainId === sepolia.id;
+  const networkIndicator = connectedWallet
+    ? isOnSepolia
+      ? {
+          dotClass: "bg-amber-400 animate-pulse",
+          label: "Sepolia Testnet",
+          tooltip: "Wallet connected to Ethereum Sepolia Testnet",
+        }
+      : {
+          dotClass: "bg-red-400",
+          label: "Wrong Network",
+          tooltip: `Wallet connected to chain ${connectedWallet?.chainId ?? "unknown"}. Switch to Ethereum Sepolia (chainId ${sepolia.id}).`,
+        }
+    : {
+        dotClass: "bg-amber-300/70",
+        label: "Sepolia Testnet",
+        tooltip: "Default network: Ethereum Sepolia Testnet",
+      };
+
   // Fetch wallet balance and ETH price
   const { balanceFormatted, isLoading: isLoadingBalance } = useWalletBalance(connectedWallet?.address);
   const { price: ethPrice } = useEthPrice();
@@ -92,7 +119,10 @@ export default function StellarHeader() {
     }
   };
 
-  const balanceUSD = (parseFloat(balanceFormatted) * ethPrice).toFixed(2);
+  const balanceValue = Number.parseFloat(balanceFormatted);
+  const balanceUSD = Number.isFinite(balanceValue) && Number.isFinite(ethPrice)
+    ? (balanceValue * ethPrice).toFixed(2)
+    : "0.00";
 
   return (
     <header className="glass-panel border-b border-white/[0.05] sticky top-0 z-50">
@@ -148,12 +178,12 @@ export default function StellarHeader() {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button className="flex items-center space-x-2 px-3 py-1.5 glass-panel rounded-lg cursor-default">
-                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                    <span className="text-xs text-gray-400">Mainnet</span>
+                    <div className={`w-2 h-2 rounded-full ${networkIndicator.dotClass}`}></div>
+                    <span className="text-xs text-gray-400">{networkIndicator.label}</span>
                   </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p className="text-xs">Connected to Stellar Mainnet</p>
+                  <p className="text-xs">{networkIndicator.tooltip}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -300,11 +330,16 @@ export default function StellarHeader() {
                       ) : (
                         <>
                           <div className="text-sm font-medium text-white">
-                            {balanceFormatted} ETH
+                            {balanceFormatted} ETH (Sepolia)
                           </div>
                           <div className="text-xs text-gray-500">
                             ≈ ${balanceUSD} USD
                           </div>
+                          {!isOnSepolia && connectedWallet && (
+                            <div className="text-[10px] text-red-400 mt-1">
+                              Switch wallet to Sepolia to ensure accurate balance.
+                            </div>
+                          )}
                         </>
                       )}
                     </div>

@@ -9,6 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import Image from "next/image";
 
 function XIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -83,19 +84,19 @@ export default function Home() {
             {/* Stats Section */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
               <div className="glass-card p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[120px] md:min-h-[140px]">
-                <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2">9.4%</div>
+                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">9.4%</div>
                 <div className="text-xs md:text-sm text-gray-400">Average APY</div>
               </div>
               <div className="glass-card p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[120px] md:min-h-[140px]">
-                <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2">$124.68M</div>
+                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">$124.68M</div>
                 <div className="text-xs md:text-sm text-gray-400">Total Value Locked</div>
               </div>
               <div className="glass-card p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[120px] md:min-h-[140px]">
-                <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2">4,988,537</div>
+                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">4,988,537</div>
                 <div className="text-xs md:text-sm text-gray-400">LST Staked</div>
               </div>
               <div className="glass-card p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[120px] md:min-h-[140px]">
-                <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2">$2,562</div>
+                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">$2,562</div>
                 <div className="text-xs md:text-sm text-gray-400">Per Holder</div>
               </div>
             </div>
@@ -589,8 +590,14 @@ export default function Home() {
             {/* Brand */}
             <div className="col-span-1">
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">S</span>
+                <div className="w-10 h-10 relative">
+                  <Image
+                    src="/logo-main.png"
+                    alt="Stellield Logo"
+                    width={40}
+                    height={40}
+                    className="object-contain"
+                  />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-lg font-semibold text-white">Stellield</span>
