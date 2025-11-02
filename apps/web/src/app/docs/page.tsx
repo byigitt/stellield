@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export default function DocsRedirect() {
 	useEffect(() => {
-		window.location.replace("http://localhost:3002/docs");
+		window.location.replace("https://docs.stellield.baris.world");
 	}, []);
 
 	return null;
