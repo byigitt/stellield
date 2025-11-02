@@ -1,4 +1,4 @@
-# Stellar Yield Aggregator
+# Stellield - Yield Aggregator
 
 A proof-of-concept cross-chain yield aggregator demonstrating automated XLM → SOL → Yield → XLM flow using Soroban smart contracts.
 
