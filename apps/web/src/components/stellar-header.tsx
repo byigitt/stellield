@@ -17,6 +17,8 @@ import {
   LogOut,
   Shield,
   Activity,
+  Menu,
+  X,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -68,6 +70,7 @@ export default function StellarHeader() {
   const { ready, authenticated, user, login, logout } = usePrivy();
   const { wallets } = useWallets();
   const [mounted, setMounted] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   const connectedWallet = wallets && wallets.length > 0 ? wallets[0] : null;
   const walletAddress = connectedWallet?.address
@@ -127,12 +130,12 @@ export default function StellarHeader() {
 
   return (
     <header className="glass-panel border-b border-white/[0.05] sticky top-0 z-50">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 sm:px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 relative">
+          <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-8">
+            <Link href="/" className="flex items-center space-x-1.5 sm:space-x-2">
+              <div className="w-8 sm:w-10 h-8 sm:h-10 relative">
                 <Image
                   src="/logo-main.png"
                   alt="Stellield Logo"
@@ -142,10 +145,10 @@ export default function StellarHeader() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-semibold text-white">
+                <span className="text-base sm:text-xl font-semibold text-white">
                   Stellield
                 </span>
-                <span className="text-xs text-gray-400 -mt-1">
+                <span className="text-[10px] sm:text-xs text-gray-400 -mt-0.5 sm:-mt-1">
                   Yield Aggregator
                 </span>
               </div>
@@ -173,28 +176,30 @@ export default function StellarHeader() {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center space-x-4">
-            {/* Network Status */}
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button className="flex items-center space-x-2 px-3 py-1.5 glass-panel rounded-lg cursor-default">
-                    <div className={`w-2 h-2 rounded-full ${networkIndicator.dotClass}`}></div>
-                    <span className="text-xs text-gray-400">{networkIndicator.label}</span>
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-xs">{networkIndicator.tooltip}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+          <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
+            {/* Network Status - Hidden on mobile */}
+            <div className="hidden sm:block">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <button className="flex items-center space-x-2 px-3 py-1.5 glass-panel rounded-lg cursor-default">
+                      <div className={`w-2 h-2 rounded-full ${networkIndicator.dotClass}`}></div>
+                      <span className="text-xs text-gray-400">{networkIndicator.label}</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs">{networkIndicator.tooltip}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
 
             {/* Risk Score */}
             <Popover>
               <PopoverTrigger asChild>
-                <button className="flex items-center space-x-2 px-3 py-1.5 glass-panel rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
-                  <Shield className="w-4 h-4 text-yellow-400" />
-                  <span className="text-xs font-medium text-yellow-400">
+                <button className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-3 py-1 sm:py-1.5 glass-panel rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
+                  <Shield className="w-3 sm:w-4 h-3 sm:h-4 text-yellow-400" />
+                  <span className="text-[10px] sm:text-xs font-medium text-yellow-400">
                     {isLoadingRisk ? "…" : riskGrade}
                   </span>
                 </button>
@@ -232,33 +237,35 @@ export default function StellarHeader() {
               </PopoverContent>
             </Popover>
 
-            {/* Activity */}
+            {/* Activity - Hidden on mobile */}
             <Button
               variant="ghost"
               size="sm"
-              className="text-gray-400 hover:text-white hover:bg-white/5"
+              className="hidden sm:flex text-gray-400 hover:text-white hover:bg-white/5"
             >
               <Activity className="w-4 h-4" />
             </Button>
 
-            {/* Language Selector */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-400 hover:text-white hover:bg-white/5"
-                >
-                  <Globe className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="glass-card border-white/10">
-                <DropdownMenuItem>English</DropdownMenuItem>
-                <DropdownMenuItem>Español</DropdownMenuItem>
-                <DropdownMenuItem>中文</DropdownMenuItem>
-                <DropdownMenuItem>日本語</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            {/* Language Selector - Hidden on mobile */}
+            <div className="hidden sm:block">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-400 hover:text-white hover:bg-white/5"
+                  >
+                    <Globe className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="glass-card border-white/10">
+                  <DropdownMenuItem>English</DropdownMenuItem>
+                  <DropdownMenuItem>Español</DropdownMenuItem>
+                  <DropdownMenuItem>中文</DropdownMenuItem>
+                  <DropdownMenuItem>日本語</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
             {/* Wallet Connection */}
             {mounted &&
@@ -266,25 +273,26 @@ export default function StellarHeader() {
                 <Button
                   onClick={login}
                   disabled={!ready}
-                  className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-6 flex items-center space-x-2 shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200"
+                  className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-3 sm:px-6 flex items-center space-x-2 shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200 text-sm sm:text-base"
                 >
                   <Wallet className="w-4 h-4" />
-                  <span>Connect Wallet</span>
+                  <span className="hidden sm:inline">Connect Wallet</span>
+                  <span className="sm:hidden">Connect</span>
                 </Button>
               ) : (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-4 shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] transition-all duration-200">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                          <span className="text-xs font-bold">
+                    <Button className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-2 sm:px-4 shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] transition-all duration-200">
+                      <div className="flex items-center space-x-1 sm:space-x-2">
+                        <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
+                          <span className="text-[10px] sm:text-xs font-bold">
                             {walletAddress.slice(0, 2).toUpperCase()}
                           </span>
                         </div>
-                        <span className="text-sm font-medium">
+                        <span className="text-xs sm:text-sm font-medium hidden sm:inline">
                           {walletAddress}
                         </span>
-                        <ChevronDown className="w-3 h-3" />
+                        <ChevronDown className="w-3 h-3 sm:w-3 sm:h-3" />
                       </div>
                     </Button>
                   </DropdownMenuTrigger>
@@ -364,9 +372,92 @@ export default function StellarHeader() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ))}
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden w-9 h-9 rounded-lg glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors ml-1"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="md:hidden fixed inset-0 top-16 bg-black/80 backdrop-blur-md z-40"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          {/* Menu Panel */}
+          <div className="md:hidden fixed inset-x-0 top-16 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="container mx-auto px-4 py-4">
+            {/* Navigation */}
+            <nav className="flex flex-col space-y-2">
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.label}
+                    href={item.href as any}
+                    className={`px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
+                      isActive
+                        ? "bg-gradient-to-r from-blue-500/30 to-purple-500/30 text-white border border-white/20"
+                        : "text-gray-300 hover:text-white hover:bg-white/10 bg-white/5"
+                    }`}
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </nav>
+
+            {/* Mobile Status Info */}
+            <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/[0.05]">
+              {/* Network Status */}
+              <div className="flex items-center space-x-2 px-3 py-1.5 bg-white/10 backdrop-blur-xl rounded-lg">
+                <div className={`w-2 h-2 rounded-full ${networkIndicator.dotClass}`}></div>
+                <span className="text-xs text-gray-300">{networkIndicator.label}</span>
+              </div>
+
+              {/* Risk Score */}
+              <div className="flex items-center space-x-2 px-3 py-1.5 bg-white/10 backdrop-blur-xl rounded-lg">
+                <Shield className="w-4 h-4 text-yellow-400" />
+                <span className="text-xs font-medium text-yellow-400">
+                  {isLoadingRisk ? "…" : riskGrade}
+                </span>
+              </div>
+            </div>
+
+            {/* Wallet Info in Mobile Menu */}
+            {mounted && connectedWallet && (
+              <div className="mt-4 p-3 bg-white/10 backdrop-blur-xl rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs text-gray-400">Wallet</span>
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400">
+                    {connectedWallet?.walletClientType === "privy" ? "Embedded" : "External"}
+                  </span>
+                </div>
+                <div className="text-sm font-medium text-white">{walletAddress}</div>
+                {!isLoadingBalance && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    {balanceFormatted} ETH ≈ ${balanceUSD}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        </>
+      )}
     </header>
   );
 }

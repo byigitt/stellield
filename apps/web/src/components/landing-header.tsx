@@ -2,7 +2,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Github, ExternalLink } from "lucide-react";
+import { Github, ExternalLink, Menu, X } from "lucide-react";
+import { useState } from "react";
 
 function XIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -36,14 +37,16 @@ const navItems = [
 ];
 
 export default function LandingHeader() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <header className="glass-panel border-b border-white/[0.05] sticky top-0 z-50">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 sm:px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 relative">
+          <div className="flex items-center space-x-4 sm:space-x-6 md:space-x-8">
+            <Link href="/" className="flex items-center space-x-1.5 sm:space-x-2">
+              <div className="w-8 sm:w-10 h-8 sm:h-10 relative">
                 <Image
                   src="/logo-main.png"
                   alt="Stellield Logo"
@@ -53,10 +56,10 @@ export default function LandingHeader() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-xl font-semibold text-white">
+                <span className="text-base sm:text-xl font-semibold text-white">
                   Stellield
                 </span>
-                <span className="text-xs text-gray-400 -mt-1">
+                <span className="text-[10px] sm:text-xs text-gray-400 -mt-0.5 sm:-mt-1">
                   Yield Aggregator
                 </span>
               </div>
@@ -82,9 +85,9 @@ export default function LandingHeader() {
           </div>
 
           {/* Right Section */}
-          <div className="flex items-center space-x-4">
-            {/* Social Media Links */}
-            <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1 sm:space-x-2 md:space-x-4">
+            {/* Social Media Links - Hidden on mobile */}
+            <div className="hidden sm:flex items-center space-x-2">
               <Link
                 href="https://x.com"
                 target="_blank"
@@ -114,14 +117,98 @@ export default function LandingHeader() {
             {/* Launch App Button */}
             <Link href="/dashboard">
               <Button
-                className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-6 shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200"
+                className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-3 sm:px-6 shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200 text-sm sm:text-base"
+              >
+                <span className="hidden sm:inline">Launch App</span>
+                <span className="sm:hidden">Launch</span>
+              </Button>
+            </Link>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden w-9 h-9 rounded-lg glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors ml-1"
+            >
+              {mobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="md:hidden fixed inset-0 top-16 bg-black/80 backdrop-blur-md z-40"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          {/* Menu Panel */}
+          <div className="md:hidden fixed inset-x-0 top-16 z-50 bg-black/95 backdrop-blur-xl border-t border-white/10 max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="container mx-auto px-4 py-4">
+            <nav className="flex flex-col space-y-2">
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  href={item.href as any}
+                  target={item.external ? "_blank" : undefined}
+                  rel={item.external ? "noopener noreferrer" : undefined}
+                  className="group flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 text-gray-300 hover:text-white hover:bg-white/10 bg-white/5"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <span>{item.label}</span>
+                  {item.external && (
+                    <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
+                  )}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Social Links in Mobile Menu */}
+            <div className="flex items-center space-x-2 mt-4 pt-4 border-t border-white/[0.05]">
+              <Link
+                href="https://x.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <XIcon className="w-4 h-4" />
+              </Link>
+              <Link
+                href="https://discord.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <DiscordIcon className="w-4 h-4" />
+              </Link>
+              <Link
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-lg glass-panel flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
+              >
+                <Github className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* Launch App Button in Mobile Menu */}
+            <Link href="/dashboard" className="block mt-4">
+              <Button
+                className="w-full bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white shadow-[0_4px_20px_rgb(0,0,0,0.1)] hover:shadow-[0_4px_20px_rgb(0,0,0,0.15)] hover:-translate-y-0.5 transition-all duration-200"
+                onClick={() => setMobileMenuOpen(false)}
               >
                 Launch App
               </Button>
             </Link>
           </div>
         </div>
-      </div>
+        </>
+      )}
     </header>
   );
 }

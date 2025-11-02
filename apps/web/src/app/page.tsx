@@ -35,7 +35,7 @@ export default function Home() {
         {/* Background Image with Shadow Effects */}
         <div className="absolute inset-0 -top-16">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-950/40 via-slate-950 to-black"></div>
-          <div 
+          <div
             className="absolute inset-0 opacity-60 blur-sm scale-105"
             style={{
               backgroundImage: 'url(/landing-page-bg.png)',
@@ -48,56 +48,56 @@ export default function Home() {
           <div className="absolute inset-0 shadow-[inset_0_0_200px_100px_rgba(0,0,0,0.9)]"></div>
           <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black via-black/50 to-transparent"></div>
           <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-          <div className="absolute left-0 top-0 bottom-0 w-96 bg-gradient-to-r from-black via-black/50 to-transparent"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-96 bg-gradient-to-l from-black via-black/50 to-transparent"></div>
+          <div className="absolute left-0 top-0 bottom-0 w-32 md:w-64 lg:w-96 bg-gradient-to-r from-black via-black/50 to-transparent"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-32 md:w-64 lg:w-96 bg-gradient-to-l from-black via-black/50 to-transparent"></div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-5xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel mb-8 text-sm text-blue-300 border border-blue-500/20">
-              <Sparkles className="w-4 h-4" />
+            <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full glass-panel mb-6 sm:mb-8 text-xs sm:text-sm text-blue-300 border border-blue-500/20">
+              <Sparkles className="w-3 sm:w-4 h-3 sm:h-4" />
               <span>Powered by Stellar Network</span>
             </div>
-            
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
+
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 sm:mb-8 leading-tight px-2 sm:px-0">
               <span className="text-white">The Decentralized</span>
               <br />
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                 Fixed Income Layer
               </span>
             </h1>
-            
-            <p className="text-lg md:text-xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4 sm:px-6 md:px-0">
               Unlock sustainable yields on Stellar with AI-powered aggregation
-              <br />
-              from everywhere into one simple platform.
+              <br className="hidden sm:block" />
+              <span className="sm:hidden"> </span>from everywhere into one simple platform.
             </p>
-            
-            <div className="flex items-center justify-center gap-4 mb-24">
+
+            <div className="flex items-center justify-center gap-4 mb-16 sm:mb-20 md:mb-24">
               <Link href="/dashboard">
-                <Button size="lg" className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-8 py-4 h-auto text-base font-semibold rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 transition-all duration-200">
+                <Button size="lg" className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-6 sm:px-8 py-3 sm:py-4 h-auto text-sm sm:text-base font-semibold rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 transition-all duration-200">
                   Launch App
                 </Button>
               </Link>
             </div>
 
             {/* Stats Section */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
-              <div className="glass-card p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[120px] md:min-h-[140px]">
-                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">9.4%</div>
-                <div className="text-xs md:text-sm text-gray-400">Average APY</div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 max-w-4xl mx-auto">
+              <div className="glass-card p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[100px] sm:min-h-[120px] md:min-h-[140px]">
+                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">9.4%</div>
+                <div className="text-[10px] sm:text-xs md:text-sm text-gray-400">Average APY</div>
               </div>
-              <div className="glass-card p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[120px] md:min-h-[140px]">
-                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">$124.68M</div>
-                <div className="text-xs md:text-sm text-gray-400">Total Value Locked</div>
+              <div className="glass-card p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[100px] sm:min-h-[120px] md:min-h-[140px]">
+                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">$124.68M</div>
+                <div className="text-[10px] sm:text-xs md:text-sm text-gray-400">Total Value Locked</div>
               </div>
-              <div className="glass-card p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[120px] md:min-h-[140px]">
-                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">4,988,537</div>
-                <div className="text-xs md:text-sm text-gray-400">LST Staked</div>
+              <div className="glass-card p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[100px] sm:min-h-[120px] md:min-h-[140px]">
+                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">4,988,537</div>
+                <div className="text-[10px] sm:text-xs md:text-sm text-gray-400">LST Staked</div>
               </div>
-              <div className="glass-card p-4 md:p-6 rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[120px] md:min-h-[140px]">
-                <div className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">$2,562</div>
-                <div className="text-xs md:text-sm text-gray-400">Per Holder</div>
+              <div className="glass-card p-3 sm:p-4 md:p-6 rounded-xl sm:rounded-2xl backdrop-blur-xl bg-white/5 border border-white/10 flex flex-col items-center justify-center text-center min-h-[100px] sm:min-h-[120px] md:min-h-[140px]">
+                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-1 md:mb-2">$2,562</div>
+                <div className="text-[10px] sm:text-xs md:text-sm text-gray-400">Per Holder</div>
               </div>
             </div>
           </div>
@@ -110,52 +110,52 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 md:py-32 relative bg-black overflow-hidden shadow-[inset_0_8px_16px_-8px_rgba(255,255,255,0.08)]">
+      <section className="py-12 sm:py-16 md:py-20 lg:py-32 relative bg-black overflow-hidden shadow-[inset_0_8px_16px_-8px_rgba(255,255,255,0.08)]">
         {/* Background with gradient */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900/60 via-black to-black"></div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6">
               Intelligent Yield Discovery
             </h2>
-            <p className="text-base md:text-lg text-gray-400 max-w-3xl mx-auto mb-8">
+            <p className="text-sm sm:text-base md:text-lg text-gray-400 max-w-3xl mx-auto mb-6 sm:mb-8 px-4 sm:px-6 md:px-0">
               Automated discovery of Stellar yield opportunities with AI-powered risk assessment
               and real-time portfolio optimization across DeFi protocols.
             </p>
             <Link href="/dashboard">
-              <Button className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-8 py-3 h-auto rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 transition-all duration-200">
+              <Button className="bg-white/10 hover:bg-white/15 backdrop-blur-xl border border-white/20 hover:border-white/30 text-white px-6 sm:px-8 py-2.5 sm:py-3 h-auto text-sm sm:text-base rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)] hover:-translate-y-0.5 transition-all duration-200">
                 View Opportunities
               </Button>
             </Link>
           </div>
 
           {/* Feature cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-5xl mx-auto mt-12 md:mt-16">
-            <div className="glass-card p-6 md:p-8 rounded-2xl text-center backdrop-blur-xl bg-gradient-to-br from-blue-500/10 to-blue-900/5 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500/30 to-blue-700/30 backdrop-blur-xl border border-blue-400/40 flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-blue-400" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 max-w-5xl mx-auto mt-8 sm:mt-12 md:mt-16">
+            <div className="glass-card p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl text-center backdrop-blur-xl bg-gradient-to-br from-blue-500/10 to-blue-900/5 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300">
+              <div className="w-12 sm:w-14 md:w-16 h-12 sm:h-14 md:h-16 mx-auto mb-3 sm:mb-4 rounded-lg sm:rounded-xl bg-gradient-to-br from-blue-500/30 to-blue-700/30 backdrop-blur-xl border border-blue-400/40 flex items-center justify-center">
+                <Sparkles className="w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-blue-400" />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">Automated Discovery</h3>
-              <p className="text-sm text-gray-400">Real-time scanning of Stellar protocols for yield opportunities</p>
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-1.5 sm:mb-2">Automated Discovery</h3>
+              <p className="text-xs sm:text-sm text-gray-400">Real-time scanning of Stellar protocols for yield opportunities</p>
             </div>
-            
-            <div className="glass-card p-6 md:p-8 rounded-2xl text-center backdrop-blur-xl bg-gradient-to-br from-purple-500/10 to-purple-900/5 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-purple-500/30 to-purple-700/30 backdrop-blur-xl border border-purple-400/40 flex items-center justify-center">
-                <Shield className="w-8 h-8 text-purple-400" />
+
+            <div className="glass-card p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl text-center backdrop-blur-xl bg-gradient-to-br from-purple-500/10 to-purple-900/5 border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300">
+              <div className="w-12 sm:w-14 md:w-16 h-12 sm:h-14 md:h-16 mx-auto mb-3 sm:mb-4 rounded-lg sm:rounded-xl bg-gradient-to-br from-purple-500/30 to-purple-700/30 backdrop-blur-xl border border-purple-400/40 flex items-center justify-center">
+                <Shield className="w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-purple-400" />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">Risk Scoring</h3>
-              <p className="text-sm text-gray-400">Multi-dimensional risk analysis with A-D tier ratings</p>
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-1.5 sm:mb-2">Risk Scoring</h3>
+              <p className="text-xs sm:text-sm text-gray-400">Multi-dimensional risk analysis with A-D tier ratings</p>
             </div>
-            
-            <div className="glass-card p-6 md:p-8 rounded-2xl text-center backdrop-blur-xl bg-gradient-to-br from-blue-500/10 to-purple-900/5 border border-blue-500/20 hover:border-purple-500/40 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-500/30 to-purple-700/30 backdrop-blur-xl border border-blue-400/40 flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-blue-400" />
+
+            <div className="glass-card p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl text-center backdrop-blur-xl bg-gradient-to-br from-blue-500/10 to-purple-900/5 border border-blue-500/20 hover:border-purple-500/40 transition-all duration-300">
+              <div className="w-12 sm:w-14 md:w-16 h-12 sm:h-14 md:h-16 mx-auto mb-3 sm:mb-4 rounded-lg sm:rounded-xl bg-gradient-to-br from-blue-500/30 to-purple-700/30 backdrop-blur-xl border border-blue-400/40 flex items-center justify-center">
+                <Sparkles className="w-6 sm:w-7 md:w-8 h-6 sm:h-7 md:h-8 text-blue-400" />
               </div>
-              <h3 className="text-lg md:text-xl font-bold text-white mb-2">AI Recommendations</h3>
-              <p className="text-sm text-gray-400">Machine learning-driven portfolio allocation suggestions</p>
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-white mb-1.5 sm:mb-2">AI Recommendations</h3>
+              <p className="text-xs sm:text-sm text-gray-400">Machine learning-driven portfolio allocation suggestions</p>
             </div>
           </div>
         </div>
