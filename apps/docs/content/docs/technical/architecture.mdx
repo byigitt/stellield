@@ -1,0 +1,374 @@
+---
+title: Platform Architecture
+description: Technical overview of Stellield's system design
+---
+
+# Platform Architecture
+
+Technical overview of how Stellield is built and how data flows through the system.
+
+## System Overview
+
+```
+┌─────────────────────────────────────────────────┐
+│              User Interface (Next.js)           │
+│  ┌──────────┐  ┌──────────┐  ┌──────────────┐  │
+│  │Dashboard │  │Portfolio │  │  Bridge      │  │
+│  │  View    │  │Simulator │  │  Estimator   │  │
+│  └──────────┘  └──────────┘  └──────────────┘  │
+└─────────────────────────────────────────────────┘
+                       │
+                       ↓ (tRPC / React Query)
+┌─────────────────────────────────────────────────┐
+│         Backend API (Elysia / tRPC)             │
+│  ┌─────────────┐  ┌──────────────┐             │
+│  │   Risk      │  │  Portfolio   │             │
+│  │  Analysis   │  │ Optimization │             │
+│  └─────────────┘  └──────────────┘             │
+└─────────────────────────────────────────────────┘
+           │                      │
+           ↓                      ↓
+┌─────────────────────┐  ┌────────────────────────┐
+│   Data Aggregation  │  │   Machine Learning     │
+│  ┌──────────────┐   │  │  ┌──────────────────┐  │
+│  │ DefiLlama    │   │  │  │ Risk Classifier   │  │
+│  │ Validation   │   │  │  │ APY Predictor     │  │
+│  │ Cloud        │   │  │  │ Portfolio Opt     │  │
+│  │ Horizon API  │   │  │  └──────────────────┘  │
+│  │ CoinGecko    │   │  │                        │
+│  └──────────────┘   │  └────────────────────────┘
+└─────────────────────┘
+```
+
+## Frontend Stack
+
+### Next.js 16 (App Router)
+- **Server Components**: SEO-optimized pages
+- **Client Components**: Interactive features
+- **Streaming**: Progressive page loading
+- **Route Handlers**: API routes
+
+### React Query
+- **Data Fetching**: Automatic caching and updates
+- **Mutations**: Optimistic updates
+- **Refetch**: Configurable intervals (10 min for most data)
+
+### TailwindCSS + shadcn/ui
+- **Styling**: Utility-first CSS
+- **Components**: Accessible, pre-built UI components
+- **Dark Mode**: Built-in theme support
+
+### Privy Authentication
+- **Wallet Connection**: Multi-wallet support
+- **Embedded Wallets**: Email-based wallets
+- **Session Management**: Secure authentication
+
+## Backend Stack
+
+### Elysia Server
+- **Fast**: Bun-powered TypeScript runtime
+- **Type-Safe**: End-to-end type safety
+- **Plugin Architecture**: Modular design
+
+### tRPC
+- **Type-Safe APIs**: Shared types between frontend/backend
+- **Automatic Validation**: Zod schemas
+- **Real-time Updates**: WebSocket support (planned)
+
+### Prisma ORM
+- **Database**: PostgreSQL
+- **Type Safety**: Generated TypeScript types
+- **Migrations**: Version-controlled schema changes
+
+## Data Layer
+
+### Primary Sources
+
+**ValidationCloud**:
+- Stellar RPC nodes
+- Soroban event monitoring
+- Real-time blockchain state
+- <1 second latency
+
+**DefiLlama**:
+- 2000+ protocol coverage
+- TVL aggregation
+- APY data
+- ML predictions
+
+**Horizon API**:
+- Stellar-specific data
+- Liquidity pools
+- Transaction history
+- Asset metadata
+
+**CoinGecko**:
+- Asset prices (XLM, USDC, etc.)
+- Market caps
+- Trading volumes
+
+### Caching Strategy
+
+```typescript
+// React Query cache configuration
+{
+  staleTime: 60_000,      // 1 minute
+  cacheTime: 300_000,     // 5 minutes
+  refetchInterval: 600_000 // 10 minutes
+}
+```
+
+**Cache Layers**:
+1. Browser (React Query)
+2. CDN (Next.js static assets)
+3. Server (Redis - planned)
+4. Database (PostgreSQL)
+
+## Machine Learning Pipeline
+
+### Model Training
+
+```python
+# Risk Classification Model
+- Algorithm: Random Forest
+- Features: 52 input variables
+- Training Data: 6 months historical
+- Retraining: Weekly
+- Accuracy: 87%
+
+# APY Prediction Model
+- Algorithm: LSTM Neural Network
+- Window: 30 days
+- Prediction: 7-day forward
+- Accuracy: ±2% MAE
+```
+
+### Inference
+
+**Real-time**:
+- Models served via Python microservice
+- REST API for predictions
+- <100ms response time
+
+**Batch**:
+- Nightly updates for all protocols
+- Historical backtesting
+- Performance monitoring
+
+## Security Architecture
+
+### Authentication Flow
+
+```
+1. User clicks "Connect Wallet"
+   ↓
+2. Privy modal opens
+   ↓
+3. User selects wallet / enters email
+   ↓
+4. Wallet signs message (no gas)
+   ↓
+5. Privy verifies signature
+   ↓
+6. Session token issued (JWT)
+   ↓
+7. Token stored in secure cookie
+```
+
+### API Security
+
+**Rate Limiting**:
+- Per IP: 100 requests/minute
+- Per User: 1000 requests/hour
+
+**CORS**:
+- Strict origin checking
+- Credentials required
+
+**Headers**:
+- HSTS enforced
+- CSP policies
+- X-Frame-Options
+
+### Data Privacy
+
+**No Sensitive Data Stored**:
+- Wallet addresses only (public)
+- No private keys
+- No transaction history
+- No personal info (except email for embedded wallets)
+
+## Performance Optimizations
+
+### Frontend
+
+**Code Splitting**:
+- Route-based splitting
+- Dynamic imports for heavy components
+- Lazy loading charts
+
+**Image Optimization**:
+- Next.js Image component
+- WebP format
+- Lazy loading
+- Blur placeholders
+
+**Bundle Size**:
+- Tree shaking
+- Minimal dependencies
+- Gzip compression
+
+### Backend
+
+**Database Indexing**:
+```sql
+CREATE INDEX idx_pools_chain ON pools(chain);
+CREATE INDEX idx_pools_apy ON pools(apy DESC);
+CREATE INDEX idx_pools_tvl ON pools(tvl_usd DESC);
+```
+
+**Query Optimization**:
+- Select only needed fields
+- Pagination for large datasets
+- Aggregate on database side
+
+### CDN & Caching
+
+**Vercel Edge Network**:
+- Global CDN
+- Edge functions
+- Automatic invalidation
+
+## Monitoring & Observability
+
+### Metrics Tracked
+
+**Application**:
+- Response times
+- Error rates
+- Cache hit ratios
+- API call volumes
+
+**Business**:
+- Active users
+- Protocols tracked
+- Yield opportunities
+- Bridge estimates calculated
+
+### Error Tracking
+
+**Sentry Integration**:
+- Frontend errors
+- Backend exceptions
+- Performance monitoring
+- User feedback
+
+### Logging
+
+**Structured Logs**:
+```typescript
+{
+  level: 'info',
+  timestamp: '2025-11-02T08:00:00Z',
+  service: 'api',
+  action: 'risk_calculation',
+  protocol: 'Soroban AMM',
+  tier: 'A',
+  score: 3.625,
+  duration_ms: 42
+}
+```
+
+## Deployment
+
+### Infrastructure
+
+**Frontend**:
+- Vercel (Next.js hosting)
+- Edge functions
+- Automatic preview deploys
+
+**Backend**:
+- Railway / Fly.io
+- PostgreSQL database
+- Redis cache (planned)
+
+**CI/CD**:
+- GitHub Actions
+- Automated tests
+- Type checking
+- Lint checks
+
+### Environment Variables
+
+```bash
+# Database
+DATABASE_URL=postgresql://...
+
+# APIs
+DEFILLAMA_API_KEY=...
+COINGECKO_API_KEY=...
+VALIDATION_CLOUD_RPC=...
+
+# Auth
+PRIVY_APP_ID=...
+PRIVY_APP_SECRET=...
+
+# Misc
+NEXT_PUBLIC_APP_URL=...
+```
+
+## Scalability Considerations
+
+### Current Capacity
+
+- **Users**: 10,000 concurrent
+- **Protocols**: 100+ tracked
+- **Data Points**: 1M+ per day
+- **API Calls**: 100k per hour
+
+### Future Scaling
+
+**Horizontal Scaling**:
+- Multiple API servers
+- Load balancer
+- Database read replicas
+
+**Vertical Scaling**:
+- Larger server instances
+- More memory for ML models
+- Faster database
+
+## Technology Choices
+
+### Why Next.js?
+- SSR for SEO
+- React ecosystem
+- TypeScript support
+- Vercel integration
+
+### Why tRPC?
+- End-to-end type safety
+- No code generation
+- Easy to use
+- Great DX
+
+### Why Privy?
+- Multi-wallet support
+- Embedded wallets
+- Good UX
+- Secure by default
+
+### Why DefiLlama?
+- Comprehensive data
+- Free tier available
+- ML predictions included
+- Community trusted
+
+## Next Steps
+
+<Cards>
+  <Card title="Data Sources" href="/docs/technical/data-sources" description="Detailed API documentation" />
+  <Card title="Integrations" href="/docs/technical/integrations" description="Third-party services" />
+  <Card title="Contributing" href="/docs/developers/contributing" description="Contribute to the project" />
+</Cards>

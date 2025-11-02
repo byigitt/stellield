@@ -1,0 +1,174 @@
+---
+title: Risk Tier Classifications
+description: Understanding Stellield's A-D risk tier system
+---
+
+# Risk Tier Classifications
+
+Every yield opportunity on Stellield receives a letter grade from A to D based on comprehensive risk analysis.
+
+## Tier A - Low Risk
+
+**Characteristics**:
+- ✅ Multiple security audits from top firms
+- ✅ >1 year operational history
+- ✅ >$10M TVL with deep liquidity
+- ✅ Known, doxxed team
+- ✅ Stable APY (<2% volatility)
+- ✅ Non-custodial architecture
+- ✅ Max drawdown <10%
+
+**Examples**:
+- Soroban AMM (USDC pools)
+- Aquarius Rewards (established vaults)
+- Major Stellar DEX pools
+
+**Suitable For**: Conservative investors, large capital allocations (up to 40% of portfolio)
+
+**Typical APY Range**: 5-10%
+
+## Tier B - Medium Risk
+
+**Characteristics**:
+- ✅ At least one security audit
+- ✅ 6-12 months operational history
+- ✅ $1M-$10M TVL
+- ✅ Active development team
+- ✅ Moderate APY volatility (2-5%)
+- ✅ Good liquidity depth
+- ⚠️ Max drawdown 10-25%
+
+**Examples**:
+- Stellar DEX LP positions
+- StellarX Savings
+- Newer Soroban protocols
+
+**Suitable For**: Moderate risk tolerance, balanced portfolios (up to 25% allocation)
+
+**Typical APY Range**: 8-15%
+
+## Tier C - Higher Risk
+
+**Characteristics**:
+- ⚠️ New protocol (<6 months)
+- ⚠️ Single or no audit
+- ⚠️ $500k-$1M TVL
+- ⚠️ Anonymous or new team
+- ⚠️ High APY volatility (>5%)
+- ⚠️ Limited liquidity
+- ❌ Max drawdown >25%
+
+**Examples**:
+- Recently launched protocols
+- Experimental yield strategies
+- Smaller liquidity pools
+
+**Suitable For**: Experienced users comfortable with risk (up to 15% allocation)
+
+**Typical APY Range**: 12-20%
+
+## Tier D - High Risk
+
+**Characteristics**:
+- ❌ No audit or failed audit
+- ❌ <3 months operational
+- ❌ <$500k TVL
+- ❌ Anonymous team
+- ❌ Extreme APY volatility
+- ❌ Very limited liquidity
+- ❌ Significant smart contract risks
+
+**Examples**:
+- Brand new launches
+- Unaudited experimental protocols
+- High-leverage strategies
+
+**Suitable For**: Advanced users only, very small allocations (<5% of portfolio)
+
+**Typical APY Range**: 20%+
+
+> ⚠️ **Warning**: Tier D protocols carry significant risk of total loss. Only invest what you can afford to lose completely.
+
+## Tier Comparison Table
+
+| Factor | Tier A | Tier B | Tier C | Tier D |
+|--------|--------|--------|--------|--------|
+| **Audits** | Multiple | ≥1 | 0-1 | None |
+| **Age** | >1 year | 6-12 mo | 3-6 mo | <3 mo |
+| **TVL** | >$10M | $1-10M | $0.5-1M | <$500k |
+| **Team** | Doxxed | Known | Mixed | Anon |
+| **Liquidity** | Excellent | Good | Fair | Poor |
+| **Max DD** | <10% | 10-25% | 25-40% | >40% |
+| **Volatility** | Very Low | Low | Medium | High |
+
+## How Tiers Are Calculated
+
+Risk tiers use a weighted scoring system across 5 dimensions:
+
+```
+Total Score = 
+  (Protocol Integrity × 35%) +
+  (Liquidity & Execution × 25%) +
+  (Performance Stability × 15%) +
+  (Network & Custody × 15%) +
+  (Operational Signals × 10%)
+```
+
+### Score to Tier Mapping
+
+- **≥3.0**: Tier A
+- **1.0 to 2.9**: Tier B
+- **-1.5 to 0.9**: Tier C
+- **<-1.5**: Tier D
+
+See [Scoring Methodology](/docs/risk/scoring-methodology) for details.
+
+## Tier Changes
+
+Risk tiers are updated hourly and can change based on:
+
+- **Security events**: Exploits, pauses, or upgrades
+- **Performance**: Sustained APY changes
+- **Liquidity**: TVL or depth fluctuations
+- **Audits**: New security reviews
+- **Age**: Protocols maturing over time
+
+**Notifications**: Stellield alerts users to tier changes for protocols in their watchlist.
+
+## Best Practices by Tier
+
+### For Tier A
+
+- Safe for larger allocations
+- Lower returns but stable
+- Good for long-term holds
+- Monitor quarterly
+
+### For Tier B
+
+- Balanced risk/reward
+- Diversify across multiple B protocols
+- Monitor monthly
+- Be ready to exit if downgraded
+
+### For Tier C
+
+- Small allocations only
+- Monitor weekly
+- Have exit strategy ready
+- Understand protocol mechanics fully
+
+### For Tier D
+
+- Experimental capital only
+- Monitor daily
+- Exit quickly if issues arise
+- Expect high volatility
+
+## Next Steps
+
+<Cards>
+  <Card title="Scoring Methodology" href="/docs/risk/scoring-methodology" description="Detailed scoring algorithm" />
+  <Card title="Risk Assessment" href="/docs/features/risk-assessment" description="How risk is evaluated" />
+  <Card title="Portfolio Simulator" href="/docs/features/portfolio-simulator" description="Test risk-adjusted strategies" />
+</Cards>

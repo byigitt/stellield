@@ -1,0 +1,328 @@
+---
+title: Bridge Cost Estimator
+description: Calculate cross-chain transfer costs and compare bridge options
+---
+
+# Bridge Cost Estimator
+
+Accurately estimate the total cost of moving assets across chains with our comprehensive bridge cost calculator.
+
+## Supported Bridges
+
+Stellield tracks three major bridge options for cross-chain transfers:
+
+<Cards>
+  <Card title="Circle CCTP" description="$0 protocol fees - Native USDC transfers" />
+  <Card title="Soroban Bridge" description="Official Stellar Foundation bridge" />
+  <Card title="Wormhole" description="Multi-chain guardian network" />
+</Cards>
+
+## How to Use
+
+### Step 1: Select Bridge
+
+Choose from available bridge options:
+
+- **Circle CCTP**: Best for USDC transfers
+- **Soroban Bridge**: For XLM ↔ Ethereum (wXLM)
+- **Wormhole**: For Solana and Polygon routes
+
+### Step 2: Enter Amount
+
+Input the amount you want to bridge in XLM:
+
+```
+Amount: 1,000 XLM
+≈ $110 USD
+
+[Max] button sets to wallet balance
+```
+
+### Step 3: Review Estimate
+
+See complete cost breakdown:
+
+```
+Notional:        1,000 XLM ($110.00)
+Bridge Fee:      $0.00
+Gas Cost:        $0.12
+Slippage:        $0.06
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Cost:      $0.18 (0.16%)
+Est. Received:   $109.82
+Effective Cost:  16 basis points
+```
+
+## Cost Components
+
+### 1. Bridge Fee
+
+Protocol-level fees charged by the bridge:
+
+| Bridge | Base Fee | Variable Fee |
+|--------|----------|--------------|
+| CCTP | $0.00 | 0 bps |
+| Soroban | $2.50 | 20 bps |
+| Wormhole | $1.80 | 15 bps |
+
+**Calculation**: `Base Fee + (Amount × Variable Fee / 10,000)`
+
+### 2. Gas Costs
+
+Transaction execution fees on destination chain:
+
+| Bridge | Base Gas | Variable Gas |
+|--------|----------|--------------|
+| CCTP | $0.12 | 5 bps |
+| Soroban | $1.50 | 7 bps |
+| Wormhole | $2.80 | 8 bps |
+
+**Why Variable?**:
+- Larger amounts require more gas for verification
+- Complex transactions cost more
+- Network congestion can increase costs
+
+### 3. Slippage Buffer
+
+Expected price movement during transfer:
+
+| Bridge | Slippage |
+|--------|----------|
+| CCTP | 5 bps |
+| Soroban | 20 bps |
+| Wormhole | 25 bps |
+
+**Note**: Actual slippage may be lower. This is a conservative estimate.
+
+### 4. Total Cost
+
+Sum of all components:
+```
+Total = Bridge Fee + Gas + Slippage
+Effective Cost (bps) = (Total / Amount) × 10,000
+```
+
+## Bridge Comparison
+
+### Circle CCTP
+
+**Best For**: USDC transfers between supported networks
+
+**Advantages**:
+- ✅ $0 protocol fees
+- ✅ Native USDC (no wrapped tokens)
+- ✅ Burn & mint mechanism
+- ✅ Fast settlement (~5 minutes)
+- ✅ High volume capacity
+
+**Disadvantages**:
+- ❌ Only supports USDC
+- ❌ Limited to specific chains
+- ❌ Requires gas on both chains
+
+**Supported Routes**:
+- Stellar ↔ Ethereum
+- Stellar ↔ Base
+- Stellar ↔ Avalanche
+- Stellar ↔ Solana
+
+### Soroban Bridge
+
+**Best For**: XLM and Stellar assets to Ethereum
+
+**Advantages**:
+- ✅ Official Stellar Foundation bridge
+- ✅ Audited smart contracts
+- ✅ Custody verification
+- ✅ Supports native Stellar assets
+
+**Disadvantages**:
+- ❌ Higher fees than CCTP
+- ❌ Only Ethereum destination
+- ❌ Creates wrapped tokens (wXLM)
+- ❌ Custody window (~5 minutes)
+
+**Supported Routes**:
+- Stellar ↔ Ethereum
+
+### Wormhole
+
+**Best For**: Multi-chain strategies, Solana routes
+
+**Advantages**:
+- ✅ Widest chain support
+- ✅ Guardian network security
+- ✅ Fast finality (~3 minutes)
+- ✅ High liquidity
+
+**Disadvantages**:
+- ❌ Moderate fees
+- ❌ Wrapped asset complexity
+- ❌ Guardian trust assumptions
+- ❌ Higher gas costs
+
+**Supported Routes**:
+- Stellar ↔ Solana
+- Stellar ↔ Ethereum
+- Stellar ↔ Polygon
+
+## Size Recommendations
+
+### Minimum Amounts
+
+| Bridge | Minimum | Reason |
+|--------|---------|--------|
+| CCTP | $10 | Protocol minimum |
+| Soroban | $25 | Fee efficiency |
+| Wormhole | $50 | Guardian costs |
+
+**Below minimum**: Fees eat too much of your transfer.
+
+### Maximum Amounts
+
+| Bridge | Maximum | Reason |
+|--------|---------|--------|
+| CCTP | None | Deep liquidity |
+| Soroban | None* | Custody varies |
+| Wormhole | None* | Per-route limits |
+
+*Check with bridge operator for large transfers (>$100k)
+
+### Optimal Range
+
+**$1,000 - $50,000**: Sweet spot for most bridges where:
+- Fees are <0.5% of transfer
+- Liquidity is abundant
+- Settlement is fast
+- Slippage is minimal
+
+## Time Estimates
+
+Average time to complete bridge transfers:
+
+| Bridge | Time | Steps |
+|--------|------|-------|
+| CCTP | 5-10 min | Burn → Attest → Mint |
+| Soroban | 5-15 min | Lock → Verify → Release |
+| Wormhole | 3-8 min | Lock → Guardian → Unlock |
+
+**Factors affecting time**:
+- Source chain finality
+- Destination chain congestion
+- Guardian/validator response time
+- Your gas price (if applicable)
+
+## Live Bridge Stats
+
+The estimator shows real-time metrics:
+
+### 24h Volume
+How much was bridged in the last 24 hours:
+- Indicates liquidity availability
+- Higher volume = more reliable
+- Shows network health
+
+### 7d Volume
+Weekly bridge activity:
+- Trend indicator
+- Capacity verification
+- Market sentiment
+
+### Previous Day Transactions
+Number of transfers completed:
+- Activity level
+- User confidence
+- Operational status
+
+## Cost Optimization Tips
+
+### Choose the Right Bridge
+
+1. **For USDC**: Always use CCTP ($0 fees)
+2. **For XLM**: Soroban Bridge to Ethereum
+3. **For Solana**: Wormhole is fastest
+4. **For multiple hops**: Calculate total cost
+
+### Batch Transfers
+
+Instead of many small transfers:
+- **Bad**: 10 × $100 = $1.80 total fees
+- **Good**: 1 × $1,000 = $0.18 total fees
+
+**Savings**: 10x more cost effective
+
+### Timing
+
+Bridge during off-peak hours:
+- **Ethereum**: Late night/early morning UTC
+- **Lower gas**: Weekends typically cheaper
+- **Less slippage**: Lower volume periods
+
+### Amount Sweet Spots
+
+Some amounts have better effective costs:
+
+```
+$50:    2.0% effective cost
+$500:   0.4% effective cost ← Better
+$5000:  0.2% effective cost ← Best
+$50000: 0.15% effective cost
+```
+
+## Warnings & Limits
+
+### Below Minimum
+
+```
+⚠️ Below recommended size
+Minimum: $25 (~227 XLM)
+Current: $10
+
+Fees will be >4% of transfer
+```
+
+### Above Maximum
+
+```
+⚠️ Exceeds automated quote
+Maximum: $100,000
+Current: $150,000
+
+Consider splitting into multiple transfers
+```
+
+### Wrong Network
+
+```
+❌ Wallet on wrong network
+Expected: Ethereum Sepolia (11155111)
+Detected: Ethereum Mainnet (1)
+
+Switch networks to proceed
+```
+
+## FAQ
+
+**Q: Are these real-time prices?**
+A: Yes, updated every 5 minutes with live bridge data.
+
+**Q: Why do estimates vary?**
+A: Gas prices fluctuate with network congestion.
+
+**Q: Can I get a refund if costs are higher?**
+A: No, estimates are not guarantees. Actual costs may vary ±10%.
+
+**Q: Which bridge is safest?**
+A: CCTP (official Circle) and Soroban (Stellar Foundation) are most trusted.
+
+**Q: How accurate are time estimates?**
+A: Typically within ±50% under normal conditions.
+
+## Next Steps
+
+<Cards>
+  <Card title="Bridge Details: CCTP" href="/docs/bridge/cctp" description="Deep dive into Circle CCTP" />
+  <Card title="Bridge Details: Soroban" href="/docs/bridge/soroban-bridge" description="Soroban Bridge specifics" />
+  <Card title="Bridge Details: Wormhole" href="/docs/bridge/wormhole" description="Wormhole integration" />
+  <Card title="Cost Comparison" href="/docs/bridge/cost-comparison" description="Side-by-side bridge comparison" />
+</Cards>

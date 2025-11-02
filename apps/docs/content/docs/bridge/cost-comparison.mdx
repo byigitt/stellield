@@ -1,0 +1,204 @@
+---
+title: Bridge Cost Comparison
+description: Side-by-side comparison of all bridge options
+---
+
+# Bridge Cost Comparison
+
+Compare costs, speeds, and features across all supported bridges to find the best option for your needs.
+
+## Quick Comparison Table
+
+| Bridge | Asset | Min Amount | Base Fee | Variable Fee | Avg Time | Chains |
+|--------|-------|------------|----------|--------------|----------|--------|
+| **CCTP** | USDC | $10 | $0 | 0% | 5-10 min | 5+ |
+| **Soroban** | XLM | $25 | $2.50 | 0.20% | 5-15 min | ETH only |
+| **Wormhole** | Any | $50 | $1.80 | 0.15% | 3-8 min | 20+ |
+
+## Cost Examples
+
+### Small Transfer ($100)
+
+| Bridge | Protocol Fee | Gas | Total | Effective % |
+|--------|--------------|-----|-------|-------------|
+| CCTP | $0.00 | $12 | $12.00 | 12.0% ❌ |
+| Soroban | $2.70 | $15 | $17.70 | 17.7% ❌ |
+| Wormhole | $1.95 | $12 | $13.95 | 14.0% ❌ |
+
+> **Verdict**: Too expensive for small amounts. Consider waiting to batch.
+
+### Medium Transfer ($1,000)
+
+| Bridge | Protocol Fee | Gas | Total | Effective % |
+|--------|--------------|-----|-------|-------------|
+| CCTP | $0.00 | $12 | $12.00 | 1.2% ✅ |
+| Soroban | $4.50 | $15 | $19.50 | 2.0% ⚠️ |
+| Wormhole | $3.30 | $12 | $15.30 | 1.5% ✅ |
+
+> **Verdict**: CCTP best for USDC, Wormhole competitive for others.
+
+### Large Transfer ($10,000)
+
+| Bridge | Protocol Fee | Gas | Total | Effective % |
+|--------|--------------|-----|-------|-------------|
+| CCTP | $0.00 | $12 | $12.00 | 0.12% ✅✅ |
+| Soroban | $22.50 | $15 | $37.50 | 0.38% ✅ |
+| Wormhole | $16.80 | $12 | $28.80 | 0.29% ✅ |
+
+> **Verdict**: All reasonable. CCTP cheapest for USDC.
+
+## Feature Comparison
+
+### Security
+
+| Bridge | Model | Audits | Track Record | Trust |
+|--------|-------|--------|--------------|-------|
+| CCTP | Centralized (Circle) | ✅ Multiple | ✅ Excellent | High |
+| Soroban | Validator Set | ✅ Multiple | ✅ Good | High |
+| Wormhole | Guardian Network | ✅ Multiple | ⚠️ 1 incident | Medium-High |
+
+### Speed
+
+| Bridge | Fastest | Average | Slowest |
+|--------|---------|---------|---------|
+| CCTP | 3 min | 7 min | 15 min |
+| Soroban | 3 min | 10 min | 30 min |
+| Wormhole | 2 min | 5 min | 15 min |
+
+**Winner**: Wormhole (fastest average)
+
+### Liquidity
+
+| Bridge | TVL | Daily Volume | Depth Rating |
+|--------|-----|--------------|--------------|
+| CCTP | $2B+ | $100M+ | ⭐⭐⭐⭐⭐ |
+| Soroban | $45M | $5M | ⭐⭐⭐ |
+| Wormhole | $5B+ | $500M+ | ⭐⭐⭐⭐⭐ |
+
+**Winner**: Tie (CCTP for USDC, Wormhole for others)
+
+### Chain Support
+
+| Bridge | Stellar | Ethereum | Solana | Other |
+|--------|---------|----------|--------|-------|
+| CCTP | ✅ | ✅ | ✅ | Base, Avax |
+| Soroban | ✅ | ✅ | ❌ | ❌ |
+| Wormhole | ✅ | ✅ | ✅ | 17+ chains |
+
+**Winner**: Wormhole (most chains)
+
+## Use Case Recommendations
+
+### For USDC Transfers
+
+**Best Choice**: Circle CCTP
+
+**Why**:
+- $0 protocol fees
+- Native USDC (no wrapping)
+- Widely supported
+- Trusted by Circle
+
+### For XLM to Ethereum
+
+**Best Choice**: Soroban Bridge
+
+**Why**:
+- Official Stellar Foundation
+- Audited and trusted
+- Direct XLM support
+
+### For Multi-Chain Strategies
+
+**Best Choice**: Wormhole
+
+**Why**:
+- 20+ chains supported
+- Fast transfers
+- High liquidity
+- Flexible routing
+
+### For Large Amounts (>$10k)
+
+**Best Choice**: CCTP (USDC) or Wormhole (others)
+
+**Why**:
+- Lowest effective cost %
+- Deep liquidity
+- Battle-tested
+
+## Decision Tree
+
+```
+Need to bridge? → What asset?
+
+USDC → CCTP (always)
+
+XLM → Where to?
+  ├─ Ethereum only → Soroban Bridge
+  └─ Other chains → Wormhole
+
+Other asset → Wormhole
+```
+
+## Hidden Costs to Consider
+
+### Gas Price Volatility
+
+Ethereum gas can vary 10x:
+- **Low** (10 gwei): ~$3
+- **Medium** (50 gwei): ~$15
+- **High** (100 gwei): ~$30
+
+**Tip**: Bridge during off-peak hours (late night UTC)
+
+### Slippage
+
+Not included in estimates:
+- CCTP: Minimal (stablecoin)
+- Soroban: ~20 bps
+- Wormhole: ~25 bps
+
+### Opportunity Cost
+
+While bridging (5-15 min), you:
+- Can't earn yield
+- Might miss price movements
+- Lock capital
+
+## Advanced: Multi-Hop Strategies
+
+### Example: Stellar → Solana → Ethereum
+
+**Option A (Two Bridges)**:
+1. Stellar → Solana (Wormhole): $2
+2. Solana → Ethereum (Wormhole): $5
+3. Total: $7, 10-15 minutes
+
+**Option B (Direct)**:
+1. Stellar → Ethereum (Soroban or Wormhole): $18-28
+2. Total: $18-28, 5-15 minutes
+
+**Analysis**: Direct is faster but costlier. Multi-hop saves money for large amounts.
+
+## FAQ
+
+**Q: Which bridge is safest?**
+A: CCTP (backed by Circle) and Soroban (Stellar Foundation) have highest trust.
+
+**Q: Why don't you support Bridge X?**
+A: We focus on most liquid, trusted bridges. Suggest additions via Discord.
+
+**Q: Can I cancel a pending bridge?**
+A: No, bridging is one-way. Ensure details are correct before confirming.
+
+**Q: What if gas spikes mid-transfer?**
+A: Destination claim may fail. You'll need to retry with higher gas.
+
+## Next Steps
+
+<Cards>
+  <Card title="Bridge Estimator" href="/docs/features/bridge-estimator" description="Calculate your exact costs" />
+  <Card title="CCTP Details" href="/docs/bridge/cctp" description="Learn more about CCTP" />
+  <Card title="Yield Opportunities" href="/docs/features/yield-discovery" description="Find yields on destination chain" />
+</Cards>

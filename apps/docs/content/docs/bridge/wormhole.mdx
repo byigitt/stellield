@@ -1,0 +1,186 @@
+---
+title: Wormhole
+description: Multi-chain bridge powered by guardian network
+---
+
+# Wormhole Bridge
+
+Decentralized cross-chain messaging protocol connecting 20+ blockchains including Stellar, Solana, and Ethereum.
+
+## Overview
+
+**Key Features**:
+- ✅ **Multi-Chain**: 20+ supported blockchains
+- ✅ **Guardian Network**: Decentralized validators
+- ✅ **Fast**: 3-8 minute average
+- ✅ **High Liquidity**: Billions in TVL
+
+**Considerations**:
+- ⚠️ Guardian trust assumptions
+- ⚠️ Wrapped token complexity
+- ⚠️ Higher gas costs than alternatives
+
+## How It Works
+
+1. **Lock** assets in source chain contract
+2. **Guardians** observe and sign attestation (19 independent nodes)
+3. **VAA** (Verifiable Action Approval) posted on-chain
+4. **Claim** wrapped assets on destination chain
+
+## Supported Routes (Stellar)
+
+- Stellar ↔ Solana
+- Stellar ↔ Ethereum
+- Stellar ↔ Polygon
+- Stellar ↔ BSC
+- And 15+ other chains
+
+## Cost Breakdown
+
+### Base Fee: $1.80
+Protocol operation cost.
+
+### Variable Fee: 15 basis points (0.15%)
+
+### Gas Costs
+
+**Source Chain**:
+- Stellar: ~$0.00001
+- Ethereum: $10-30
+- Solana: $0.00025
+
+**Destination Chain**:
+- Varies by chain (see above)
+
+### Example (Stellar → Solana, 1000 XLM)
+
+```
+Transfer: 1,000 XLM ($110)
+
+Base Fee:        $1.80
+Variable (15bps): $0.17
+Stellar Gas:     $0.00
+Solana Gas:      $0.00
+━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Cost:      $1.97 (1.8%)
+You Receive:     $108.03 in whXLM
+```
+
+## When to Use
+
+✅ **Best For**:
+- Solana opportunities
+- Multi-chain strategies
+- Supported exotic chains
+- DeFi power users
+
+❌ **Not Ideal For**:
+- USDC transfers (use CCTP)
+- Ethereum-only needs (use Soroban)
+- Users unfamiliar with wrapped tokens
+
+## Guardian Network
+
+**Structure**:
+- 19 independent validators
+- Threshold: 13 of 19 signatures required
+- Geographic distribution
+- 24/7 monitoring
+
+**Guardians Include**:
+- Jump Crypto
+- Everstake
+- Staking Fund
+- Certus One
+- And 15 others
+
+## Security
+
+**Audits**:
+- Trail of Bits (comprehensive)
+- Kudelski Security
+- Neodyme
+- OtterSec
+
+**Bug Bounties**:
+- Up to $10M reward
+- Active Immunefi program
+
+**Historical Security**:
+- Feb 2022 incident ($325M) - fully resolved
+- Enhanced monitoring since
+- No incidents since improvements
+
+## Wrapped Assets
+
+**whXLM** (Wormhole XLM):
+- Available on Solana, Ethereum, etc.
+- Backed 1:1 by locked XLM
+- Tradeable on destination DEXs
+
+**Unwrapping**:
+- Return whXLM to bridge
+- Receive native XLM on Stellar
+- Same fee structure
+
+## Speed
+
+**Average**: 3-8 minutes
+
+**Breakdown**:
+1. Source transaction: <1 minute
+2. Guardian signatures: 1-2 minutes
+3. VAA availability: <1 minute
+4. Destination claim: 1-5 minutes
+
+**Fastest Route**: Stellar → Solana (~2 minutes)
+**Slowest Route**: Stellar → Ethereum (~15 minutes)
+
+## Limits
+
+- **Minimum**: $50 (fee efficiency)
+- **Maximum**: Check per-route limits
+- **Governor**: Rate limiting for security (protects against exploits)
+
+## Advanced: Portal Token Bridge
+
+Wormhole's Portal is the token bridge interface:
+
+**Features**:
+- Automatic redemption
+- Multi-hop routing
+- Unified liquidity
+
+**Access**: portal.wormhole.com
+
+## Troubleshooting
+
+**VAA Not Available?**
+- Wait for guardian confirmations (1-2 min)
+- Check Wormhole explorer
+
+**Claim Failed?**
+- Ensure gas on destination chain
+- Retry claim transaction
+- Check VAA expiry
+
+**Wrapped Token Not Showing?**
+- Add token contract to wallet
+- Verify correct destination address
+- Check Wormhole explorer status
+
+## Official Resources
+
+- **Website**: wormhole.com
+- **Portal**: portal.wormhole.com
+- **Explorer**: wormholescan.io
+- **Docs**: docs.wormhole.com
+- **Support**: Discord
+
+## Next Steps
+
+<Cards>
+  <Card title="Bridge Estimator" href="/docs/features/bridge-estimator" description="Calculate Wormhole costs" />
+  <Card title="Cost Comparison" href="/docs/bridge/cost-comparison" description="Compare all bridges" />
+  <Card title="CCTP" href="/docs/bridge/cctp" description="Alternative for USDC" />
+</Cards>

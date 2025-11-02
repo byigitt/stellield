@@ -1,0 +1,180 @@
+---
+title: Connect Your Wallet
+description: Learn how to connect your wallet using Privy authentication
+---
+
+# Connect Your Wallet
+
+Stellield uses Privy for secure, flexible wallet authentication. This guide covers all available connection methods.
+
+## Supported Wallet Options
+
+### External Wallets (Recommended)
+- **MetaMask**: Most popular Ethereum wallet
+- **Coinbase Wallet**: User-friendly option with mobile support
+- **WalletConnect**: Connect any WalletConnect-compatible wallet
+- **Rainbow**: Modern, user-friendly Ethereum wallet
+
+### Embedded Wallet
+- **Email-based**: Create a wallet secured by your email
+- No browser extension required
+- Automatically created during sign-up
+
+## Connecting with an External Wallet
+
+### Step 1: Click Connect Wallet
+
+In the top-right corner of the header, click the **"Connect Wallet"** button.
+
+### Step 2: Choose Your Wallet
+
+A modal will appear with available wallet options. Select your preferred wallet provider.
+
+### Step 3: Approve Connection
+
+Your wallet extension will prompt you to:
+1. **Approve the connection** to Stellield
+2. **Sign an authentication message** (no gas required)
+
+> **Security Note**: The signature request does NOT give Stellield permission to move your funds. It only proves you own the wallet address.
+
+### Step 4: Verify Network
+
+Ensure your wallet is connected to **Ethereum Sepolia Testnet**:
+
+- **Chain ID**: 11155111
+- **RPC URL**: https://rpc.sepolia.org
+- **Currency**: SepoliaETH
+
+If you're on the wrong network, you'll see a warning indicator in the header. Click to switch networks automatically.
+
+## Creating an Embedded Wallet
+
+### Step 1: Select Email Option
+
+When connecting, choose the **"Continue with Email"** option.
+
+### Step 2: Enter Your Email
+
+Provide a valid email address where you can receive verification codes.
+
+### Step 3: Verify Email
+
+Check your inbox for a verification code and enter it in the prompt.
+
+### Step 4: Wallet Created
+
+Your embedded wallet is automatically created and secured by Privy. The wallet address will be displayed in your profile.
+
+## Understanding the Wallet Display
+
+Once connected, the header shows:
+
+### Network Indicator
+- **Green dot**: Connected to correct network (Sepolia Testnet)
+- **Red dot**: Wrong network detected
+- Hover for network details
+
+### Risk Score Badge
+- Shows current portfolio risk tier
+- Click to see risk distribution breakdown
+- Updates based on market conditions
+
+### Wallet Button
+Click your wallet address to access:
+- **Email**: Associated email address (if applicable)
+- **Wallet Type**: Embedded or External
+- **Connector**: MetaMask, Coinbase, etc.
+- **Balance**: Current ETH balance on Sepolia
+- **USD Value**: Estimated value (testnet prices)
+- **Copy Address**: Copy your wallet address
+- **View Activity**: Transaction history
+- **Disconnect**: Sign out and disconnect wallet
+
+## Wallet Balance Display
+
+Your wallet balance is displayed in the dropdown:
+
+```
+1.2345 ETH (Sepolia)
+≈ $2,345.67 USD
+```
+
+> **Testnet Note**: USD values are based on real ETH prices but represent testnet funds with no actual value.
+
+## Switching Networks
+
+If you connect to the wrong network:
+
+1. Click the network indicator in the header
+2. Follow your wallet's prompts to switch networks
+3. Approve the network switch
+4. Your balance will update automatically
+
+## Managing Your Wallet
+
+### Viewing Balance
+Your current balance updates automatically every 30 seconds using:
+- **ValidationCloud RPC** for accurate data
+- **CoinGecko API** for USD pricing
+
+### Copying Address
+1. Click your wallet button
+2. Select **"Copy Address"**
+3. Address is copied to clipboard
+
+### Disconnecting
+1. Click your wallet button
+2. Select **"Disconnect"** (red text at bottom)
+3. Confirm disconnection
+
+## Security Best Practices
+
+> **Never Share Private Keys**: Stellield will never ask for your private keys or seed phrase.
+
+> **Verify URLs**: Always ensure you're on the official Stellield domain before connecting.
+
+> **Use Hardware Wallets**: For maximum security, use a hardware wallet with MetaMask.
+
+> **Review Transactions**: Always review transaction details in your wallet before approving.
+
+## Troubleshooting
+
+### "Wrong Network" Warning
+
+**Solution**: Your wallet is not on Sepolia Testnet. Click the network indicator to switch.
+
+### Balance Shows "Loading..."
+
+**Solution**: 
+- Wait a few seconds for RPC query to complete
+- Refresh the page
+- Check your internet connection
+
+### "Wallet Not Detected"
+
+**Solution**:
+- Install the wallet extension (e.g., MetaMask)
+- Refresh the page
+- Try a different browser
+
+### Email Not Receiving Code
+
+**Solution**:
+- Check spam/junk folder
+- Wait 60 seconds before requesting a new code
+- Try a different email address
+
+## Next Steps
+
+<Cards>
+  <Card title="Make Your First Deposit" href="/docs/getting-started/first-deposit" description="Learn how to deposit funds into yield protocols" />
+  <Card title="Portfolio Simulator" href="/docs/features/portfolio-simulator" description="Test strategies without risk" />
+  <Card title="Security Guide" href="/docs/support/security" description="Keep your assets safe" />
+</Cards>
+
+## Need More Help?
+
+- [FAQ](/docs/support/faq) - Common wallet questions
+- [Troubleshooting](/docs/support/troubleshooting) - Technical issues
+- Community Discord - Live support

@@ -1,0 +1,162 @@
+---
+title: Soroban Bridge
+description: Official Stellar Foundation bridge to Ethereum
+---
+
+# Soroban Bridge
+
+The official bridge maintained by the Stellar Development Foundation for moving XLM and Stellar assets to Ethereum.
+
+## Overview
+
+**Key Features**:
+- ✅ **Foundation-Backed**: Operated by Stellar Foundation
+- ✅ **Audited Contracts**: Multiple security reviews
+- ✅ **XLM Support**: Native Stellar asset bridging
+- ✅ **Custody Verification**: Multi-step validation
+
+**Trade-offs**:
+- ⚠️ Higher fees than CCTP
+- ⚠️ Wrapped tokens (wXLM on Ethereum)
+- ⚠️ Limited to Ethereum only
+
+## How It Works
+
+### Stellar → Ethereum
+
+1. Lock XLM in Stellar smart contract
+2. Validators verify lock transaction
+3. wXLM minted on Ethereum
+4. Receive wXLM ERC-20 tokens
+
+### Ethereum → Stellar
+
+1. Burn wXLM on Ethereum
+2. Validators verify burn
+3. XLM released from Stellar contract
+4. Receive native XLM
+
+## Cost Breakdown
+
+### Base Fee: $2.50
+Fixed protocol operation cost.
+
+### Variable Fee: 20 basis points (0.20%)
+
+### Gas Costs
+
+**Stellar Side**:
+- Lock/Release: ~$0.00001 (negligible)
+
+**Ethereum Side**:
+- Mint/Burn: $10-40 (depends on gas)
+
+### Example (1,000 XLM → Ethereum)
+
+```
+Transfer: 1,000 XLM ($110)
+
+Base Fee:        $2.50
+Variable (20bps): $0.22
+Stellar Gas:     $0.00
+Ethereum Gas:    $15.00
+━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Cost:      $17.72 (16.1%)
+You Receive:     $92.28 in wXLM
+```
+
+## Wrapped XLM (wXLM)
+
+**What is wXLM?**
+- ERC-20 token on Ethereum
+- 1:1 backed by locked XLM
+- Tradeable on Ethereum DEXs
+- Redeemable for native XLM
+
+**Where to Trade wXLM**:
+- Uniswap
+- Sushiswap
+- 1inch aggregator
+
+**Liquidity**: ~$5M in major pools
+
+## When to Use
+
+✅ **Best For**:
+- XLM holders wanting Ethereum exposure
+- Large transfers (>$500)
+- Users comfortable with wrapped tokens
+- Long-term Ethereum positions
+
+❌ **Not Ideal For**:
+- Small amounts (<$100)
+- USDC transfers (use CCTP instead)
+- Quick arbitrage trades
+- Non-Ethereum destinations
+
+## Security Model
+
+### Validators
+- Run by trusted Stellar organizations
+- Multi-signature validation (5 of 7)
+- Independent monitoring
+
+### Smart Contracts
+- Audited by CertiK and Trail of Bits
+- Open source
+- Timelocked upgrades
+
+### Custody
+- XLM held in audited contract
+- Regular reserve proofs
+- Emergency pause functionality
+
+## Speed
+
+**Average**: 5-15 minutes
+
+**Process**:
+1. Stellar transaction: <10 seconds
+2. Validator confirmation: 2-5 minutes
+3. Ethereum minting: 3-10 minutes (depends on gas)
+
+**Fastest**: ~3 minutes (low congestion)
+**Slowest**: ~30 minutes (high congestion)
+
+## Limits
+
+- **Minimum**: $25 (transaction cost efficiency)
+- **Maximum**: None official (contact for >$1M transfers)
+- **Daily Limit**: None
+
+## Official Resources
+
+- **Website**: bridge.stellar.org
+- **Contract Addresses**: Verified on Stellar and Etherscan
+- **Documentation**: stellar.org/docs/soroban-bridge
+- **Support**: Discord #soroban-bridge
+
+## Troubleshooting
+
+**Transfer Pending?**
+- Check validator status dashboard
+- Verify Stellar transaction confirmed
+- Ensure Ethereum wallet has ETH for gas
+
+**wXLM Not Received?**
+- Check Ethereum address matches
+- Add wXLM token to wallet (contract: 0x...)
+- Verify on Etherscan
+
+**Want to Unwrap?**
+- Use bridge interface to burn wXLM
+- Receive native XLM on Stellar
+- Process takes 5-15 minutes
+
+## Next Steps
+
+<Cards>
+  <Card title="Bridge Estimator" href="/docs/features/bridge-estimator" description="Calculate Soroban costs" />
+  <Card title="Wormhole" href="/docs/bridge/wormhole" description="Alternative multi-chain option" />
+  <Card title="Cost Comparison" href="/docs/bridge/cost-comparison" description="Compare all bridges" />
+</Cards>

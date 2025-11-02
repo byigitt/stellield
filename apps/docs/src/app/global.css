@@ -1,3 +1,191 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Host Grotesk", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+html,
+body {
+  @apply bg-gradient-to-br from-[#0a0e27] via-[#151932] to-[#1a1f3a];
+  min-height: 100vh;
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
+}
+
+:root {
+  --radius: 0.75rem;
+
+  /* DeFi Dark Theme */
+  --background: 10 14 39;
+  --foreground: 210 217 233;
+  --card: 17 23 48;
+  --card-foreground: 210 217 233;
+  --popover: 17 23 48;
+  --popover-foreground: 210 217 233;
+  --primary: 59 130 246;
+  --primary-foreground: 250 250 250;
+  --secondary: 88 101 242;
+  --secondary-foreground: 250 250 250;
+  --muted: 30 41 67;
+  --muted-foreground: 148 163 184;
+  --accent: 129 140 248;
+  --accent-foreground: 250 250 250;
+  --destructive: 239 68 68;
+  --destructive-foreground: 248 250 252;
+  --border: 30 41 59;
+  --input: 30 41 59;
+  --ring: 129 140 248;
+
+  /* Chart Colors */
+  --chart-1: 96 165 250;
+  --chart-2: 52 211 153;
+  --chart-3: 251 146 60;
+  --chart-4: 167 139 250;
+  --chart-5: 248 113 113;
+
+  /* Gradient stops */
+  --gradient-start: 37 99 235;
+  --gradient-middle: 88 101 242;
+  --gradient-end: 129 140 248;
+
+  /* Glass effect variables */
+  --glass-bg: rgba(17, 23, 48, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+
+  /* Status colors */
+  --success: 34 197 94;
+  --warning: 251 191 36;
+  --info: 59 130 246;
+  --error: 239 68 68;
+}
+
+.dark {
+  --background: 10 14 39;
+  --foreground: 210 217 233;
+  --card: 17 23 48;
+  --card-foreground: 210 217 233;
+  --popover: 17 23 48;
+  --popover-foreground: 210 217 233;
+  --primary: 59 130 246;
+  --primary-foreground: 250 250 250;
+  --secondary: 88 101 242;
+  --secondary-foreground: 250 250 250;
+  --muted: 30 41 67;
+  --muted-foreground: 148 163 184;
+  --accent: 129 140 248;
+  --accent-foreground: 250 250 250;
+  --destructive: 239 68 68;
+  --border: 30 41 59;
+  --input: 30 41 59;
+  --ring: 129 140 248;
+  --chart-1: 96 165 250;
+  --chart-2: 52 211 153;
+  --chart-3: 251 146 60;
+  --chart-4: 167 139 250;
+  --chart-5: 248 113 113;
+}
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply text-foreground;
+  }
+}
+
+/* Glassmorphism utilities */
+@layer utilities {
+  .glass {
+    @apply backdrop-blur-xl bg-white/[0.02] border border-white/[0.05];
+    box-shadow: var(--glass-shadow);
+  }
+
+  .glass-card {
+    @apply backdrop-blur-md bg-gradient-to-br from-white/[0.07] to-white/[0.03] border border-white/[0.08];
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+  }
+
+  .glass-panel {
+    @apply backdrop-blur-lg bg-black/20 border border-white/[0.05];
+    box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .gradient-border {
+    @apply relative;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(129, 140, 248, 0.1));
+    border: 1px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0; bottom: 0; left: 0;
+    z-index: -1;
+    margin: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5), rgba(129, 140, 248, 0.5));
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+  }
+
+  .glow-green {
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.3);
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent;
+  }
+}
+
+/* Import fumadocs styles after our custom theme */
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';

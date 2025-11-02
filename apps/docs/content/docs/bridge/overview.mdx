@@ -1,0 +1,60 @@
+---
+title: Bridge Overview
+description: Understanding cross-chain bridges for Stellar assets
+---
+
+# Bridge Overview
+
+Learn about the cross-chain bridge options available for moving assets between Stellar and other blockchains.
+
+## Available Bridges
+
+<Cards>
+  <Card title="Circle CCTP" href="/docs/bridge/cctp" description="$0 fees - Native USDC transfers" />
+  <Card title="Soroban Bridge" href="/docs/bridge/soroban-bridge" description="Official Stellar Foundation bridge" />
+  <Card title="Wormhole" href="/docs/bridge/wormhole" description="Multi-chain guardian network" />
+</Cards>
+
+## Quick Comparison
+
+| Bridge | Best For | Fee | Speed | Chains |
+|--------|----------|-----|-------|--------|
+| CCTP | USDC | $0 | 5-10 min | 5+ chains |
+| Soroban | XLM, Stellar assets | $2.50 + 20bps | 5-15 min | Ethereum |
+| Wormhole | Multi-chain | $1.80 + 15bps | 3-8 min | 20+ chains |
+
+## How Bridges Work
+
+### Circle CCTP (Burn & Mint)
+1. Burn USDC on source chain
+2. Attestation service verifies burn
+3. Mint USDC on destination chain
+4. No wrapped tokens needed
+
+### Soroban Bridge (Lock & Release)
+1. Lock XLM in Stellar contract
+2. Validators verify lock
+3. Mint wXLM (wrapped XLM) on Ethereum
+4. Reverse process to unlock
+
+### Wormhole (Guardian Network)
+1. Lock assets in source chain contract
+2. Guardians observe and sign message
+3. Message posted to destination chain
+4. Assets released or minted
+
+## Cost Calculator
+
+Use the [Bridge Estimator](/docs/features/bridge-estimator) to:
+- Compare real-time bridge costs
+- Estimate total fees and gas
+- Check transfer times
+- View live bridge statistics
+
+## Next Steps
+
+<Cards>
+  <Card title="CCTP Details" href="/docs/bridge/cctp" description="Deep dive into Circle CCTP" />
+  <Card title="Cost Comparison" href="/docs/bridge/cost-comparison" description="Side-by-side comparison" />
+  <Card title="Bridge Estimator" href="/docs/features/bridge-estimator" description="Calculate your costs" />
+</Cards>

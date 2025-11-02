@@ -1,0 +1,277 @@
+---
+title: Risk Assessment System
+description: Comprehensive risk analysis for yield opportunities
+---
+
+# Risk Assessment System
+
+Stellield employs a multi-dimensional risk assessment framework to evaluate every yield opportunity, providing you with transparent, data-driven risk scores.
+
+## Risk Tier Classification
+
+Every opportunity receives a letter grade from A to D:
+
+<Cards>
+  <Card title="Tier A - Low Risk" description="Audited protocols, deep liquidity, proven track record. Suitable for conservative investors." />
+  <Card title="Tier B - Medium Risk" description="Established protocols with good security. Suitable for moderate risk tolerance." />
+  <Card title="Tier C - Higher Risk" description="Newer or less liquid protocols. Requires careful consideration." />
+  <Card title="Tier D - High Risk" description="Experimental protocols. Only for experienced users comfortable with significant risk." />
+</Cards>
+
+## Five Risk Dimensions
+
+### 1. Protocol Integrity (35% Weight)
+
+The most important factor measuring trust and security:
+
+#### Security Audits
+- **Multiple audits** from top firms (CertiK, Trail of Bits, etc.): +2 points
+- **Single audit** from reputable firm: +1 point
+- **No audit**: -2 points
+- **Audit recency**: <6 months preferred
+
+#### Protocol Age
+- **>1 year**: +1.5 points
+- **6-12 months**: +0.5 points
+- **3-6 months**: 0 points
+- **<3 months**: -1 point
+
+#### Team Transparency
+- **Doxxed team** with track record: +1 point
+- **Anonymous but active**: 0 points
+- **Inactive or unknown**: -1 point
+
+#### Smart Contract Risk
+- **Upgradeable contracts** with multisig: +0.5 points
+- **Immutable contracts**: +1 point (after audit)
+- **Upgradeable without timelock**: -1 point
+
+### 2. Liquidity & Execution (25% Weight)
+
+Measures ability to enter and exit positions:
+
+#### Liquidity Depth
+- **>$20M**: +2 points
+- **$5M-$20M**: +1 point
+- **$1M-$5M**: 0 points
+- **<$1M**: -1.5 points
+
+#### Slippage Analysis
+- **<0.5% for $100k trade**: +1 point
+- **0.5-2%**: 0 points
+- **>2%**: -1 point
+
+#### Daily Volume
+- **>$1M daily**: +1 point
+- **$100k-$1M**: 0 points
+- **<$100k**: -0.5 points
+
+#### Exit Capacity
+- **Can handle 10% of TVL exit**: +1 point
+- **5-10% capacity**: 0 points
+- **<5% capacity**: -1 point
+
+### 3. Performance Stability (15% Weight)
+
+Historical consistency and predictability:
+
+#### APY Volatility
+- **<2% std deviation** (30-day): +1 point
+- **2-5% std deviation**: 0 points
+- **>5% std deviation**: -1 point
+
+#### Drawdown History
+- **Max drawdown <10%**: +1 point
+- **10-25% max drawdown**: 0 points
+- **>25% max drawdown**: -1.5 points
+
+#### Prediction Confidence
+- **ML model confidence >85%**: +1 point
+- **70-85% confidence**: +0.5 points
+- **<70% confidence**: 0 points
+
+### 4. Network & Custody (15% Weight)
+
+Chain-level and custody security:
+
+#### Network Security
+- **Stellar (PoS, mature)**: +1 point
+- **Established L2**: +0.5 points
+- **Newer chain**: -0.5 points
+
+#### Custody Model
+- **Non-custodial, user keys**: +1 point
+- **Smart contract custody**: 0 points
+- **Centralized custody**: -2 points
+
+#### Oracle Risk
+- **Chainlink or decentralized**: +0.5 points
+- **Single oracle**: -1 point
+- **No oracle needed**: +0.5 points
+
+### 5. Operational Signals (10% Weight)
+
+Real-time health indicators:
+
+#### User Activity
+- **Growing user base** (30-day): +1 point
+- **Stable users**: 0 points
+- **Declining users**: -1 point
+
+#### TVL Trend
+- **Growing TVL** (30-day): +1 point
+- **Stable TVL**: 0 points
+- **Declining TVL**: -0.5 points
+
+#### Community Engagement
+- **Active Discord/Twitter**: +0.5 points
+- **Inactive community**: -0.5 points
+
+## Scoring Algorithm
+
+### Total Score Calculation
+
+```typescript
+totalScore = 
+  (protocolIntegrity * 0.35) +
+  (liquidity * 0.25) +
+  (stability * 0.15) +
+  (network * 0.15) +
+  (operational * 0.10)
+```
+
+### Tier Thresholds
+
+| Total Score | Risk Tier | Description |
+|-------------|-----------|-------------|
+| ≥3.0 | A | Low Risk |
+| 1.0 to 2.9 | B | Medium Risk |
+| -1.5 to 0.9 | C | Higher Risk |
+| <-1.5 | D | High Risk |
+
+## Additional Risk Factors
+
+### Impermanent Loss Risk
+
+For liquidity pool opportunities:
+
+- **Stablecoin-Stablecoin**: IL Risk = No
+- **Stablecoin-Volatile**: IL Risk = Moderate
+- **Volatile-Volatile**: IL Risk = Yes
+
+IL Risk lowers the score by 2 points.
+
+### Exposure Type
+
+- **Single-Chain**: +0.5 points
+- **Multi-Chain**: -0.5 points (additional bridge risk)
+
+### Token Rewards
+
+- **Established tokens** (XLM, USDC): 0 points
+- **New tokens**: -0.5 points (dump risk)
+- **Vesting schedules**: +0.5 points
+
+## Risk Score Updates
+
+Risk scores are recalculated:
+
+- **Hourly**: For real-time metrics (TVL, volume, activity)
+- **Daily**: For market data and trends
+- **Weekly**: For ML model predictions
+- **On Event**: Security incidents, audits, major changes
+
+## Viewing Risk Details
+
+### On Opportunity Cards
+
+Each card displays:
+- **Risk Badge**: Colored tier (A-D)
+- **Hover Tooltip**: Risk factors summary
+- **Risk Distribution**: Percentage in each tier
+
+### In Risk Popover
+
+Click the risk badge to see:
+- **Tier Breakdown**: Distribution across A, B, C, D
+- **Overall Grade**: Portfolio-wide risk score
+- **Historical Changes**: Risk tier movements
+
+### On Detail Pages
+
+Full breakdown including:
+- Score per dimension
+- Contributing factors
+- Historical risk chart
+- Comparison to similar protocols
+
+## Portfolio Risk Analysis
+
+### Aggregated Risk Score
+
+Your portfolio risk grade considers:
+- **Allocation weights**: Larger positions have more impact
+- **Correlation**: Diversification benefits
+- **Concentration**: Single-protocol exposure limits
+
+### Risk Distribution Formula
+
+```typescript
+portfolioGrade = (
+  (countTierA * 4) +
+  (countTierB * 2) -
+  (countTierC * 1) -
+  (countTierD * 2)
+) / totalOpportunities
+```
+
+### Grade Mapping
+
+| Score | Grade | Meaning |
+|-------|-------|---------|
+| ≥3.2 | A | Very Low Risk |
+| 1.5-3.1 | B+ | Low-Medium Risk |
+| 1.0-1.4 | B | Medium Risk |
+| 0.2-0.9 | B- | Medium-High Risk |
+| -0.5 to 0.1 | C | Higher Risk |
+| <-0.5 | C- | High Risk |
+
+## Risk Mitigation Strategies
+
+### Diversification
+
+- **Multiple Tiers**: Spread across A/B opportunities
+- **Multiple Protocols**: Don't concentrate in one protocol
+- **Multiple Assets**: Different underlying tokens
+
+### Position Sizing
+
+- **Tier A**: Up to 40% of portfolio
+- **Tier B**: Up to 25% of portfolio
+- **Tier C**: Up to 15% of portfolio
+- **Tier D**: Up to 5% of portfolio (advanced users only)
+
+### Monitoring
+
+- **Daily**: Check for risk tier changes
+- **Weekly**: Review performance vs. expectations
+- **Monthly**: Rebalance based on risk shifts
+
+## Limitations
+
+> **Not Financial Advice**: Risk scores are informational tools, not investment recommendations.
+
+> **Historical Data**: Models use past data, which may not predict future events.
+
+> **External Factors**: Cannot account for regulatory changes, black swan events, or market manipulation.
+
+> **Human Review**: Scores are partially automated but include editorial judgment.
+
+## Next Steps
+
+<Cards>
+  <Card title="Risk Tiers" href="/docs/risk/risk-tiers" description="Deep dive into each tier" />
+  <Card title="Scoring Methodology" href="/docs/risk/scoring-methodology" description="Detailed algorithm explanation" />
+  <Card title="Portfolio Simulator" href="/docs/features/portfolio-simulator" description="Test risk-adjusted strategies" />
+  <Card title="Yield Discovery" href="/docs/features/yield-discovery" description="How we find opportunities" />
+</Cards>

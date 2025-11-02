@@ -1,0 +1,330 @@
+---
+title: Market Overview
+description: Real-time Stellar DeFi analytics and market insights
+---
+
+# Market Overview
+
+Track the health and activity of Stellar's DeFi ecosystem with comprehensive market analytics updated in real-time.
+
+## Key Metrics
+
+### Stellar TVL (Total Value Locked)
+
+Current value of assets locked in Stellar DeFi protocols:
+
+```
+$124.68M
++5.2% (7 days)
+```
+
+**What it means**:
+- **Growing TVL**: Ecosystem gaining traction
+- **Stable TVL**: Mature, consistent usage
+- **Declining TVL**: Potential concern, investigate why
+
+**Updated**: Every 10 minutes via DefiLlama API
+
+### 24h DEX Volume
+
+Trading volume across Stellar DEX protocols in last 24 hours:
+
+```
+$8.2M
++12.3% (vs prev 24h)
+```
+
+**Significance**:
+- Higher volume = better liquidity
+- Sudden spikes may indicate volatility
+- Low volume may mean wider spreads
+
+### Active Protocols
+
+Number of unique protocols offering yield opportunities:
+
+```
+47 protocols
+12 new this month
+```
+
+**Tracking**:
+- AMMs (Automated Market Makers)
+- Lending/Borrowing platforms
+- Staking protocols
+- Yield aggregators
+
+### Average APY
+
+Mean yield across all tracked Stellar opportunities:
+
+```
+9.31%
+Weighted by TVL
+```
+
+**Calculation**: 
+```typescript
+avgAPY = Σ(protocol_APY × protocol_TVL) / total_TVL
+```
+
+## Protocol Distribution
+
+### By Category
+
+```
+Liquidity Pools:     62% ($77M)
+Lending:             23% ($29M)
+Staking:             12% ($15M)
+Other:               3% ($4M)
+```
+
+### By Risk Tier
+
+See the risk distribution across all opportunities:
+
+```
+Tier A (Low):        45% (21 protocols)
+Tier B (Medium):     38% (18 protocols)
+Tier C (Higher):     15% (7 protocols)
+Tier D (High):       2% (1 protocol)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Overall Risk Grade:  B+
+```
+
+### By Yield Range
+
+```
+0-5% APY:      8 protocols
+5-10% APY:     23 protocols ← Most common
+10-15% APY:    12 protocols
+15-20% APY:    3 protocols
+>20% APY:      1 protocol
+```
+
+## Live Activity Feed
+
+Recent significant events:
+
+```
+5 min ago  │ Soroban AMM APY ↑ 9.2% → 9.5%
+12 min ago │ New protocol: Blend Lending (Tier B)
+25 min ago │ Aquarius TVL +$2.1M
+1 hour ago │ Risk upgrade: Protocol X (C → B)
+2 hours ago│ High volume alert: Stellar DEX +150%
+```
+
+## Market Health Indicators
+
+### Liquidity Score (0-100)
+
+Ecosystem-wide liquidity health:
+
+```
+92/100 - Excellent
+```
+
+**Components**:
+- Average slippage for $100k trades
+- TVL concentration (diversification)
+- 24h volume sustainability
+- Pool depth distribution
+
+### Yield Stability Index
+
+How consistent are yields over time:
+
+```
+8.2/10 - Very Stable
+```
+
+**Measures**:
+- APY volatility (30-day std dev)
+- Number of >10% APY drops
+- Recovery time from drawdowns
+- Correlation with market events
+
+### Growth Momentum
+
+Trending direction of the ecosystem:
+
+```
++15% (30-day)
+Positive momentum
+```
+
+**Factors**:
+- TVL growth rate
+- New protocol adoption
+- User wallet growth
+- Transaction volume trends
+
+## Top Performers
+
+### Highest APY
+
+```
+1. Protocol Alpha     18.5% APY (Tier C)
+2. Stellar DEX LP     14.8% APY (Tier B)
+3. Soroban Staking    12.1% APY (Tier B)
+```
+
+### Most TVL
+
+```
+1. Aquarius          $45M (Tier A)
+2. Soroban AMM       $28M (Tier A)
+3. Stellar DEX       $22M (Tier B)
+```
+
+### Best Risk-Adjusted
+
+```
+1. Soroban AMM       9.5% APY, Tier A
+2. Aquarius          10.0% APY, Tier A
+3. StellarX Savings  7.2% APY, Tier B
+```
+
+## Historical Charts
+
+### TVL Over Time
+
+```
+$150M │           ╱╲
+      │          ╱  ╲
+$125M │    ╱────╱    ╲___
+      │   ╱              ╲
+$100M │__╱                ╲__
+      └─────────────────────────
+        30d   15d   Now
+```
+
+**Observations**:
+- Peak: $138M (15 days ago)
+- Current: $124.68M
+- Trend: Slight decline, stabilizing
+
+### Average APY Trend
+
+```
+12%  │  ╲
+     │   ╲___
+10%  │       ────────
+     │
+8%   │
+     └─────────────────────────
+       30d   15d   Now
+```
+
+**Interpretation**:
+- Started high (competition for TVL)
+- Normalizing to sustainable rates
+- Stable around 9-10%
+
+## Cross-Chain Comparison
+
+How Stellar compares to other chains:
+
+| Chain | TVL | Avg APY | Risk |
+|-------|-----|---------|------|
+| Stellar | $124.68M | 9.31% | B+ |
+| Solana | $2.1B | 7.8% | B |
+| Ethereum | $48B | 3.2% | A |
+| Polygon | $980M | 8.5% | B |
+
+**Stellar Advantages**:
+- ✅ Higher yields than major chains
+- ✅ Lower fees than Ethereum
+- ✅ Faster finality than most L1s
+- ✅ Growing ecosystem
+
+**Considerations**:
+- ⚠️ Smaller TVL than major chains
+- ⚠️ Fewer established protocols
+- ⚠️ Higher perceived risk (newer DeFi)
+
+## Market Sentiment
+
+### Social Metrics
+
+```
+Twitter Mentions:    +42% (7d)
+Discord Activity:    High
+GitHub Commits:      125 (30d)
+New Wallets:         +8,200 (30d)
+```
+
+### Developer Activity
+
+```
+Active Projects:     82
+Open Bounties:       15
+Audit Queue:         3 protocols
+Recent Launches:     4 this month
+```
+
+## Alerts & Notifications
+
+Set up alerts for:
+
+- **TVL changes**: >±10% in 24h
+- **APY movements**: Protocol yield changes >2%
+- **Risk updates**: Tier upgrades/downgrades
+- **New protocols**: Freshly listed opportunities
+- **Security events**: Exploits, pauses, upgrades
+
+## Data Sources
+
+All metrics sourced from:
+
+- **ValidationCloud**: Real-time Stellar RPC
+- **DefiLlama**: TVL and APY aggregation
+- **Horizon API**: Transaction and pool data
+- **CoinGecko**: Asset pricing
+- **Protocol APIs**: Direct integrations
+
+**Update Frequency**:
+- TVL, APY: Every 10 minutes
+- Prices: Every 1 minute
+- Volume: Every 5 minutes
+- Risk scores: Every 1 hour
+
+## Using Market Data
+
+### For Entry Decisions
+
+**Good Times to Enter**:
+- TVL growing consistently
+- Liquidity score >85
+- Yield stability high
+- Positive momentum
+
+**Caution Signs**:
+- TVL declining >15% in 7 days
+- High APY volatility
+- Low volume periods
+- Multiple protocol issues
+
+### For Portfolio Management
+
+**Rebalance When**:
+- Market sentiment shifts significantly
+- Your protocols underperform average by >20%
+- Risk distribution changes
+- New high-quality opportunities emerge
+
+### For Risk Assessment
+
+**Monitor Daily**:
+- Your protocols' TVL trends
+- Risk tier changes
+- Yield vs. average
+- Liquidity scores
+
+## Next Steps
+
+<Cards>
+  <Card title="Yield Discovery" href="/docs/features/yield-discovery" description="How we track opportunities" />
+  <Card title="Risk Assessment" href="/docs/features/risk-assessment" description="Understanding risk metrics" />
+  <Card title="Data Sources" href="/docs/technical/data-sources" description="Where data comes from" />
+</Cards>

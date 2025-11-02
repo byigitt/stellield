@@ -1,0 +1,316 @@
+---
+title: Portfolio Simulator
+description: Test allocation strategies without executing trades
+---
+
+# Portfolio Simulator
+
+Test different portfolio allocation strategies using historical data and AI predictions without risking real funds.
+
+## Overview
+
+The Portfolio Simulator allows you to:
+- **Test strategies** with different risk tolerances
+- **Compare outcomes** across allocation models
+- **Get AI recommendations** with confidence scores
+- **Understand metrics** like Sharpe ratio and max drawdown
+- **Simulate time periods** to see historical performance
+
+## Key Metrics
+
+### Expected APY
+AI-projected annual percentage yield based on:
+- Historical performance patterns
+- Current market conditions
+- ML model predictions
+- Risk-adjusted returns
+
+### Net APY
+Current on-chain yield across your simulated allocations:
+- Real-time rates from protocols
+- Weighted by allocation percentages
+- Updated every 10 minutes
+
+### Risk Score
+Portfolio-wide risk classification (Tier A-D):
+- Weighted average of individual opportunities
+- Considers concentration risk
+- Accounts for correlation
+
+### Sharpe Ratio
+Risk-adjusted return measure:
+- **>2.0**: Excellent risk-adjusted returns
+- **1.5-2.0**: Good returns for the risk taken
+- **1.0-1.5**: Moderate risk/reward balance
+- **<1.0**: High risk for the expected return
+
+Formula: `(Portfolio Return - Risk Free Rate) / Standard Deviation`
+
+### Max Drawdown
+Largest historical decline from peak:
+- **<10%**: Low volatility, stable yields
+- **10-25%**: Moderate fluctuations
+- **>25%**: High volatility, unstable yields
+
+### Liquidity Score
+Exit capacity rating (0-100):
+- **90-100**: Can exit entire position easily
+- **70-89**: Minor slippage expected
+- **50-69**: Significant slippage on large exits
+- **<50**: Limited exit capacity
+
+## Using the Simulator
+
+### Step 1: Set Risk Tolerance
+
+Choose your risk profile:
+
+#### Conservative (Tier A Only)
+- Focus on audited, established protocols
+- Lower expected returns (5-8% APY)
+- Minimal volatility
+- High liquidity
+- **Best for**: Capital preservation with some yield
+
+#### Moderate (Tier A-B)
+- Mix of proven and established protocols
+- Balanced returns (8-12% APY)
+- Moderate volatility
+- Good liquidity
+- **Best for**: Most investors seeking steady income
+
+#### Aggressive (All Tiers)
+- Includes newer, higher-yield opportunities
+- Higher expected returns (12-20%+ APY)
+- Significant volatility
+- Variable liquidity
+- **Best for**: Experienced users comfortable with risk
+
+### Step 2: Adjust Allocation
+
+Use the slider to set your Stellar allocation (0-100%):
+
+- **100% Stellar**: All funds in Stellar ecosystem
+- **50% Stellar**: Balanced with other chains
+- **30% Stellar**: Minor Stellar exposure
+
+Remaining allocation can be:
+- Other blockchain opportunities
+- Stablecoin reserves
+- Traditional assets
+
+### Step 3: Choose Optimization Mode
+
+#### AI Optimize (Recommended)
+Let our ML models suggest allocations:
+
+```
+AI Recommended Allocation:
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Soroban AMM (USDC)     35%
+Aquarius Rewards       25%
+Stellar DEX LP         20%
+StellarX Savings       20%
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Confidence Score: 87%
+```
+
+**How AI Optimizes**:
+1. Analyzes historical correlations between protocols
+2. Maximizes Sharpe ratio for your risk tolerance
+3. Ensures diversification across asset types
+4. Considers current market conditions
+5. Factors in liquidity constraints
+
+**Confidence Score** indicates:
+- **>85%**: High confidence in recommendation
+- **70-85%**: Moderate confidence
+- **<70%**: Low confidence, manual review suggested
+
+#### Manual
+Set custom percentages for each protocol:
+- Full control over allocations
+- Test specific hypotheses
+- Override AI suggestions
+- Useful for experienced users
+
+#### Compare
+Side-by-side comparison:
+- AI recommendation vs. your manual allocation
+- Different risk tolerance levels
+- Historical vs. projected performance
+
+### Step 4: Enter Simulation Amount
+
+Input the amount you want to simulate:
+
+```
+Simulation Amount: 10,000 XLM
+≈ $1,100 USD
+
+Quick amounts:
+[1K] [10K] [100K]
+```
+
+**Note**: This is simulation only. No funds are moved.
+
+### Step 5: Run Simulation
+
+Click **"Run Simulation"** to see projected outcomes:
+
+#### Results Include:
+- **1-Year Projection**: Expected portfolio value
+- **APY Range**: Min/max expected yields
+- **Risk Metrics**: Volatility, drawdown estimates
+- **Fee Impact**: Estimated costs
+- **Comparison**: vs. market average
+- **Historical Backtest**: How strategy would have performed
+
+## Understanding Results
+
+### Projected Outcomes
+
+```
+Starting Amount: 10,000 XLM ($1,100)
+
+After 1 Year:
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Best Case:    11,250 XLM (+12.5%)
+Expected:     11,080 XLM (+10.8%)
+Worst Case:   10,540 XLM (+5.4%)
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Confidence Interval: 95%
+```
+
+### Fee Breakdown
+
+```
+Estimated Costs (1 Year):
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Protocol Fees:  $15 (1.4%)
+Gas Costs:      $2 (0.2%)
+Rebalancing:    $8 (0.7%)
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Cost:     $25 (2.3%)
+Net APY:        10.8%
+```
+
+### Risk Analysis
+
+```
+Risk Metrics:
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Volatility:      8.5% (annualized)
+Max Drawdown:    -12%
+Value at Risk:   $110 (10%)
+Sharpe Ratio:    1.85
+Liquidity Score: 92/100
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+Overall Risk:    Tier B (Medium)
+```
+
+## Advanced Features
+
+### Backtesting
+
+Test strategies against historical data:
+
+- **Time Period**: 30d, 90d, 1y, 2y
+- **Market Conditions**: Bull, bear, sideways
+- **Rebalancing**: Daily, weekly, monthly, or never
+- **Comparison**: vs. buy & hold, vs. market
+
+### Sensitivity Analysis
+
+See how results change with:
+- **APY variations**: ±20% from expected
+- **Fee increases**: Higher gas or protocol fees
+- **Liquidity shocks**: Temporary liquidity drops
+- **Market stress**: Correlated drawdowns
+
+### Monte Carlo Simulation
+
+Run 10,000 scenarios to understand:
+- **Probability distributions** of outcomes
+- **Worst-case scenarios** (1st percentile)
+- **Best-case scenarios** (99th percentile)
+- **Median outcome** vs. mean
+
+## Best Practices
+
+### Before Simulating
+
+1. **Set realistic goals**: Don't chase unrealistic APYs
+2. **Consider time horizon**: Longer = more stable projections
+3. **Account for taxes**: Include tax implications
+4. **Factor in opportunity cost**: vs. other investments
+
+### Interpreting Results
+
+> **Projections ≠ Guarantees**: Simulations are estimates based on historical data.
+
+> **Market Changes**: Future conditions may differ significantly from the past.
+
+> **Model Limitations**: AI cannot predict unprecedented events.
+
+### When to Rebalance
+
+Simulator suggests rebalancing when:
+- **Risk tier changes**: Protocol moves up or down a tier
+- **Performance divergence**: >20% from expected APY
+- **Liquidity drops**: Liquidity score falls below 70
+- **Better opportunities**: New protocols with higher risk-adjusted returns
+
+## Common Scenarios
+
+### Conservative Income
+
+```
+Goal: Stable 6-8% APY
+Risk Tolerance: Conservative
+Allocation:
+- 40% Soroban AMM (USDC) - Tier A
+- 30% StellarX Savings (EURC) - Tier B
+- 30% Cash Reserve
+
+Expected: 7.2% APY
+Risk: Very Low (Tier A)
+```
+
+### Balanced Growth
+
+```
+Goal: 10-12% APY
+Risk Tolerance: Moderate
+Allocation:
+- 30% Soroban AMM - Tier A
+- 25% Aquarius Rewards - Tier A
+- 25% Stellar DEX LP - Tier B
+- 20% StellarX Savings - Tier B
+
+Expected: 11.1% APY
+Risk: Medium (Tier B)
+```
+
+### Aggressive Yield
+
+```
+Goal: 15%+ APY
+Risk Tolerance: Aggressive
+Allocation:
+- 25% Stellar DEX LP - Tier B
+- 25% New Protocol A - Tier C
+- 25% New Protocol B - Tier C
+- 25% Experimental - Tier D
+
+Expected: 16.8% APY
+Risk: High (Tier C)
+```
+
+## Next Steps
+
+<Cards>
+  <Card title="Risk Assessment" href="/docs/features/risk-assessment" description="Understand risk calculations" />
+  <Card title="First Deposit" href="/docs/getting-started/first-deposit" description="Ready to invest? Start here" />
+  <Card title="Market Overview" href="/docs/features/market-overview" description="Monitor market conditions" />
+</Cards>

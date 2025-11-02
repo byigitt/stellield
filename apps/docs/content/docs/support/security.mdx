@@ -1,0 +1,354 @@
+---
+title: Security Best Practices
+description: Keep your assets safe while using Stellield
+---
+
+# Security Best Practices
+
+Protect your crypto assets with these essential security guidelines.
+
+## Wallet Security
+
+### Use Strong Passwords
+
+✅ **Do**:
+- 12+ characters
+- Mix uppercase, lowercase, numbers, symbols
+- Unique password per service
+- Use a password manager
+
+❌ **Don't**:
+- Reuse passwords
+- Use simple patterns (abc123)
+- Share passwords
+- Store in plain text
+
+### Secure Your Seed Phrase
+
+> **Critical**: Your seed phrase is your wallet. Anyone with it can steal all your funds.
+
+✅ **Do**:
+- Write it down on paper (never digital)
+- Store in secure physical location (safe, bank)
+- Create multiple copies in different locations
+- Consider metal backup for fire/water resistance
+
+❌ **Don't**:
+- Save in cloud storage
+- Take screenshots
+- Email or message to anyone
+- Enter into websites (except official wallet recovery)
+- Share with anyone (not even "support")
+
+### Enable 2FA
+
+Where available:
+- Email accounts (critical for embedded wallets)
+- Exchange accounts
+- Wallet provider accounts
+- Privy authentication
+
+**Use**: Authenticator app (Google Authenticator, Authy)
+**Avoid**: SMS 2FA (SIM swap attacks possible)
+
+### Hardware Wallets (Most Secure)
+
+**Recommended**:
+- Ledger Nano S/X
+- Trezor One/Model T
+- GridPlus Lattice1
+
+**Benefits**:
+- Private keys never leave device
+- Sign transactions offline
+- Immune to computer malware
+
+**Setup**: Connect hardware wallet to MetaMask for Stellield use
+
+## Phishing Protection
+
+### Verify URLs
+
+> **Always check you're on the real site before connecting wallet**
+
+✅ **Correct**: `https://stellield.app`
+
+❌ **Fake Examples**:
+- `stellield.com` (wrong TLD)
+- `stellield-app.com`
+- `stellield.app.phishing.com`
+- `stel1ield.app` (1 instead of l)
+
+**Tips**:
+- Bookmark official site
+- Check for HTTPS and lock icon
+- Verify certificate details
+
+### Recognize Phishing Attempts
+
+**Red Flags**:
+- Urgent messages ("Act now or lose funds!")
+- Requests for seed phrase or private keys
+- Too-good-to-be-true offers
+- Suspicious emails from "support"
+- Unknown links in DMs
+
+**Remember**:
+- Stellield will NEVER ask for your seed phrase
+- Stellield will NEVER ask for your private keys
+- Stellield support won't DM you first
+- We won't ask you to send funds anywhere
+
+### Email Security
+
+**Be Cautious Of**:
+- Emails claiming to be from Stellield
+- Requests to "verify" your wallet
+- Links to "urgent security updates"
+- Attachments from unknown senders
+
+**Verify**:
+- Check sender email domain
+- Hover over links (don't click) to see real URL
+- Contact official channels if suspicious
+
+## Transaction Safety
+
+### Before Signing Any Transaction
+
+1. **Read carefully** what you're approving
+2. **Verify recipient** address is correct
+3. **Check amount** matches your intention
+4. **Understand permissions** you're granting
+5. **Confirm gas fees** are reasonable
+
+### Token Approvals
+
+**Unlimited Approvals** (common but risky):
+- Allow protocol to spend unlimited tokens
+- Convenient but dangerous if protocol is compromised
+- Consider using exact amounts instead
+
+**Revoke Old Approvals**:
+- Use tools like revoke.cash
+- Remove permissions for protocols you no longer use
+- Reduces attack surface
+
+### Simulation Tools
+
+**Before confirming**:
+- Use wallet simulation features (MetaMask warnings)
+- Check what assets will be moved
+- Verify contract interactions
+
+## Browser Security
+
+### Keep Software Updated
+
+- Browser (Chrome, Firefox, etc.)
+- Wallet extensions
+- Operating system
+- Antivirus software
+
+**Why**: Security patches fix vulnerabilities
+
+### Use Dedicated Browser Profile
+
+**For Crypto**:
+- Create separate browser profile
+- Install only necessary extensions
+- Avoid visiting unrelated sites
+- Clear regularly
+
+**Benefits**:
+- Isolate crypto activity
+- Reduce malware exposure
+- Limit tracking
+
+### Dangerous Extensions
+
+❌ **Avoid**:
+- Unknown/unverified extensions
+- Extensions with excessive permissions
+- Browser extensions from unofficial stores
+
+✅ **Install Only**:
+- Official wallet extensions (MetaMask, Coinbase Wallet)
+- From official browser stores
+- Verified publishers
+
+## Network Safety
+
+### Public WiFi Risks
+
+**Never on public WiFi**:
+- Access wallet
+- Sign transactions
+- Enter passwords or seed phrases
+
+**Use Instead**:
+- Home network
+- Trusted private WiFi
+- Mobile data (cellular)
+- VPN if must use public WiFi
+
+### VPN Recommendations
+
+**Benefits**:
+- Encrypt internet traffic
+- Hide IP address
+- Protect on untrusted networks
+
+**Reputable VPN Providers**:
+- Mullvad
+- ProtonVPN
+- IVPN
+
+**Avoid**: Free VPNs (often sell your data)
+
+## Smart Contract Interaction
+
+### Before Using Any Protocol
+
+1. **Research thoroughly**:
+   - Check for audits
+   - Read documentation
+   - Review team background
+   - Check community sentiment
+
+2. **Verify contracts**:
+   - Use block explorers (Stellar Expert, Etherscan)
+   - Confirm contract addresses match official docs
+   - Check contract is verified (source code published)
+
+3. **Start small**:
+   - Test with minimal amounts first
+   - Verify functionality works as expected
+   - Scale up gradually
+
+### Red Flags
+
+❌ **Warning Signs**:
+- No audit reports
+- Anonymous team
+- Promises of unrealistic returns
+- Pressure to invest quickly
+- Unverified contracts
+- Very new protocols (<1 month)
+
+## Stellield-Specific Security
+
+### What Stellield Can Access
+
+✅ **Stellield CAN**:
+- See your wallet address (public information)
+- Show your balance (reads from blockchain)
+
+❌ **Stellield CANNOT**:
+- Move your funds (no custody)
+- Execute transactions without your approval
+- Access your private keys or seed phrase
+- Withdraw or transfer on your behalf
+
+### Our Security Measures
+
+**Platform**:
+- HTTPS encryption
+- No sensitive data storage
+- No custody of funds
+- Open source components (where possible)
+
+**Data**:
+- No private keys handled
+- Wallet address only (public)
+- No transaction signing on our backend
+
+## Incident Response
+
+### If You Suspect Compromise
+
+**Immediate Steps**:
+1. **Disconnect wallet** from all dApps
+2. **Transfer funds** to new, secure wallet
+3. **Revoke approvals** on old wallet
+4. **Scan device** for malware
+5. **Change passwords** on all accounts
+
+**Do NOT**:
+- Panic and send funds to unverified "recovery" services
+- Share details in public channels
+- Reuse the compromised wallet
+
+### If You're Scammed
+
+1. **Document everything**:
+   - Transaction hashes
+   - Wallet addresses involved
+   - Screenshots of communications
+   - Timestamps
+
+2. **Report**:
+   - Local law enforcement (if significant amount)
+   - Blockchain explorers (flag addresses)
+   - Community (warn others)
+
+3. **Learn**:
+   - How did it happen?
+   - How to prevent in future?
+   - Share your experience (anonymously) to help others
+
+## Security Checklist
+
+Before each session:
+
+- [ ] Verified URL is correct (stellield.app)
+- [ ] Wallet extension is updated
+- [ ] Browser is updated
+- [ ] Not using public WiFi
+- [ ] No suspicious extensions installed
+
+Before each transaction:
+
+- [ ] Read transaction details carefully
+- [ ] Verified recipient address
+- [ ] Checked gas fees are reasonable
+- [ ] Understand what permissions I'm granting
+- [ ] Double-checked amount
+
+Weekly:
+
+- [ ] Review active token approvals
+- [ ] Check for suspicious transactions
+- [ ] Update software if needed
+- [ ] Backup important data
+
+## Additional Resources
+
+**Security Tools**:
+- revoke.cash - Revoke token approvals
+- Etherscan - Verify contracts
+- wallet.security - Security scanner
+
+**Education**:
+- CryptoSec.info - Security guides
+- Certik Skynet - Protocol security ratings
+- Rekt.news - Learn from exploits
+
+## Emergency Contacts
+
+**Wallet Support**:
+- MetaMask: support.metamask.io
+- Coinbase Wallet: help.coinbase.com
+- Privy: docs.privy.io
+
+**Report Issues**:
+- Stellield Discord: #security-reports
+- Email: security@stellield.app (if available)
+
+## Next Steps
+
+<Cards>
+  <Card title="Quick Start" href="/docs/getting-started/quickstart" description="Get started safely" />
+  <Card title="Connect Wallet" href="/docs/getting-started/connect-wallet" description="Secure wallet connection" />
+  <Card title="FAQ" href="/docs/support/faq" description="Common questions" />
+</Cards>

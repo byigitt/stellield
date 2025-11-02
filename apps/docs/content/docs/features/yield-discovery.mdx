@@ -1,0 +1,258 @@
+---
+title: AI-Powered Yield Discovery
+description: How Stellield discovers and tracks yield opportunities across Stellar Network
+---
+
+# AI-Powered Yield Discovery
+
+Stellield uses automated systems and AI to continuously discover, evaluate, and track yield opportunities across the Stellar ecosystem.
+
+## How It Works
+
+### 1. Automated Protocol Scanning
+
+Every 10 minutes, our system:
+
+- **Queries ValidationCloud Infrastructure**: Direct access to Stellar RPC nodes
+- **Monitors Soroban Events**: Real-time smart contract activity
+- **Scans Horizon APIs**: Historical transaction data and ledger state
+- **Tracks DefiLlama**: Cross-references with aggregated DeFi data
+- **Checks Protocol APIs**: Direct integration with major Stellar protocols
+
+### 2. Data Collection
+
+For each discovered opportunity, we gather:
+
+#### Core Metrics
+- **APY (Annual Percentage Yield)**: Current and historical rates
+- **TVL (Total Value Locked)**: Protocol size and trust indicator
+- **Volume**: 24h, 7d, and 30d trading/activity volume
+- **Liquidity Depth**: Available liquidity for entries/exits
+
+#### Protocol Information
+- **Smart Contract Addresses**: Verified on-chain addresses
+- **Audit Status**: Security audit reports and dates
+- **Launch Date**: Protocol maturity indicator
+- **Team Information**: Transparency and credibility
+
+#### Risk Signals
+- **IL Risk**: Impermanent loss potential
+- **Volatility**: Historical APY stability
+- **Exposure**: Single vs. multi-chain
+- **Predictions**: ML model confidence scores
+
+### 3. AI Analysis
+
+Our machine learning models process the data to:
+
+#### Classify Risk Tiers
+Using 5 key dimensions:
+- **Protocol Integrity (35%)**: Audits, maturity, team reputation
+- **Liquidity & Execution (25%)**: Depth, slippage, exit capacity
+- **Performance Stability (15%)**: APY consistency, drawdowns
+- **Network & Custody (15%)**: Chain security, contract safety
+- **Operational Signals (10%)**: Volume trends, user activity
+
+#### Generate Predictions
+- **Expected APY**: Projected yield based on historical patterns
+- **Confidence Score**: Model certainty (0-100%)
+- **Trend Classification**: Stable/Up, Neutral, or Down
+- **Risk Probability**: Likelihood of adverse events
+
+#### Portfolio Recommendations
+- **Optimal Allocation**: Suggested percentage per protocol
+- **Diversification**: Risk-adjusted spread across opportunities
+- **Rebalancing Signals**: When to shift allocations
+
+## Data Sources
+
+### Primary Sources
+
+#### ValidationCloud
+- **Real-time RPC access** to Stellar Network
+- **Sub-second latency** for current state
+- **99.9% uptime** guaranteed infrastructure
+- **Direct Soroban integration**
+
+#### DefiLlama
+- **Historical APY data** across 2000+ protocols
+- **TVL tracking** with 5-minute updates
+- **Cross-chain comparisons**
+- **ML yield predictions**
+
+#### Horizon API
+- **Official Stellar API** for ledger data
+- **Liquidity pool information**
+- **Transaction history**
+- **Asset metadata**
+
+### Secondary Sources
+
+#### CoinGecko
+- **Asset price data** (XLM, USDC, etc.)
+- **Market cap information**
+- **Trading volume**
+
+#### Protocol APIs
+- **Soroban AMM**: Direct pool data
+- **Aquarius**: Reward emission schedules
+- **StellarX**: Order book depth
+- **Blend Protocol**: Lending metrics
+
+## Update Frequency
+
+Different data points update at different intervals:
+
+| Data Type | Update Frequency | Source |
+|-----------|-----------------|--------|
+| APY Rates | 10 minutes | DefiLlama + Protocol APIs |
+| TVL | 10 minutes | DefiLlama |
+| Prices | 1 minute | CoinGecko |
+| Risk Scores | 1 hour | Internal ML Models |
+| Predictions | 6 hours | AI Analysis |
+| Audits | 24 hours | Manual Review |
+
+## Opportunity Filtering
+
+### Minimum Criteria
+
+To appear on Stellield, opportunities must meet:
+
+- **Minimum TVL**: $100,000 USD equivalent
+- **Minimum Liquidity**: $50,000 available depth
+- **Data Availability**: At least 7 days of history
+- **Smart Contract**: Verified and published source code
+- **Active**: Transaction within last 48 hours
+
+### Quality Filters
+
+We prioritize opportunities with:
+- Security audits from reputable firms
+- Longer operational history (30+ days)
+- Higher liquidity (>$1M)
+- Stable APY (low volatility)
+- Known team members
+
+## Discovery Categories
+
+### Yield Types
+
+#### Liquidity Mining
+- **Mechanism**: Provide liquidity to AMM pools
+- **Rewards**: Trading fees + token incentives
+- **Risk**: Impermanent loss, smart contract risk
+- **Examples**: Soroban AMM, Stellar DEX LP
+
+#### Lending/Borrowing
+- **Mechanism**: Lend assets to borrowers
+- **Rewards**: Interest from borrowers
+- **Risk**: Default risk, protocol risk
+- **Examples**: Blend Protocol
+
+#### Staking
+- **Mechanism**: Lock tokens for network security
+- **Rewards**: Staking rewards + fees
+- **Risk**: Slashing, lock-up periods
+- **Examples**: Liquid staking protocols
+
+#### Yield Aggregators
+- **Mechanism**: Auto-compound across strategies
+- **Rewards**: Optimized yields minus fees
+- **Risk**: Strategy risk, multiple protocol exposure
+- **Examples**: Aquarius Rewards
+
+### Asset Types
+
+#### Stablecoins
+- **Assets**: USDC, EURC
+- **Characteristics**: Low volatility, predictable returns
+- **Use Case**: Capital preservation + yield
+
+#### Native Tokens
+- **Assets**: XLM
+- **Characteristics**: Higher volatility, network exposure
+- **Use Case**: Long-term holders earning passive income
+
+#### LP Tokens
+- **Assets**: Pool shares (XLM-USDC, etc.)
+- **Characteristics**: Exposure to both assets, trading fees
+- **Use Case**: Liquidity providers
+
+## AI Model Architecture
+
+### Input Features (50+)
+
+Our models consider:
+- Historical APY (mean, median, std dev)
+- Volume trends (24h, 7d, 30d changes)
+- TVL growth rate
+- Liquidity depth changes
+- Smart contract age
+- Audit status and recency
+- Team transparency score
+- Social media sentiment
+- Competitor comparison
+- Market correlation
+
+### Model Types
+
+#### Random Forest Classifier
+- **Purpose**: Risk tier classification
+- **Accuracy**: 87% on historical data
+- **Features**: 52 input variables
+- **Output**: A/B/C/D tier probability
+
+#### LSTM Neural Network
+- **Purpose**: APY prediction
+- **Accuracy**: ±2% MAE (Mean Absolute Error)
+- **Lookback**: 30-day windows
+- **Output**: 7-day expected APY
+
+#### XGBoost Regressor
+- **Purpose**: Anomaly detection
+- **Accuracy**: 92% detection rate
+- **Features**: 40 input variables
+- **Output**: Risk probability score
+
+### Model Updates
+
+- **Retraining**: Weekly with new data
+- **Backtesting**: Continuous validation
+- **Versioning**: All models tagged with deployment dates
+- **Rollback**: Ability to revert to previous versions
+
+## Transparency & Explainability
+
+### SHAP Values
+
+Every AI prediction includes:
+- **Feature Importance**: Which factors drove the decision
+- **Confidence Intervals**: Prediction uncertainty ranges
+- **Historical Accuracy**: Model performance on similar opportunities
+
+### Manual Overrides
+
+Our team can:
+- Flag opportunities for additional review
+- Adjust risk tiers based on off-chain information
+- Remove opportunities with security concerns
+- Add editorial notes on specific protocols
+
+## Limitations
+
+> **No Guarantee**: AI predictions are not guarantees. Past performance ≠ future results.
+
+> **Data Lag**: Some data sources have inherent delays (up to 10 minutes).
+
+> **Black Swan Events**: Models cannot predict unprecedented events.
+
+> **Manual Review**: New protocols require human verification before listing.
+
+## Next Steps
+
+<Cards>
+  <Card title="Risk Assessment" href="/docs/features/risk-assessment" description="Understand how we evaluate risk" />
+  <Card title="Risk Tiers" href="/docs/risk/risk-tiers" description="Learn about A-D classifications" />
+  <Card title="Data Sources" href="/docs/technical/data-sources" description="Detailed source documentation" />
+  <Card title="Architecture" href="/docs/technical/architecture" description="System design overview" />
+</Cards>

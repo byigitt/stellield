@@ -1,0 +1,267 @@
+---
+title: Troubleshooting Guide
+description: Solutions to common technical issues
+---
+
+# Troubleshooting Guide
+
+## Wallet Connection Issues
+
+### Cannot Connect Wallet
+
+**Symptoms**: "Connect Wallet" button doesn't respond or throws error
+
+**Solutions**:
+1. Refresh the page
+2. Ensure wallet extension is installed and unlocked
+3. Try a different browser (Chrome recommended)
+4. Disable ad blockers temporarily
+5. Clear browser cache and cookies
+
+### Wrong Network Warning
+
+**Symptoms**: Red network indicator showing wrong chain
+
+**Solution**:
+```
+1. Click network indicator in header
+2. Wallet will prompt to switch networks
+3. Approve the network switch to Sepolia Testnet
+4. If not prompted, manually add network:
+   - Chain ID: 11155111
+   - RPC: https://rpc.sepolia.org
+   - Currency: SepoliaETH
+```
+
+### Wallet Disconnects Frequently
+
+**Cause**: Session timeout or extension issues
+
+**Solutions**:
+1. Check wallet extension is up to date
+2. Re-connect and stay on same tab
+3. Try different wallet provider
+4. Disable other wallet extensions (conflicts)
+
+## Balance & Display Issues
+
+### Balance Shows "Loading..."
+
+**Causes**: RPC query timeout or network issues
+
+**Solutions**:
+1. Wait 30 seconds for query to complete
+2. Refresh the page
+3. Check wallet is on correct network (Sepolia)
+4. Verify internet connection
+
+### Balance is $0 but I have funds
+
+**Possible Causes**:
+- Wrong network (check you're on Sepolia)
+- Testnet funds (no real value)
+- Price API temporary outage
+
+**Solutions**:
+1. Verify network: Should show "Sepolia Testnet"
+2. Check actual balance in wallet extension
+3. If persistent, refresh after 5 minutes
+
+### USD value seems incorrect
+
+**Cause**: Testnet mode uses real prices but testnet funds
+
+**Note**: USD values are estimates only. Sepolia ETH has no actual value.
+
+## Data & Loading Issues
+
+### Opportunities Not Loading
+
+**Symptoms**: Empty cards or perpetual loading spinners
+
+**Solutions**:
+1. Check internet connection
+2. Try refreshing (F5 or Ctrl+R)
+3. Clear browser cache
+4. Check DefiLlama status (status.defillama.com)
+5. Try again in 10 minutes (update cycle)
+
+### Risk Scores Show "N/A"
+
+**Cause**: Insufficient data or API timeout
+
+**Solutions**:
+1. Wait for hourly risk score update
+2. Refresh after 5 minutes
+3. Check if protocol is newly listed (<24h)
+
+### Charts Not Rendering
+
+**Causes**: Browser compatibility or script blocker
+
+**Solutions**:
+1. Enable JavaScript
+2. Disable script blockers for stellield.app
+3. Try different browser
+4. Check console for errors (F12)
+
+## Bridge Estimator Issues
+
+### "Failed to refresh pricing"
+
+**Cause**: CoinGecko API rate limit or timeout
+
+**Solutions**:
+1. Wait 60 seconds and try again
+2. Estimator uses fallback prices
+3. Calculations still valid but may be slightly off
+
+### Bridge stats not loading
+
+**Cause**: DefiLlama bridge API timeout
+
+**Solutions**:
+1. Core functionality still works
+2. Volume stats may show as "Loading..."
+3. Refresh after 5 minutes
+
+### Amount input not accepting decimals
+
+**Cause**: Browser locale settings
+
+**Solution**: Use period (.) not comma (,) for decimals
+
+## Portfolio Simulator Issues
+
+### Simulation button does nothing
+
+**Causes**: Invalid input or missing data
+
+**Checks**:
+1. Ensure amount is entered
+2. Amount must be > 0
+3. Risk tolerance is selected
+4. Allocation percentages total ≤ 100%
+
+### Results seem unrealistic
+
+**Note**: Simulations are projections, not guarantees
+
+**Verify**:
+1. Time period selected (1 month vs 1 year)
+2. Risk tolerance matches expectations
+3. Historical volatility for that period
+
+## Performance Issues
+
+### Page loads slowly
+
+**Causes**: Large dataset or slow connection
+
+**Solutions**:
+1. Check internet speed
+2. Close unnecessary browser tabs
+3. Clear cache and hard refresh (Ctrl+Shift+R)
+4. Try incognito/private mode
+
+### High CPU/memory usage
+
+**Causes**: Multiple charts rendering or memory leak
+
+**Solutions**:
+1. Refresh page periodically
+2. Close unused tabs
+3. Reduce number of open views
+4. Update browser to latest version
+
+## Error Messages
+
+### "Failed to fetch"
+
+**Meaning**: Network request to API failed
+
+**Solutions**:
+1. Check firewall/antivirus not blocking
+2. Try different network (mobile hotspot)
+3. Verify site is not blocked by ISP
+4. Check browser console for specific error
+
+### "Rate limit exceeded"
+
+**Meaning**: Too many requests to third-party API
+
+**Solutions**:
+1. Wait 60 seconds before retrying
+2. Reduce frequency of refreshes
+3. Platform will auto-retry after delay
+
+### "Transaction failed"
+
+**Note**: Stellield doesn't execute transactions
+
+**Possible**: Tried to interact with protocol directly
+
+**Solutions**:
+1. Ensure you have gas fees
+2. Check wallet approval settings
+3. Verify you're interacting with correct contract
+
+## Browser Compatibility
+
+### Recommended Browsers
+
+✅ **Fully Supported**:
+- Chrome 100+
+- Firefox 100+
+- Brave 1.40+
+- Edge 100+
+
+⚠️ **Partial Support**:
+- Safari 15+ (some features limited)
+- Opera 85+
+
+❌ **Not Supported**:
+- Internet Explorer (deprecated)
+- Very old browser versions
+
+## Mobile Issues
+
+### Wallet connection on mobile
+
+**WalletConnect Option**:
+1. Use WalletConnect
+2. Scan QR with mobile wallet app
+3. Approve connection
+
+**In-App Browsers**:
+- Trust Wallet browser
+- MetaMask mobile browser
+- Coinbase Wallet browser
+
+### Display issues on mobile
+
+**Solutions**:
+1. Rotate to landscape for tables
+2. Use pinch-to-zoom for details
+3. Some features better on desktop
+
+## Still Having Issues?
+
+If none of these solutions work:
+
+1. **Check System Status**: status.stellield.app (if available)
+2. **Browser Console**: Press F12, check for errors, report to team
+3. **Discord Support**: Join our Discord for live help
+4. **Create Issue**: Describe problem with:
+   - Browser & version
+   - Wallet type
+   - Steps to reproduce
+   - Screenshots if applicable
+
+## Next Steps
+
+<Cards>
+  <Card title="FAQ" href="/docs/support/faq" description="Common questions answered" />
+  <Card title="Security Guide" href="/docs/support/security" description="Keep your assets safe" />
+  <Card title="Quick Start" href="/docs/getting-started/quickstart" description="Get started guide" />
+</Cards>

@@ -1,0 +1,301 @@
+---
+title: Metrics Explained
+description: Detailed definitions of all metrics used in risk assessment
+---
+
+# Metrics Explained
+
+Comprehensive glossary of all metrics, formulas, and terms used throughout Stellield.
+
+## Yield Metrics
+
+### APY (Annual Percentage Yield)
+**Definition**: Annualized return including compound interest.
+
+**Formula**: 
+```
+APY = (1 + rate/periods)^periods - 1
+```
+
+**Example**: 
+- Daily rate: 0.03%
+- APY = (1 + 0.0003)^365 - 1 = 11.62%
+
+### Net APY
+**Definition**: Current on-chain yield rate.
+
+**Source**: Real-time data from protocol smart contracts via DefiLlama.
+
+**Update Frequency**: Every 10 minutes
+
+### Expected APY
+**Definition**: ML-predicted yield for next 7 days.
+
+**Model**: LSTM neural network trained on 30-day historical windows
+
+**Accuracy**: ±2% MAE (Mean Absolute Error)
+
+### APY Volatility
+**Definition**: Standard deviation of daily APY over 30 days.
+
+**Formula**:
+```
+σ = √(Σ(APY_i - μ)² / n)
+```
+
+**Interpretation**:
+- <2%: Very stable
+- 2-5%: Moderate stability
+- >5%: High volatility
+
+## Liquidity Metrics
+
+### TVL (Total Value Locked)
+**Definition**: Total USD value of assets deposited in protocol.
+
+**Calculation**: `Σ(token_amount × token_price_usd)`
+
+**Significance**:
+- >$10M: Deep liquidity
+- $1-10M: Good liquidity
+- <$1M: Shallow liquidity
+
+### Liquidity Depth
+**Definition**: Available liquidity for trades/withdrawals.
+
+**Measurement**: Maximum trade size before 2% slippage
+
+**Example**: $5M depth = can trade up to $5M with <2% slippage
+
+### 24h Volume
+**Definition**: Trading/transaction volume in last 24 hours.
+
+**Use**: Indicates market activity and liquidity availability
+
+### Slippage
+**Definition**: Price movement caused by your trade.
+
+**Formula**:
+```
+Slippage = (Execution Price - Expected Price) / Expected Price × 100%
+```
+
+**Acceptable Levels**:
+- <0.5%: Excellent
+- 0.5-2%: Good
+- >2%: High slippage
+
+## Risk Metrics
+
+### Risk Tier
+**Definition**: Letter grade classification (A-D) based on comprehensive analysis.
+
+**Values**: A (Low), B (Medium), C (Higher), D (High)
+
+**See**: [Risk Tiers](/docs/risk/risk-tiers) for details
+
+### Risk Score
+**Definition**: Numerical score (-5 to +5) used to determine tier.
+
+**Components**: 5 weighted dimensions totaling 100%
+
+**See**: [Scoring Methodology](/docs/risk/scoring-methodology)
+
+### Sharpe Ratio
+**Definition**: Risk-adjusted return measure.
+
+**Formula**:
+```
+Sharpe = (Portfolio Return - Risk-Free Rate) / Standard Deviation
+```
+
+**Interpretation**:
+- >2.0: Excellent
+- 1.5-2.0: Good
+- 1.0-1.5: Moderate
+- <1.0: Poor
+
+### Max Drawdown
+**Definition**: Largest peak-to-trough decline in value.
+
+**Formula**:
+```
+Max DD = (Trough Value - Peak Value) / Peak Value × 100%
+```
+
+**Example**: Portfolio went from $1000 → $850 → $950
+- Max DD = ($850 - $1000) / $1000 = -15%
+
+### Value at Risk (VaR)
+**Definition**: Maximum expected loss at 95% confidence over period.
+
+**Example**: 1-day VaR of $100 means 95% chance losses won't exceed $100
+
+## Performance Metrics
+
+### 7-Day APY Change
+**Definition**: Percentage change in APY over last 7 days.
+
+**Formula**: `(Current APY - APY 7d ago) / APY 7d ago × 100%`
+
+### 30-Day Mean APY
+**Definition**: Average APY over past 30 days.
+
+**Use**: Smooths out daily volatility for trend analysis
+
+### IL Risk (Impermanent Loss)
+**Definition**: Loss compared to holding assets separately.
+
+**Calculation**: For liquidity pools only
+
+**Values**:
+- "No": Stable-stable pairs
+- "Yes": Pairs with volatile assets
+
+## Protocol Metrics
+
+### Protocol Age
+**Definition**: Days since protocol launch.
+
+**Calculation**: Days between contract deployment and now
+
+**Thresholds**:
+- >365 days: Mature
+- 180-365: Established
+- 90-180: Growing
+- <90: New
+
+### Audit Status
+**Definition**: Security audit completion and recency.
+
+**Values**:
+- Multiple audits by top firms
+- Single audit
+- No audit
+
+**Recency**: <6 months preferred
+
+### Team Transparency
+**Definition**: Level of team disclosure.
+
+**Categories**:
+- Doxxed: Full team identities public
+- Semi-doxxed: Some members known
+- Anonymous: Team not disclosed
+
+## Market Metrics
+
+### Market Cap
+**Definition**: Total value of all tokens in circulation.
+
+**Formula**: `Circulating Supply × Token Price`
+
+### Fully Diluted Value (FDV)
+**Definition**: Theoretical market cap if all tokens were released.
+
+**Formula**: `Total Supply × Token Price`
+
+**Red Flag**: FDV >> Market Cap (high future dilution)
+
+### Trading Volume
+**Definition**: USD value of tokens traded in time period.
+
+**Periods**: 24h, 7d, 30d
+
+## Bridge Metrics
+
+### Bridge Fee
+**Definition**: Protocol fee charged by bridge operator.
+
+**Components**:
+- Base fee (fixed)
+- Variable fee (percentage)
+
+### Gas Cost
+**Definition**: Blockchain transaction fee.
+
+**Depends On**:
+- Network congestion
+- Transaction complexity
+- Gas price at execution
+
+### Effective Cost (bps)
+**Definition**: Total cost as basis points of transfer amount.
+
+**Formula**: `(Total Cost / Transfer Amount) × 10,000`
+
+**Example**: $10 fee on $1,000 = 100 bps = 1%
+
+## Prediction Metrics
+
+### Predicted Class
+**Definition**: ML model's directional forecast.
+
+**Values**:
+- "Stable/Up": Expected to maintain or increase
+- "Neutral": No strong directional signal
+- "Down": Expected to decrease
+
+### Predicted Probability
+**Definition**: Model confidence in prediction.
+
+**Range**: 0-100%
+
+**Interpretation**:
+- >85%: High confidence
+- 70-85%: Moderate confidence
+- <70%: Low confidence
+
+### Binned Confidence
+**Definition**: Grouped confidence levels.
+
+**Bins**:
+- 1: <50%
+- 2: 50-70%
+- 3: 70-85%
+- 4: >85%
+
+## Portfolio Metrics
+
+### Allocation Percentage
+**Definition**: Share of portfolio in each opportunity.
+
+**Formula**: `(Position Value / Total Portfolio) × 100%`
+
+### Diversification Score
+**Definition**: How spread out your investments are.
+
+**Formula**: Based on Herfindahl-Hirschman Index
+
+**Interpretation**:
+- >80: Well diversified
+- 50-80: Moderately diversified
+- <50: Concentrated
+
+### Rebalancing Need
+**Definition**: Deviation from target allocations.
+
+**Trigger**: >5% drift from targets
+
+## Technical Metrics
+
+### Update Latency
+**Definition**: Time between on-chain event and data update.
+
+**Typical Values**:
+- Prices: <1 minute
+- APY: <10 minutes
+- TVL: <10 minutes
+
+### Data Freshness
+**Definition**: Age of most recent data point.
+
+**Display**: "Updated X minutes ago"
+
+## Next Steps
+
+<Cards>
+  <Card title="Risk Tiers" href="/docs/risk/risk-tiers" description="Understanding risk classifications" />
+  <Card title="Yield Discovery" href="/docs/features/yield-discovery" description="How metrics are gathered" />
+  <Card title="Market Overview" href="/docs/features/market-overview" description="Using metrics in practice" />
+</Cards>

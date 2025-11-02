@@ -1,0 +1,149 @@
+---
+title: Circle CCTP
+description: Native USDC transfers with zero protocol fees
+---
+
+# Circle CCTP (Cross-Chain Transfer Protocol)
+
+Circle's official bridging solution for native USDC transfers across blockchains.
+
+## Overview
+
+**Key Features**:
+- ✅ **$0 Protocol Fees**: Only pay gas on destination chain
+- ✅ **Native USDC**: No wrapped tokens
+- ✅ **Burn & Mint**: True cross-chain USDC
+- ✅ **Fast Settlement**: 5-10 minutes average
+- ✅ **Widely Supported**: 5+ major chains
+
+## How It Works
+
+1. **Burn** USDC on source chain (e.g., Stellar)
+2. **Circle Attestation Service** verifies the burn
+3. **Mint** native USDC on destination chain (e.g., Ethereum)
+4. **Receive** USDC in your wallet
+
+## Supported Chains
+
+- Stellar
+- Ethereum
+- Base (Coinbase L2)
+- Avalanche C-Chain
+- Solana
+- Arbitrum (coming soon)
+
+## Cost Breakdown
+
+### Protocol Fee: $0.00
+Circle does not charge any bridging fee.
+
+### Gas Costs
+
+**Source Chain (Stellar)**:
+- Transaction: ~$0.00001 (negligible)
+
+**Destination Chain (varies)**:
+- Ethereum: $5-30 (depends on gas price)
+- Base: $0.05-0.50
+- Avalanche: $0.10-1.00
+- Solana: $0.00025
+
+### Total Example (Stellar → Ethereum)
+
+```
+Transfer: $1,000 USDC
+
+Protocol Fee:    $0.00
+Stellar Gas:     $0.00
+Ethereum Gas:    ~$12.00 (50 gwei)
+━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Cost:      $12.00 (1.2%)
+You Receive:     $988.00
+```
+
+## When to Use CCTP
+
+✅ **Best For**:
+- USDC-specific transfers
+- Large amounts (>$500)
+- Supported chain pairs
+- Users who prioritize security
+
+❌ **Not Ideal For**:
+- Non-USDC assets
+- Small transfers (<$100)
+- Chains not supported
+- Urgent transfers (<5 min)
+
+## Security
+
+**Attestation Service**:
+- Run by Circle
+- Centralized but trusted
+- Monitors all burns
+- Signs mints
+
+**Risks**:
+- Circle attestation service downtime
+- Smart contract bugs (audited by major firms)
+- Regulatory risk (Circle is regulated entity)
+
+**Audits**:
+- Multiple security audits
+- Open source contracts
+- Bug bounty program
+
+## Step-by-Step Usage
+
+### Via Stellield
+
+1. Navigate to Bridge Estimator
+2. Select "Circle CCTP"
+3. Enter USDC amount
+4. Review cost estimate
+5. Click protocol link to proceed
+
+### Direct Integration
+
+CCTP is not directly integrated into Stellield. We provide:
+- Cost estimates
+- Bridge status monitoring
+- Links to official Circle interface
+
+## Speed
+
+**Average**: 5-10 minutes
+
+**Factors**:
+- Source chain finality
+- Attestation service responsiveness
+- Destination chain congestion
+
+**Fastest Path**: Stellar → Base (~3 minutes)
+**Slowest Path**: Ethereum → Stellar (~15 minutes during congestion)
+
+## Limits
+
+- **Minimum**: $10 USDC
+- **Maximum**: None (unlimited)
+- **Daily Limit**: None
+
+## Troubleshooting
+
+**Transfer Stuck?**
+- Check attestation status on Circle's tracker
+- Verify you have gas on destination chain
+- Wait 30 minutes before escalating
+
+**Failed Transfer?**
+- USDC will be returned to source address
+- Check transaction on block explorer
+- Contact Circle support if unresolved
+
+## Next Steps
+
+<Cards>
+  <Card title="Bridge Estimator" href="/docs/features/bridge-estimator" description="Calculate your CCTP costs" />
+  <Card title="Soroban Bridge" href="/docs/bridge/soroban-bridge" description="Alternative for XLM transfers" />
+  <Card title="Cost Comparison" href="/docs/bridge/cost-comparison" description="Compare all bridges" />
+</Cards>
