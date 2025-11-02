@@ -9,7 +9,17 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Marquee } from "@/components/ui/marquee";
 import Image from "next/image";
+
+import Lorem1 from "../../public/landing-logos/1.svg";
+import Lorem2 from "../../public/landing-logos/2.svg";
+import Lorem3 from "../../public/landing-logos/3.svg";
+import Lorem4 from "../../public/landing-logos/4.svg";
+import Lorem5 from "../../public/landing-logos/5.svg";
+import Lorem6 from "../../public/landing-logos/6.svg";
+import Lorem7 from "../../public/landing-logos/7.svg";
+import Lorem8 from "../../public/landing-logos/8.svg";
 
 function XIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -106,6 +116,44 @@ export default function Home() {
         {/* Scroll indicator */}
         <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2">
           <ChevronDown className="w-6 h-6 text-gray-400 animate-bounce" />
+        </div>
+      </section>
+
+
+      {/* Backed By Section */}
+      <section className="py-20 md:py-32 relative overflow-hidden bg-black -mb-12">
+        {/* Background with gradient */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900/30 via-black to-black"></div>
+        </div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-8 md:mb-12 text-center">
+            Backed By
+          </h2>
+
+          <Marquee pauseOnHover fade className="[--duration:30s] [--gap:6rem] max-w-7xl mx-auto">
+            {[
+              Lorem1,
+              Lorem2,
+              Lorem3,
+              Lorem4,
+              Lorem5,
+              Lorem6,
+              Lorem7,
+              Lorem8,
+            ].map((logo, index) => (
+              <div key={index} className="flex-shrink-0 h-16 flex items-center justify-center">
+                <Image 
+                  src={logo} 
+                  alt="Partner Logo" 
+                  width={120} 
+                  height={64}
+                  className="h-16 w-auto object-contain grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                />
+              </div>
+            ))}
+          </Marquee>
         </div>
       </section>
 
@@ -536,44 +584,6 @@ export default function Home() {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-          </div>
-        </div>
-      </section>
-
-      {/* Backed By Section */}
-      <section className="py-20 md:py-32 relative overflow-hidden bg-black">
-        {/* Background with gradient */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900/30 via-black to-black"></div>
-        </div>
-
-        <div className="container mx-auto px-4 relative z-10">
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-8 md:mb-12 text-center">
-            Backed By
-          </h2>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 max-w-5xl mx-auto">
-            {[
-              "StellarOrg",
-              "Lightcurve",
-              "Stellar Dev Foundation",
-              "Meridian",
-              "Ultra Capital",
-              "SoroVerse",
-              "SettleNetwork",
-              "DeFi Collective",
-              "Stellar Labs",
-              "Validators"
-            ].map((partner) => (
-              <div
-                key={partner}
-                className="glass-panel p-4 md:p-6 rounded-xl flex items-center justify-center min-h-[80px] md:min-h-[100px] hover:bg-white/5 transition-colors"
-              >
-                <span className="text-gray-400 font-medium text-xs md:text-sm text-center">
-                  {partner}
-                </span>
-              </div>
-            ))}
           </div>
         </div>
       </section>
