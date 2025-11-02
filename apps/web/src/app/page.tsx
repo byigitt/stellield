@@ -36,7 +36,7 @@ export default function Home() {
         <div className="absolute inset-0 -top-16">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-950/40 via-slate-950 to-black"></div>
           <div 
-            className="absolute inset-0 opacity-60 blur-md scale-105"
+            className="absolute inset-0 opacity-60 blur-sm scale-105"
             style={{
               backgroundImage: 'url(/landing-page-bg.png)',
               backgroundSize: 'cover',

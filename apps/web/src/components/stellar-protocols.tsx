@@ -44,7 +44,7 @@ interface Protocol {
 	audited: boolean;
 }
 
-type Network = "Stellar" | "Solana";
+type Network = "Stellar" | "Solana" | "Ethereum";
 
 const getRiskBadgeColor = (tier: string) => {
 	switch (tier) {
@@ -193,6 +193,17 @@ export default function StellarProtocols() {
 		refetchInterval: 60_000,
 	});
 
+	const {
+		data: ethereumPools,
+		isLoading: isLoadingEthereum,
+		error: ethereumError,
+	} = useQuery({
+		queryKey: ["defillama-pools", "Ethereum"],
+		queryFn: () => fetchDefiLlamaPools("Ethereum"),
+		staleTime: 60_000,
+		refetchInterval: 60_000,
+	});
+
 	useEffect(() => {
 		setAssetFilter("All Assets");
 		setTypeFilter("All Types");
@@ -211,11 +222,20 @@ export default function StellarProtocols() {
 			.slice(0, 12)
 			.map(mapPoolToProtocol);
 	}, [solanaPools]);
+	const mappedEthereumProtocols = useMemo(() => {
+		return (ethereumPools ?? [])
+			.sort((a, b) => (b.tvlUsd ?? 0) - (a.tvlUsd ?? 0))
+			.slice(0, 12)
+			.map(mapPoolToProtocol);
+	}, [ethereumPools]);
+
 
 	const displayedProtocols =
 		networkFilter === "Stellar"
 			? mappedStellarProtocols
-			: mappedSolanaProtocols;
+			: networkFilter === "Solana"
+				? mappedSolanaProtocols
+				: mappedEthereumProtocols;
 
 	const assetOptions = useMemo(() => {
 		const baseAssets = new Set<string>();
@@ -268,9 +288,17 @@ export default function StellarProtocols() {
 	}, [filteredProtocols]);
 
 	const isLoadingCurrent =
-		networkFilter === "Stellar" ? isLoadingStellar : isLoadingSolana;
+		networkFilter === "Stellar"
+			? isLoadingStellar
+			: networkFilter === "Solana"
+				? isLoadingSolana
+				: isLoadingEthereum;
 	const currentError =
-		networkFilter === "Stellar" ? stellarError : solanaError;
+		networkFilter === "Stellar"
+			? stellarError
+			: networkFilter === "Solana"
+				? solanaError
+				: ethereumError;
 
 	return (
 		<div className="glass-card rounded-2xl p-6 border border-white/10">
@@ -296,6 +324,9 @@ export default function StellarProtocols() {
 						</DropdownMenuItem>
 						<DropdownMenuItem onClick={() => setNetworkFilter("Solana")}>
 							Solana
+						</DropdownMenuItem>
+						<DropdownMenuItem onClick={() => setNetworkFilter("Ethereum")}>
+							Ethereum
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

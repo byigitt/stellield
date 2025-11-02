@@ -25,6 +25,7 @@ import {
   BadgeCheck,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
+import { trpc } from "@/utils/trpc";
 import {
   Dialog,
   DialogContent,
@@ -248,7 +249,11 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
   const [steps, setSteps] = useState<Step[]>(buildInitialSteps);
   const [flowSteps, setFlowSteps] = useState<YieldFlowState[]>(buildInitialFlowState);
   const [flowStatus, setFlowStatus] = useState<"idle" | "running" | "completed">("idle");
+  const [currentFlowId, setCurrentFlowId] = useState<string | null>(null);
   const timersRef = useRef<number[]>([]);
+
+  // State for backend flow tracking
+  const [backendFlowStatus, setBackendFlowStatus] = useState<any>(null);
 
   const totalFlowDuration = useMemo(
     () => FLOW_BLUEPRINT.reduce((acc, step) => acc + step.duration, 0),
@@ -409,6 +414,13 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
     const finalizeTimer = window.setTimeout(() => {
       setFlowSteps(prev => prev.map(step => ({ ...step, status: "completed" })));
       setFlowStatus("completed");
+      
+      // Add 3-second delay before resetting to deposit screen
+      const resetTimer = window.setTimeout(() => {
+        resetFlowState();
+      }, 3000);
+      
+      timersRef.current.push(resetTimer);
     }, totalFlowDuration);
 
     timersRef.current.push(finalizeTimer);
@@ -422,7 +434,7 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
     setCurrentStep(0);
   }, [clearFlowTimers]);
 
-  const handlePrimaryAction = () => {
+  const handlePrimaryAction = async () => {
     if (currentStep < steps.length - 1) {
       setSteps(prev => {
         const next = [...prev];
@@ -441,7 +453,24 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
     );
 
     if (flowStatus === "running") return;
-    startYieldFlow();
+    
+    // Start real backend flow
+    try {
+      const result = await trpc.stellar.startYieldFlow.mutate({
+        xlmAmount: depositXLM.toFixed(7),
+        walletAddress: walletAddress,
+      });
+      
+      setCurrentFlowId(result.flowId);
+      setFlowStatus("running");
+      
+      // Also start the UI animation
+      startYieldFlow();
+    } catch (error: any) {
+      console.error('Failed to start yield flow:', error);
+      // Fallback to simulation if backend fails
+      startYieldFlow();
+    }
   };
 
   useEffect(() => {
@@ -452,6 +481,81 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
       clearFlowTimers();
     };
   }, [open, clearFlowTimers, resetFlowState]);
+
+  // Poll backend flow status
+  useEffect(() => {
+    if (!currentFlowId || flowStatus !== "running") return;
+
+    const pollInterval = setInterval(async () => {
+      try {
+        const status = await trpc.stellar.getFlowStatus.query({ flowId: currentFlowId });
+        setBackendFlowStatus(status);
+      } catch (error) {
+        console.error('Failed to poll flow status:', error);
+      }
+    }, 1000);
+
+    return () => clearInterval(pollInterval);
+  }, [currentFlowId, flowStatus]);
+
+  // Sync backend flow status with UI
+  useEffect(() => {
+    if (!backendFlowStatus) return;
+
+    console.log('Backend flow update:', backendFlowStatus);
+
+    // Map backend steps to UI step IDs
+    const stepMapping: Record<string, string> = {
+      'XLM_TO_USDC_SWAP': 'swap',
+      'USDC_BURN_STELLAR_TO_ETH': 'burn-stellar',
+      'BRIDGE_ATTESTATION_STELLAR_TO_ETH': 'attestation-forward',
+      'USDC_MINT_ETHEREUM': 'mint-ethereum',
+      'AAVE_SUPPLY': 'supply-aave',
+      'YIELD_ACCUMULATION': 'yield-sim',
+      'AAVE_WITHDRAW': 'withdraw-aave',
+      'USDC_BURN_ETHEREUM': 'burn-eth',
+      'BRIDGE_ATTESTATION_ETH_TO_STELLAR': 'attestation-return',
+      'USDC_MINT_STELLAR_FROM_ETH': 'analyze', // Mint triggers analyze
+      'USDC_TO_XLM_SWAP': 'swap-back',
+      'XLM_RETURNED': 'swap-back',
+    };
+
+    const currentUIStep = stepMapping[backendFlowStatus.currentStep];
+    
+    if (currentUIStep) {
+      setFlowSteps(prev =>
+        prev.map(step => {
+          const stepIndex = FLOW_BLUEPRINT.findIndex(s => s.id === step.id);
+          const currentStepIndex = FLOW_BLUEPRINT.findIndex(s => s.id === currentUIStep);
+          
+          if (stepIndex < currentStepIndex) {
+            return { ...step, status: "completed" as const };
+          } else if (stepIndex === currentStepIndex) {
+            return { ...step, status: "active" as const };
+          }
+          return { ...step, status: "pending" as const };
+        })
+      );
+    }
+
+    // Handle completion
+    if (backendFlowStatus.status === 'COMPLETED') {
+      setFlowSteps(prev => prev.map(step => ({ ...step, status: "completed" as const })));
+      setFlowStatus("completed");
+      
+      setTimeout(() => {
+        resetFlowState();
+        setCurrentFlowId(null);
+      }, 3000);
+    }
+
+    // Handle failure
+    if (backendFlowStatus.status === 'FAILED') {
+      console.error('Backend flow failed:', backendFlowStatus.error);
+      // Keep showing current progress, but stop polling
+      setFlowStatus("idle");
+    }
+  }, [backendFlowStatus]);
 
   const receiptTokenAmount = depositAmount
     ? (parseFloat(depositAmount) * parseFloat(MOCK_DATA.exchangeRate)).toFixed(4)
@@ -598,7 +702,7 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
           {/* Right Panel - Deposit Form */}
           <div className="space-y-4 p-6 flex-1 min-w-0">
             {/* Yield Flow Visualizer - Only show when simulation is running */}
-            {flowStatus === "running" && (
+            {(flowStatus === "running" || flowStatus === "completed") && (
               <div className="max-w-[520px]">
                 <div className="rounded-2xl border border-gray-700/80 bg-gray-800/40 p-5 shadow-[0_20px_40px_rgba(15,23,42,0.25)]">
                   <div className="flex items-start justify-between">
@@ -701,7 +805,8 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
               </div>
             )}
 
-            {/* Progress Steps */}
+            {/* Progress Steps - Hide during simulation */}
+            {flowStatus === "idle" && (
             <div className="relative mb-4 max-w-[480px]">
               <div className="flex items-start justify-between">
                 {steps.map((step, index) => (
@@ -755,8 +860,11 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
                 ))}
               </div>
             </div>
+            )}
 
-            {/* Deposit Input */}
+            {/* Deposit Input - Hide during simulation */}
+            {flowStatus === "idle" && (
+            <>
             <div className="space-y-2 max-w-[480px]">
               <label className="text-gray-400 text-sm flex items-center justify-between">
                 <span>Enter to Deposit</span>
@@ -922,6 +1030,8 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
                   Minimum deposit amount is {MOCK_DATA.minDeposit.toLocaleString()} USDC
                 </p>
               </div>
+            )}
+            </>
             )}
           </div>
         </div>

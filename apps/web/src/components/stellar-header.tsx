@@ -57,9 +57,10 @@ const normalizeChainId = (value?: string | number | null) => {
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
   { label: "Yields", href: "/dashboard/yields" },
-  { label: "Portfolio", href: "/dashboard/portfolio" },
+  { label: "Agent", href: "/dashboard/agent" },
+  { label: "Transactions", href: "/dashboard/transactions" },
   { label: "Bridge", href: "/dashboard/bridge" },
-  { label: "Analytics", href: "/dashboard/analytics" }
+  { label: "Docs", href: "/docs" },
 ];
 
 export default function StellarHeader() {

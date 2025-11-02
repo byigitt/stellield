@@ -1,4 +1,6 @@
 import { protectedProcedure, publicProcedure, router } from "../index";
+import { stellarRouter } from "./stellar";
+import { agentRouter } from "./agent";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => {
@@ -10,5 +12,7 @@ export const appRouter = router({
 			user: ctx.session.user,
 		};
 	}),
+	stellar: stellarRouter,
+	agent: agentRouter,
 });
 export type AppRouter = typeof appRouter;
