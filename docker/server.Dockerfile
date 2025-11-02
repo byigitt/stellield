@@ -41,11 +41,13 @@ RUN apk add --no-cache dumb-init
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nodejs
 
-# Copy built files
+# Copy built files and dependencies
 COPY --from=builder --chown=nodejs:nodejs /app/apps/server/dist ./apps/server/dist
+COPY --from=builder --chown=nodejs:nodejs /app/apps/server/node_modules ./apps/server/node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=nodejs:nodejs /app/packages ./packages
 COPY --from=builder --chown=nodejs:nodejs /app/apps/server/package.json ./apps/server/
+COPY --from=builder --chown=nodejs:nodejs /app/package.json ./package.json
 
 USER nodejs
 
