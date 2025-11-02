@@ -254,6 +254,9 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
 
   // State for backend flow tracking
   const [backendFlowStatus, setBackendFlowStatus] = useState<any>(null);
+  
+  // tRPC mutation hook for starting yield flow
+  const startYieldFlowMutation = trpc.stellar.startYieldFlow.useMutation();
 
   const totalFlowDuration = useMemo(
     () => FLOW_BLUEPRINT.reduce((acc, step) => acc + step.duration, 0),
@@ -456,7 +459,7 @@ export default function DepositDialog({ open, onOpenChange }: DepositDialogProps
     
     // Start real backend flow
     try {
-      const result = await trpc.stellar.startYieldFlow.mutate({
+      const result = await startYieldFlowMutation.mutateAsync({
         xlmAmount: depositXLM.toFixed(7),
         walletAddress: walletAddress,
       });
