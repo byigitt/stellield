@@ -10,17 +10,70 @@
 
 html,
 body {
-  @apply bg-gradient-to-br from-[#0a0e27] via-[#151932] to-[#1a1f3a];
   min-height: 100vh;
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+html.dark,
+html.dark body {
+  @apply bg-gradient-to-br from-[#0a0e27] via-[#151932] to-[#1a1f3a];
+  color-scheme: dark;
+}
+
+html:not(.dark),
+html:not(.dark) body {
+  @apply bg-white;
+  color-scheme: light;
 }
 
 :root {
   --radius: 0.75rem;
 
+  /* Light Theme (Default) */
+  --background: 255 255 255;
+  --foreground: 15 23 42;
+  --card: 255 255 255;
+  --card-foreground: 15 23 42;
+  --popover: 255 255 255;
+  --popover-foreground: 15 23 42;
+  --primary: 37 99 235;
+  --primary-foreground: 255 255 255;
+  --secondary: 241 245 249;
+  --secondary-foreground: 15 23 42;
+  --muted: 241 245 249;
+  --muted-foreground: 100 116 139;
+  --accent: 241 245 249;
+  --accent-foreground: 15 23 42;
+  --destructive: 239 68 68;
+  --destructive-foreground: 255 255 255;
+  --border: 226 232 240;
+  --input: 226 232 240;
+  --ring: 37 99 235;
+
+  /* Chart Colors */
+  --chart-1: 59 130 246;
+  --chart-2: 34 197 94;
+  --chart-3: 251 146 60;
+  --chart-4: 139 92 246;
+  --chart-5: 248 113 113;
+
+  /* Status colors */
+  --success: 34 197 94;
+  --warning: 251 191 36;
+  --info: 59 130 246;
+  --error: 239 68 68;
+
+  /* Sidebar colors for light mode */
+  --sidebar: 248 250 252;
+  --sidebar-foreground: 15 23 42;
+  --sidebar-primary: 37 99 235;
+  --sidebar-primary-foreground: 255 255 255;
+  --sidebar-accent: 241 245 249;
+  --sidebar-accent-foreground: 15 23 42;
+  --sidebar-border: 226 232 240;
+  --sidebar-ring: 37 99 235;
+}
+
+.dark {
   /* DeFi Dark Theme */
   --background: 10 14 39;
   --foreground: 210 217 233;
@@ -59,37 +112,15 @@ body {
   --glass-border: rgba(255, 255, 255, 0.1);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
 
-  /* Status colors */
-  --success: 34 197 94;
-  --warning: 251 191 36;
-  --info: 59 130 246;
-  --error: 239 68 68;
-}
-
-.dark {
-  --background: 10 14 39;
-  --foreground: 210 217 233;
-  --card: 17 23 48;
-  --card-foreground: 210 217 233;
-  --popover: 17 23 48;
-  --popover-foreground: 210 217 233;
-  --primary: 59 130 246;
-  --primary-foreground: 250 250 250;
-  --secondary: 88 101 242;
-  --secondary-foreground: 250 250 250;
-  --muted: 30 41 67;
-  --muted-foreground: 148 163 184;
-  --accent: 129 140 248;
-  --accent-foreground: 250 250 250;
-  --destructive: 239 68 68;
-  --border: 30 41 59;
-  --input: 30 41 59;
-  --ring: 129 140 248;
-  --chart-1: 96 165 250;
-  --chart-2: 52 211 153;
-  --chart-3: 251 146 60;
-  --chart-4: 167 139 250;
-  --chart-5: 248 113 113;
+  /* Sidebar colors matching main app theme */
+  --sidebar: 17 23 48;
+  --sidebar-foreground: 210 217 233;
+  --sidebar-primary: 59 130 246;
+  --sidebar-primary-foreground: 250 250 250;
+  --sidebar-accent: 30 41 67;
+  --sidebar-accent-foreground: 210 217 233;
+  --sidebar-border: 30 41 59;
+  --sidebar-ring: 129 140 248;
 }
 
 @theme inline {
@@ -189,3 +220,83 @@ body {
 /* Import fumadocs styles after our custom theme */
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+
+/* Custom sidebar styling for light mode */
+html:not(.dark) #nd-sidebar {
+  @apply bg-slate-50 border-slate-200;
+}
+
+html:not(.dark) #nd-sidebar * {
+  @apply text-slate-900;
+}
+
+html:not(.dark) #nd-sidebar a {
+  @apply text-slate-700 hover:text-blue-600;
+}
+
+html:not(.dark) #nd-sidebar a[aria-current="page"],
+html:not(.dark) #nd-sidebar a.active {
+  @apply text-blue-600 bg-blue-50;
+}
+
+html:not(.dark) #nd-sidebar button {
+  @apply text-slate-700 hover:text-slate-900;
+}
+
+/* Dark mode sidebar styling */
+html.dark #nd-sidebar {
+  @apply bg-[rgb(17,23,48)] border-[rgb(30,41,59)];
+}
+
+html.dark #nd-sidebar * {
+  @apply text-[rgb(210,217,233)];
+}
+
+html.dark #nd-sidebar a {
+  @apply text-[rgb(148,163,184)] hover:text-[rgb(59,130,246)];
+}
+
+html.dark #nd-sidebar a[aria-current="page"],
+html.dark #nd-sidebar a.active {
+  @apply text-[rgb(59,130,246)] bg-[rgb(30,41,67)];
+}
+
+html.dark #nd-sidebar button {
+  @apply text-[rgb(210,217,233)] hover:text-[rgb(59,130,246)];
+}
+
+/* Custom TOC (Table of Contents) styling for light mode */
+html:not(.dark) #nd-tocnav {
+  @apply bg-slate-50 border-slate-200;
+}
+
+html:not(.dark) #nd-tocnav * {
+  @apply text-slate-900;
+}
+
+html:not(.dark) #nd-tocnav a {
+  @apply text-slate-700 hover:text-blue-600;
+}
+
+html:not(.dark) #nd-tocnav a[aria-current="true"],
+html:not(.dark) #nd-tocnav a.active {
+  @apply text-blue-600;
+}
+
+/* Dark mode TOC styling */
+html.dark #nd-tocnav {
+  @apply bg-[rgb(17,23,48)] border-[rgb(30,41,59)];
+}
+
+html.dark #nd-tocnav * {
+  @apply text-[rgb(210,217,233)];
+}
+
+html.dark #nd-tocnav a {
+  @apply text-[rgb(148,163,184)] hover:text-[rgb(59,130,246)];
+}
+
+html.dark #nd-tocnav a[aria-current="true"],
+html.dark #nd-tocnav a.active {
+  @apply text-[rgb(59,130,246)];
+}
