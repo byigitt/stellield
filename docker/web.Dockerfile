@@ -15,7 +15,6 @@ COPY apps/web/package.json ./apps/web/
 COPY packages/api/package.json ./packages/api/
 COPY packages/auth/package.json ./packages/auth/
 COPY packages/db/package.json ./packages/db/
-COPY packages/ui/package.json ./packages/ui/ 2>/dev/null || true
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
