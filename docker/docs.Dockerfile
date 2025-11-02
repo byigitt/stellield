@@ -12,11 +12,14 @@ COPY pnpm-workspace.yaml package.json pnpm-lock.yaml ./
 # Copy docs package.json
 COPY apps/docs/package.json ./apps/docs/
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install dependencies (skip postinstall scripts)
+RUN pnpm install --frozen-lockfile --ignore-scripts
 
-# Copy docs source code
+# Copy docs source code (needed for fumadocs-mdx to generate .source)
 COPY apps/docs ./apps/docs
+
+# Run fumadocs-mdx to generate .source directory
+RUN pnpm --filter docs run postinstall
 
 # Build the documentation site
 RUN pnpm --filter docs build
