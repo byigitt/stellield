@@ -38,9 +38,45 @@ import { cn } from "@/lib/utils";
 import { RISK_COLOR_SCHEME } from "@/lib/metrics";
 
 const RISK_OPTIONS = [
-	{ value: "low", label: "Low Risk", description: "Safer, stable yields" },
-	{ value: "medium", label: "Medium Risk", description: "Balanced approach" },
-	{ value: "high", label: "High Risk", description: "Maximum returns" },
+	{ 
+		value: "low", 
+		label: "Low Risk", 
+		description: "Safer, stable yields",
+		icon: Shield,
+		color: "from-green-500 to-emerald-600",
+		bgGradient: "from-green-950/40 to-green-900/20",
+		borderColor: "border-green-700/30",
+		hoverBorder: "hover:border-green-500/50",
+		selectedBorder: "border-green-500",
+		textColor: "text-green-400",
+		percentage: "5-10%"
+	},
+	{ 
+		value: "medium", 
+		label: "Medium Risk", 
+		description: "Balanced approach",
+		icon: TrendingUp,
+		color: "from-yellow-500 to-orange-600",
+		bgGradient: "from-yellow-950/40 to-yellow-900/20",
+		borderColor: "border-yellow-700/30",
+		hoverBorder: "hover:border-yellow-500/50",
+		selectedBorder: "border-yellow-500",
+		textColor: "text-yellow-400",
+		percentage: "10-20%"
+	},
+	{ 
+		value: "high", 
+		label: "High Risk", 
+		description: "Maximum returns",
+		icon: AlertTriangle,
+		color: "from-red-500 to-rose-600",
+		bgGradient: "from-red-950/40 to-red-900/20",
+		borderColor: "border-red-700/30",
+		hoverBorder: "hover:border-red-500/50",
+		selectedBorder: "border-red-500",
+		textColor: "text-red-400",
+		percentage: "20%+"
+	},
 ];
 
 const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes
@@ -102,7 +138,7 @@ export default function AgentPage() {
 					</div>
 
 					{/* Controls Grid */}
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+					<div className="space-y-6">
 						{/* Amount Input */}
 						<div className="space-y-3">
 							<Label htmlFor="amount" className="text-blue-100 font-medium flex items-center space-x-2">
@@ -125,40 +161,87 @@ export default function AgentPage() {
 							<p className="text-xs text-blue-300/70">Minimum: $1,000 USD</p>
 						</div>
 
-						{/* Risk Tolerance */}
+						{/* Risk Tolerance Cards */}
 						<div className="space-y-3">
-							<Label htmlFor="risk" className="text-blue-100 font-medium flex items-center space-x-2">
+							<Label className="text-blue-100 font-medium flex items-center space-x-2">
 								<Shield className="w-4 h-4" />
 								<span>Risk Tolerance</span>
 							</Label>
-							<Select value={riskTolerance} onValueChange={(v: any) => setRiskTolerance(v)}>
-								<SelectTrigger className="bg-blue-900/30 border-blue-700/50 text-white h-12 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20">
-									<SelectValue />
-								</SelectTrigger>
-								<SelectContent className="bg-blue-950 border-blue-800/50 backdrop-blur-xl">
-									{RISK_OPTIONS.map((option) => (
-										<SelectItem 
-											key={option.value} 
-											value={option.value}
-											className="text-white hover:bg-blue-900/50 focus:bg-blue-900/50"
+							<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+								{RISK_OPTIONS.map((option) => {
+									const Icon = option.icon;
+									const isSelected = riskTolerance === option.value;
+									return (
+										<button
+											key={option.value}
+											onClick={() => setRiskTolerance(option.value as "low" | "medium" | "high")}
+											className={cn(
+												"relative overflow-hidden rounded-xl p-5 border-2 transition-all duration-300 text-left",
+												"bg-gradient-to-br",
+												option.bgGradient,
+												isSelected ? option.selectedBorder : option.borderColor,
+												!isSelected && option.hoverBorder,
+												isSelected ? "ring-2 ring-offset-2 ring-offset-blue-950" : "",
+												isSelected && option.value === "low" ? "ring-green-500/50" : "",
+												isSelected && option.value === "medium" ? "ring-yellow-500/50" : "",
+												isSelected && option.value === "high" ? "ring-red-500/50" : "",
+												"hover:scale-[1.02] active:scale-[0.98]"
+											)}
 										>
-											<div>
-												<div className="font-medium">{option.label}</div>
-												<div className="text-xs text-blue-300/70">{option.description}</div>
+											{/* Animated Background Gradient */}
+											<div className={cn(
+												"absolute inset-0 opacity-0 transition-opacity duration-300",
+												isSelected && "opacity-100",
+												"bg-gradient-to-br",
+												option.color,
+												"blur-2xl"
+											)} />
+											
+											<div className="relative">
+												{/* Icon and Badge */}
+												<div className="flex items-center justify-between mb-3">
+													<div className={cn(
+														"p-2.5 rounded-lg bg-gradient-to-br",
+														option.color,
+														"shadow-lg"
+													)}>
+														<Icon className="w-5 h-5 text-white" />
+													</div>
+													{isSelected && (
+														<div className="flex items-center space-x-1">
+															<div className={cn("w-2 h-2 rounded-full", option.textColor.replace("text-", "bg-"), "animate-pulse")} />
+															<span className="text-xs text-white font-medium">Selected</span>
+														</div>
+													)}
+												</div>
+
+												{/* Title and Description */}
+												<div className="mb-3">
+													<h3 className="text-white font-semibold text-lg mb-1">{option.label}</h3>
+													<p className="text-sm text-gray-400">{option.description}</p>
+												</div>
+
+												{/* Expected APY Range */}
+												<div className="flex items-center justify-between pt-3 border-t border-white/10">
+													<span className="text-xs text-gray-400">Expected APY</span>
+													<span className={cn("text-sm font-bold", option.textColor)}>
+														{option.percentage}
+													</span>
+												</div>
 											</div>
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
+										</button>
+									);
+								})}
+							</div>
+							<p className="text-xs text-blue-300/70">Select your preferred risk level for yield opportunities</p>
 						</div>
 
 						{/* Action Button */}
-						<div className="space-y-3">
-							<Label className="text-blue-100 font-medium opacity-0 pointer-events-none">Action</Label>
+						<div>
 							<Button
 								onClick={handleRefresh}
 								disabled={isLoading}
-								className="w-full h-12 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white shadow-lg shadow-blue-600/30 hover:shadow-blue-500/40 transition-all duration-300 rounded-xl font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+								className="w-full h-14 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white shadow-lg shadow-blue-600/30 hover:shadow-blue-500/40 transition-all duration-300 rounded-xl font-semibold text-base disabled:opacity-50 disabled:cursor-not-allowed"
 							>
 								{isLoading ? (
 									<>

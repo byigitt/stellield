@@ -167,7 +167,7 @@ function mapPoolToProtocol(pool: DefiLlamaPool, index: number): Protocol {
 }
 
 export default function StellarProtocols() {
-	const [networkFilter, setNetworkFilter] = useState<Network>("Stellar");
+	const [networkFilter, setNetworkFilter] = useState<Network>("Ethereum");
 	const [assetFilter, setAssetFilter] = useState("All Assets");
 	const [typeFilter, setTypeFilter] = useState("All Types");
 
