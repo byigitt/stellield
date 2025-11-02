@@ -57,10 +57,10 @@ export class StellarSwap {
       
       const route = [
         sourceAsset.isNative() ? 'XLM' : sourceAsset.getCode(),
-        ...bestPath.path.map((asset) => 
+        ...bestPath.path.map((asset) =>
           asset.asset_type === 'native' ? 'XLM' : asset.asset_code
         ),
-        destAsset.getCode(),
+        destAsset.isNative() ? 'XLM' : destAsset.getCode(),
       ];
 
       // Calculate price impact (simplified)
@@ -202,6 +202,17 @@ export class StellarSwap {
       logger.error('Failed to execute swap', error);
       throw error;
     }
+  }
+
+  /**
+   * Convenience helper: Get quote for USDC → XLM swap
+   */
+  async getUSDCToXLMQuote(usdcAmount: string): Promise<SwapQuote> {
+    return this.getSwapQuote(
+      usdcAmount,
+      this.client.getUSDCAsset(),
+      StellarSdk.Asset.native()
+    );
   }
 
   /**

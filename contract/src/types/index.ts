@@ -36,8 +36,11 @@ export interface AaveConfig {
   aUSDCAddress: string;
 }
 
+export type BridgeProvider = 'circle' | 'manual';
+
 export interface BridgeConfig {
   circleAttestationApi: string;
+  provider: BridgeProvider;
 }
 
 export interface MarinadeConfig {

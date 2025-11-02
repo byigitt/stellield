@@ -34,6 +34,7 @@ export function getConfig(): AppConfig {
     },
     bridge: {
       circleAttestationApi: process.env.CIRCLE_ATTESTATION_API || 'https://iris-api-sandbox.circle.com',
+      provider: (process.env.BRIDGE_PROVIDER as AppConfig['bridge']['provider']) || 'circle',
     },
   };
 
@@ -100,4 +101,3 @@ export function getConfig(): AppConfig {
 }
 
 export const config = getConfig();
-

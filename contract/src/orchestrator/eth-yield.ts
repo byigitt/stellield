@@ -8,7 +8,7 @@ import { StellarSwap } from '../stellar/swap';
 import { StellarCCTPBurn } from '../stellar/cctp-burn';
 import { EthereumClient } from '../ethereum/client';
 import { AaveV3Service } from '../ethereum/aave';
-import { CircleAttestationService } from '../bridge/attestation';
+import { createBridgeAttestationService } from '../bridge/factory';
 import { StateManager } from './state';
 import { TransactionState, TransactionStatus, TransactionStep } from '../types';
 import { logger } from '../utils/logger';
@@ -39,7 +39,7 @@ export class EthYieldOrchestrator {
   private stellarBurn: StellarCCTPBurn;
   private ethClient: EthereumClient;
   private aave: AaveV3Service;
-  private attestation: CircleAttestationService;
+  private attestation = createBridgeAttestationService();
   private stateManager: StateManager;
 
   constructor() {
@@ -71,7 +71,6 @@ export class EthYieldOrchestrator {
       config.aave.aUSDCAddress
     );
 
-    this.attestation = new CircleAttestationService();
     this.stateManager = new StateManager();
 
     logger.info('Ethereum Yield orchestrator initialized');
@@ -311,7 +310,7 @@ export class EthYieldOrchestrator {
   }
 
   /**
-   * Step 3/8: Wait for Circle attestation
+   * Step 3/8: Wait for bridge attestation
    */
   private async waitForAttestation(
     txId: string,
@@ -578,7 +577,7 @@ export class EthYieldOrchestrator {
       );
 
       // Get quote for USDC to XLM
-      const quote = await this.stellarSwap.getSwapQuote(usdcBalance);
+      const quote = await this.stellarSwap.getUSDCToXLMQuote(usdcBalance);
 
       // Calculate minimum output with slippage
       const minOutput = this.stellarSwap.calculateMinOutput(

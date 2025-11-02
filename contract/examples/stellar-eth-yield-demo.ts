@@ -18,7 +18,6 @@
 
 import { EthYieldOrchestrator } from '../src/orchestrator/eth-yield';
 import { logger } from '../src/utils/logger';
-import { config } from '../src/config';
 
 async function main() {
   console.log('');

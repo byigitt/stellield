@@ -5,7 +5,8 @@
 
 import { StellarClient } from '../stellar/client';
 import { StellarCCTPBurn } from '../stellar/cctp-burn';
-import { CircleAttestationService } from '../bridge/attestation';
+import { createBridgeAttestationService } from '../bridge/factory';
+import { config } from '../config';
 import { logger } from '../utils/logger';
 
 export interface StellarToEthResult {
@@ -19,12 +20,11 @@ export interface StellarToEthResult {
 export class StellarToEthOrchestrator {
   private stellarClient: StellarClient;
   private stellarBurn: StellarCCTPBurn;
-  private attestationService: CircleAttestationService;
+  private attestationService = createBridgeAttestationService();
 
   constructor() {
     this.stellarClient = new StellarClient();
     this.stellarBurn = new StellarCCTPBurn(this.stellarClient);
-    this.attestationService = new CircleAttestationService();
 
     logger.info('Stellar → Ethereum orchestrator initialized');
   }
@@ -61,7 +61,9 @@ export class StellarToEthOrchestrator {
       });
 
       // Step 2: Wait for attestation
-      logger.info('Step 2: Waiting for attestation from Circle');
+      logger.info('Step 2: Waiting for attestation from bridge provider', {
+        provider: config.bridge.provider,
+      });
       try {
         const attestation = await this.attestationService.waitForAttestation(
           burnResult.messageHash,
@@ -77,6 +79,7 @@ export class StellarToEthOrchestrator {
         });
       } catch (error) {
         logger.warn('Attestation timeout - manual completion needed', {
+          provider: config.bridge.provider,
           messageHash: burnResult.messageHash,
           error,
         });

@@ -6,9 +6,10 @@
 import axios, { AxiosInstance } from 'axios';
 import { config } from '../config';
 import { logger } from '../utils/logger';
+import { BridgeAttestationProvider } from './attestation-provider';
 import { AttestationResponse, BridgeStatus } from './types';
 
-export class CircleAttestationService {
+export class CircleAttestationService implements BridgeAttestationProvider {
   private client: AxiosInstance;
   private apiUrl: string;
 

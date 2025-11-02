@@ -17,9 +17,11 @@ catalog:
 onlyBuiltDependencies:
   - '@prisma/client'
   - '@prisma/engines'
+  - '@reown/appkit'
   - '@stellar/stellar-sdk'
   - bigint-buffer
   - bufferutil
+  - es5-ext
   - esbuild
   - keccak
   - prisma
