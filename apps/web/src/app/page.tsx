@@ -110,7 +110,7 @@ export default function Home() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-20 md:py-32 relative bg-black overflow-hidden">
+      <section className="py-20 md:py-32 relative bg-black overflow-hidden shadow-[inset_0_8px_16px_-8px_rgba(255,255,255,0.08)]">
         {/* Background with gradient */}
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900/60 via-black to-black"></div>

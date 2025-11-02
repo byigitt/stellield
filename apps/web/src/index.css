@@ -198,13 +198,15 @@ body {
     right: 0;
     bottom: 300px;
     background-image: 
-      linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 100px 100px;
+      linear-gradient(to right, rgba(255, 255, 255, 0.13) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.13) 1px, transparent 1px);
+    background-size: 80px 80px;
     mask-image: 
       linear-gradient(to bottom, 
         transparent 0%, 
-        transparent 100vh,
+        transparent 95vh,
+        rgba(0, 0, 0, 0.35) 100vh,
+        rgba(0, 0, 0, 0.75) 110vh,
         black 120vh,
         black calc(100% - 300px),
         transparent 100%
@@ -212,7 +214,9 @@ body {
     -webkit-mask-image: 
       linear-gradient(to bottom, 
         transparent 0%, 
-        transparent 100vh,
+        transparent 95vh,
+        rgba(0, 0, 0, 0.35) 100vh,
+        rgba(0, 0, 0, 0.75) 110vh,
         black 120vh,
         black calc(100% - 300px),
         transparent 100%
