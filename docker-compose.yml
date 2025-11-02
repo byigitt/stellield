@@ -1,0 +1,180 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: stellar-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-stellar_hackathon}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - stellar-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Python Agent Service (FastAPI)
+  agent:
+    build:
+      context: .
+      dockerfile: docker/agent.Dockerfile
+    container_name: stellar-agent
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Gemini AI Configuration
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      
+      # Data Source URLs
+      DEFILLAMA_YIELD_URL: ${DEFILLAMA_YIELD_URL:-https://yields.llama.fi/pools}
+      HORIZON_API_URL: ${HORIZON_API_URL:-https://horizon.stellar.org}
+      VALIDATION_CLOUD_API_KEY: ${VALIDATION_CLOUD_API_KEY:-}
+      
+      # Caching Configuration
+      CACHE_TTL_SECONDS: ${CACHE_TTL_SECONDS:-600}
+      ENABLE_REDIS_CACHE: ${ENABLE_REDIS_CACHE:-false}
+      
+      # Logging
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      LOG_FILE: ${LOG_FILE:-logs/agent.log}
+      
+      # API Server
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      API_WORKERS: ${API_WORKERS:-4}
+      CORS_ORIGINS: ${AGENT_CORS_ORIGINS:-http://localhost:3000,http://localhost:3001}
+      
+      # Recommendation Settings
+      DEFAULT_RISK_TOLERANCE: ${DEFAULT_RISK_TOLERANCE:-medium}
+      MIN_LIQUIDITY_USD: ${MIN_LIQUIDITY_USD:-50000}
+      MAX_RECOMMENDATIONS: ${MAX_RECOMMENDATIONS:-5}
+    networks:
+      - stellar-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # API Server (Elysia + tRPC)
+  server:
+    build:
+      context: .
+      dockerfile: docker/server.Dockerfile
+    container_name: stellar-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      # Database
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-stellar_hackathon}
+      
+      # Better Auth
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET}
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-https://api.yourdomain.com}
+      
+      # CORS
+      CORS_ORIGIN: ${CORS_ORIGIN:-https://yourdomain.com}
+      
+      # Agent API
+      AGENT_API_URL: ${AGENT_API_URL:-http://agent:8000}
+      
+      # CCTP Bridge Configuration
+      STELLAR_PRIVATE_KEY: ${STELLAR_PRIVATE_KEY}
+      SOLANA_PRIVATE_KEY: ${SOLANA_PRIVATE_KEY}
+      NETWORK: ${NETWORK:-testnet}
+      
+      # Stellar Network
+      STELLAR_RPC_URL: ${STELLAR_RPC_URL:-https://soroban-testnet.stellar.org:443}
+      STELLAR_NETWORK_PASSPHRASE: ${STELLAR_NETWORK_PASSPHRASE:-Test SDF Network ; September 2015}
+      
+      # Solana Network
+      SOLANA_RPC_URL: ${SOLANA_RPC_URL:-https://api.devnet.solana.com}
+      SOLANA_PAYER_SECRET_KEY: ${SOLANA_PAYER_SECRET_KEY}
+      SOLANA_TREASURY_ADDRESS: ${SOLANA_TREASURY_ADDRESS}
+      
+      NODE_ENV: production
+      PORT: 3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+      agent:
+        condition: service_healthy
+    networks:
+      - stellar-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Web App (Next.js)
+  web:
+    build:
+      context: .
+      dockerfile: docker/web.Dockerfile
+    container_name: stellar-web
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      # Server URL
+      NEXT_PUBLIC_SERVER_URL: ${NEXT_PUBLIC_SERVER_URL:-https://api.yourdomain.com}
+      
+      # Agent API URL
+      NEXT_PUBLIC_AGENT_API_URL: ${NEXT_PUBLIC_AGENT_API_URL:-https://agent.yourdomain.com}
+      
+      NODE_ENV: production
+      PORT: 3001
+      HOSTNAME: "0.0.0.0"
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - stellar-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3001/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # Documentation (Fumadocs)
+  docs:
+    build:
+      context: .
+      dockerfile: docker/docs.Dockerfile
+    container_name: stellar-docs
+    restart: unless-stopped
+    ports:
+      - "3002:3002"
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+      HOSTNAME: "0.0.0.0"
+    networks:
+      - stellar-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3002/', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  stellar-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
