@@ -10,9 +10,9 @@ export default function YieldsPage() {
 			{/* Main Content */}
 			<div className="container mx-auto px-4 py-6">
 				{/* Yield Opportunities Section */}
-				<div className="mb-8">
-					<StellarYieldOpportunities />
-				</div>
+					{/* <div className="mb-8">
+						<StellarYieldOpportunities />
+					</div> */}
 
 				{/* Main Dashboard Layout */}
 				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

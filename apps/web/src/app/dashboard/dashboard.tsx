@@ -1,7 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { trpc } from "@/utils/trpc";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -11,8 +10,7 @@ import {
   Activity,
   DollarSign,
   Percent,
-  Users,
-  Info
+  Info,
 } from "lucide-react";
 import {
   Tooltip,
@@ -24,6 +22,17 @@ import StellarYieldOpportunities from "@/components/stellar-yield-opportunities"
 import PortfolioSimulator from "@/components/portfolio-simulator";
 import BridgeInsights from "@/components/bridge-insights";
 import StellarProtocols from "@/components/stellar-protocols";
+import {
+  fetchChainTvlHistory,
+  fetchDexOverview,
+  fetchDefiLlamaPools,
+} from "@/lib/data-sources";
+import {
+  computeRiskDistribution,
+  RISK_COLOR_SCHEME,
+} from "@/lib/metrics";
+import { formatCompactUsd, formatPercentDelta } from "@/lib/format";
+import { cn } from "@/lib/utils";
 
 export default function Dashboard() {
 	const [mounted, setMounted] = useState(false);
@@ -32,23 +41,143 @@ export default function Dashboard() {
 		setMounted(true);
 	}, []);
 
-	const stats = {
-		totalTVL: "$247.5M",
-		tvlChange: "+12.5%",
-		avgAPY: "10.8%",
-		apyChange: "+0.3%",
-		activeProtocols: 23,
-		protocolChange: "+2",
-		totalUsers: "14.2K",
-		userChange: "+8.1%",
-	};
+	const { data: tvlHistory } = useQuery({
+		queryKey: ["stellar-chain-tvl"],
+		queryFn: () => fetchChainTvlHistory("Stellar"),
+		staleTime: 5 * 60_000,
+	});
 
-	const riskDistribution = [
-		{ tier: "A", percentage: 42, color: "bg-green-500" },
-		{ tier: "B", percentage: 35, color: "bg-yellow-500" },
-		{ tier: "C", percentage: 18, color: "bg-orange-500" },
-		{ tier: "D", percentage: 5, color: "bg-red-500" },
-	];
+	const { data: dexOverview } = useQuery({
+		queryKey: ["stellar-dex-overview"],
+		queryFn: () => fetchDexOverview("Stellar"),
+		staleTime: 5 * 60_000,
+	});
+
+	const { data: stellarPools } = useQuery({
+		queryKey: ["defillama-pools", "Stellar"],
+		queryFn: () => fetchDefiLlamaPools("Stellar"),
+		staleTime: 60_000,
+		refetchInterval: 60_000,
+	});
+
+	const tvlSummary = useMemo(() => {
+		if (!tvlHistory || tvlHistory.length === 0) {
+			return { latest: null as number | null, changePct: null as number | null };
+		}
+
+		const latest = tvlHistory[tvlHistory.length - 1]?.tvl ?? null;
+		const prevIndex = Math.max(tvlHistory.length - 8, 0);
+		const previous = tvlHistory[prevIndex]?.tvl ?? null;
+
+		const changePct =
+			latest !== null && previous
+				? ((latest - previous) / previous) * 100
+				: null;
+
+		return { latest, changePct };
+	}, [tvlHistory]);
+
+	const apySummary = useMemo(() => {
+		if (!stellarPools || stellarPools.length === 0) {
+			return { average: null as number | null, baseline: null as number | null };
+		}
+
+		const totals = stellarPools.reduce(
+			(acc, pool) => {
+				const apy = pool.apy ?? 0;
+				const apy30d =
+					pool.apyMean30d !== null && pool.apyMean30d !== undefined
+						? pool.apyMean30d
+						: apy;
+				return {
+					sum: acc.sum + apy,
+					sum30d: acc.sum30d + apy30d,
+				};
+			},
+			{ sum: 0, sum30d: 0 },
+		);
+
+		const average = totals.sum / stellarPools.length;
+		const baseline = totals.sum30d / stellarPools.length;
+
+		return {
+			average,
+			baseline,
+		};
+	}, [stellarPools]);
+
+	const riskSummary = useMemo(
+		() => computeRiskDistribution(stellarPools),
+		[stellarPools],
+	);
+
+	const tierAShare =
+		riskSummary.distribution.find((slice) => slice.tier === "A")
+			?.percentage ?? 0;
+
+	const stats = useMemo(() => {
+		const tvlChangeLabel = formatPercentDelta(tvlSummary.changePct);
+		const volumeChangeLabel = formatPercentDelta(
+			dexOverview?.change_1d ?? null,
+		);
+		const apyDelta =
+			apySummary.average !== null && apySummary.baseline !== null
+				? apySummary.average - apySummary.baseline
+				: null;
+		const apyChangeLabel = formatPercentDelta(apyDelta);
+
+		return [
+			{
+				id: "tvl",
+				title: "Total Stellar TVL",
+				value: formatCompactUsd(tvlSummary.latest),
+				change: tvlChangeLabel,
+				subLabel: "vs 7d ago",
+				isPositive: (tvlSummary.changePct ?? 0) >= 0,
+				showTrend: tvlChangeLabel !== null,
+				icon: DollarSign,
+			},
+			{
+				id: "volume",
+				title: "24h DEX Volume",
+				value: formatCompactUsd(dexOverview?.total24h ?? null),
+				change: volumeChangeLabel ?? undefined,
+				subLabel: "vs previous 24h",
+				isPositive: (dexOverview?.change_1d ?? 0) >= 0,
+				showTrend: volumeChangeLabel !== null,
+				icon: Activity,
+			},
+			{
+				id: "apy",
+				title: "Average APY",
+				value:
+					apySummary.average !== null
+						? `${apySummary.average.toFixed(2)}%`
+						: "-",
+				change: apyChangeLabel ?? undefined,
+				subLabel: "vs 30d average",
+				isPositive: (apyDelta ?? 0) >= 0,
+				showTrend: apyChangeLabel !== null,
+				icon: Percent,
+			},
+			{
+				id: "protocols",
+				title: "Tracked Protocols",
+				value: riskSummary.total.toString(),
+				change: `${tierAShare}% Tier A coverage`,
+				subLabel: "Risk-weighted share",
+				isPositive: tierAShare >= 40,
+				showTrend: false,
+				icon: Shield,
+			},
+		];
+	}, [
+		apySummary,
+		dexOverview,
+		riskSummary.total,
+		tierAShare,
+		tvlSummary,
+	]);
 
 	if (!mounted) {
 		return <div className="min-h-screen" />;
@@ -59,76 +188,46 @@ export default function Dashboard() {
 			<div className="container mx-auto px-4 py-6">
 				{/* Stats Grid */}
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-					<Card className="glass-card border-white/10 p-6">
-						<div className="flex items-center justify-between mb-2">
-							<span className="text-sm text-gray-400">Total TVL</span>
-							<DollarSign className="w-4 h-4 text-blue-400" />
-						</div>
-						<div className="text-2xl font-bold text-white mb-1">{stats.totalTVL}</div>
-						<div className="flex items-center text-sm">
-							<span className={`flex items-center ${stats.tvlChange.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-								{stats.tvlChange.startsWith('+') ? (
-									<TrendingUp className="w-3 h-3 mr-1" />
-								) : (
-									<TrendingDown className="w-3 h-3 mr-1" />
-								)}
-								{stats.tvlChange}
-							</span>
-							<span className="text-gray-500 ml-2">vs last 24h</span>
-						</div>
-					</Card>
-
-					<Card className="glass-card border-white/10 p-6">
-						<div className="flex items-center justify-between mb-2">
-							<span className="text-sm text-gray-400">Average APY</span>
-							<Percent className="w-4 h-4 text-green-400" />
-						</div>
-						<div className="text-2xl font-bold text-white mb-1">{stats.avgAPY}</div>
-						<div className="flex items-center text-sm">
-							<span className={`flex items-center ${stats.apyChange.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-								{stats.apyChange.startsWith('+') ? (
-									<TrendingUp className="w-3 h-3 mr-1" />
-								) : (
-									<TrendingDown className="w-3 h-3 mr-1" />
-								)}
-								{stats.apyChange}
-							</span>
-							<span className="text-gray-500 ml-2">vs last 24h</span>
-						</div>
-					</Card>
-
-					<Card className="glass-card border-white/10 p-6">
-						<div className="flex items-center justify-between mb-2">
-							<span className="text-sm text-gray-400">Active Protocols</span>
-							<Activity className="w-4 h-4 text-purple-400" />
-						</div>
-						<div className="text-2xl font-bold text-white mb-1">{stats.activeProtocols}</div>
-						<div className="flex items-center text-sm">
-							<span className="text-green-400">
-								{stats.protocolChange} new
-							</span>
-							<span className="text-gray-500 ml-2">this week</span>
-						</div>
-					</Card>
-
-					<Card className="glass-card border-white/10 p-6">
-						<div className="flex items-center justify-between mb-2">
-							<span className="text-sm text-gray-400">Total Users</span>
-							<Users className="w-4 h-4 text-cyan-400" />
-						</div>
-						<div className="text-2xl font-bold text-white mb-1">{stats.totalUsers}</div>
-						<div className="flex items-center text-sm">
-							<span className={`flex items-center ${stats.userChange.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
-								{stats.userChange.startsWith('+') ? (
-									<TrendingUp className="w-3 h-3 mr-1" />
-								) : (
-									<TrendingDown className="w-3 h-3 mr-1" />
-								)}
-								{stats.userChange}
-							</span>
-							<span className="text-gray-500 ml-2">growth</span>
-						</div>
-					</Card>
+					{stats.map((card) => {
+						const Icon = card.icon;
+						const shouldShowTrend = (card.showTrend ?? true) && card.change !== null && card.change !== undefined;
+						const isPositive = card.isPositive ?? true;
+						const trendIcon =
+							shouldShowTrend && isPositive ? (
+								<TrendingUp className="w-3 h-3 mr-1" />
+							) : (
+								<TrendingDown className="w-3 h-3 mr-1" />
+							);
+						return (
+							<Card key={card.id} className="glass-card border-white/10 p-6">
+								<div className="flex items-center justify-between mb-2">
+									<span className="text-sm text-gray-400">{card.title}</span>
+									<Icon className="w-4 h-4 text-blue-300" />
+								</div>
+								<div className="text-2xl font-bold text-white mb-1">{card.value}</div>
+								<div className="flex items-center text-sm">
+									{card.change ? (
+										<span
+											className={cn(
+												"flex items-center",
+												card.showTrend === false
+													? "text-gray-300"
+													: isPositive
+														? "text-green-400"
+														: "text-red-400",
+											)}
+										>
+											{shouldShowTrend && trendIcon}
+											{card.change}
+										</span>
+									) : (
+										<span className="text-gray-400">No change data</span>
+									)}
+									<span className="text-gray-500 ml-2">{card.subLabel}</span>
+								</div>
+							</Card>
+						);
+					})}
 				</div>
 
 				{/* Risk Distribution Bar */}
@@ -152,19 +251,21 @@ export default function Dashboard() {
 						</TooltipProvider>
 					</div>
 					<div className="flex h-8 rounded-lg overflow-hidden mb-4">
-						{riskDistribution.map((risk, index) => (
+						{riskSummary.distribution.map((slice) => (
 							<div
-								key={risk.tier}
-								className={`${risk.color} opacity-80 hover:opacity-100 transition-opacity`}
-								style={{ width: `${risk.percentage}%` }}
+								key={slice.tier}
+								className={`${RISK_COLOR_SCHEME[slice.tier].track} opacity-80 hover:opacity-100 transition-opacity`}
+								style={{ width: `${slice.percentage}%` }}
 							/>
 						))}
 					</div>
 					<div className="grid grid-cols-4 gap-4">
-						{riskDistribution.map((risk) => (
-							<div key={risk.tier} className="text-center">
-								<div className="text-xs text-gray-400 mb-1">Tier {risk.tier}</div>
-								<div className="text-sm font-medium text-white">{risk.percentage}%</div>
+						{riskSummary.distribution.map((slice) => (
+							<div key={slice.tier} className="text-center">
+								<div className="text-xs text-gray-400 mb-1">
+									Tier {slice.tier} ({RISK_COLOR_SCHEME[slice.tier].label})
+								</div>
+								<div className="text-sm font-medium text-white">{slice.percentage}%</div>
 							</div>
 						))}
 					</div>

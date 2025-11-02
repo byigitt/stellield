@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { toast } from "sonner";
 import { useWalletBalance } from "@/hooks/use-wallet-balance";
 import { useEthPrice } from "@/hooks/use-eth-price";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import {
   ChevronDown,
@@ -37,6 +38,13 @@ import {
 } from "@/components/ui/popover";
 import { Card } from "@/components/ui/card";
 import { Info } from "lucide-react";
+import {
+  fetchDefiLlamaPools,
+} from "@/lib/data-sources";
+import {
+  computeRiskDistribution,
+  RISK_COLOR_SCHEME,
+} from "@/lib/metrics";
 
 const navItems = [
   { label: "Dashboard", href: "/dashboard" },
@@ -61,36 +69,17 @@ export default function StellarHeader() {
   const { balanceFormatted, isLoading: isLoadingBalance } = useWalletBalance(connectedWallet?.address);
   const { price: ethPrice } = useEthPrice();
 
-  const riskDistribution = [
-    {
-      tier: "A",
-      label: "Low Risk",
-      percentage: 42,
-      color: "bg-green-500",
-      dotColor: "bg-green-400",
-    },
-    {
-      tier: "B",
-      label: "Medium",
-      percentage: 35,
-      color: "bg-yellow-500",
-      dotColor: "bg-yellow-400",
-    },
-    {
-      tier: "C",
-      label: "Higher",
-      percentage: 18,
-      color: "bg-orange-500",
-      dotColor: "bg-orange-400",
-    },
-    {
-      tier: "D",
-      label: "High",
-      percentage: 5,
-      color: "bg-red-500",
-      dotColor: "bg-red-400",
-    },
-  ];
+  const { data: stellarPools, isLoading: isLoadingRisk } = useQuery({
+    queryKey: ["defillama-pools", "Stellar"],
+    queryFn: () => fetchDefiLlamaPools("Stellar"),
+    staleTime: 60_000,
+    refetchInterval: 60_000,
+  });
+
+  const { distribution: riskDistribution, grade: riskGrade } = useMemo(
+    () => computeRiskDistribution(stellarPools),
+    [stellarPools],
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -175,7 +164,7 @@ export default function StellarHeader() {
                 <button className="flex items-center space-x-2 px-3 py-1.5 glass-panel rounded-lg hover:bg-white/5 transition-colors cursor-pointer">
                   <Shield className="w-4 h-4 text-yellow-400" />
                   <span className="text-xs font-medium text-yellow-400">
-                    B+
+                    {isLoadingRisk ? "…" : riskGrade}
                   </span>
                 </button>
               </PopoverTrigger>
@@ -187,50 +176,27 @@ export default function StellarHeader() {
                     </h3>
                     <Info className="w-4 h-4 text-gray-400" />
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                        <span className="text-xs text-gray-400">
-                          Tier A (Low Risk)
-                        </span>
-                      </div>
-                      <span className="text-xs font-medium text-white">
-                        42%
-                      </span>
+                  {isLoadingRisk ? (
+                    <div className="flex items-center justify-center py-6 text-xs text-gray-400">
+                      Loading risk metrics...
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 rounded-full bg-yellow-400"></div>
-                        <span className="text-xs text-gray-400">
-                          Tier B (Medium)
-                        </span>
-                      </div>
-                      <span className="text-xs font-medium text-white">
-                        35%
-                      </span>
+                  ) : (
+                    <div className="space-y-2">
+                      {riskDistribution.map(({ tier, percentage }) => (
+                        <div key={tier} className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <div className={`w-2 h-2 rounded-full ${RISK_COLOR_SCHEME[tier].marker}`}></div>
+                            <span className="text-xs text-gray-400">
+                              Tier {tier} ({RISK_COLOR_SCHEME[tier].label})
+                            </span>
+                          </div>
+                          <span className="text-xs font-medium text-white">
+                            {percentage}%
+                          </span>
+                        </div>
+                      ))}
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 rounded-full bg-orange-400"></div>
-                        <span className="text-xs text-gray-400">
-                          Tier C (Higher)
-                        </span>
-                      </div>
-                      <span className="text-xs font-medium text-white">
-                        18%
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 rounded-full bg-red-400"></div>
-                        <span className="text-xs text-gray-400">
-                          Tier D (High)
-                        </span>
-                      </div>
-                      <span className="text-xs font-medium text-white">5%</span>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </PopoverContent>
             </Popover>
