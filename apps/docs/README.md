@@ -1,45 +1,16 @@
-# docs
+# Docs App · Fumadocs Site
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+This Next.js/Fumadocs project powers Stellield's documentation portal, ideal for publishing API guides, runbooks, and tutorials.
 
-Run development server:
+## Highlights
+- Fumadocs MDX content pipeline with `source.config.ts`
+- Animated landing pages under `app/(home)`
+- Built-in search (`app/api/search`) and components from `fumadocs-ui`
 
+## Develop Locally
 ```bash
-npm run dev
-# or
-pnpm dev
-# or
-yarn dev
+pnpm install          # once from repo root
+pnpm dev:docs         # http://localhost:3002
 ```
 
-Open http://localhost:3000 with your browser to see the result.
-
-## Explore
-
-In the project, you can see:
-
-- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
-- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
-
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
-
-### Fumadocs MDX
-
-A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
-
-Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
-
-## Learn More
-
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+Update documentation by adding MDX files in `content/` and wiring navigation in `src/`. The site respects the root `.env` when deployed via Docker (`docker/docs.Dockerfile`).
