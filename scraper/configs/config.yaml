@@ -1,0 +1,46 @@
+# Stellar Hackathon Data Scraper Configuration
+
+scrapers:
+  defillama:
+    enabled: true
+    chains:
+      - Stellar
+      - Ethereum
+      - Solana
+      - Polygon
+    bridge_ids:
+      - 1  # Example bridge IDs
+      - 2
+      - 3
+    
+  stellar:
+    enabled: true
+    horizon_url: "https://horizon.stellar.org"
+    limit: 200
+  
+  coingecko:
+    enabled: true
+    asset_ids:
+      - ethereum
+      - bitcoin
+      - solana
+      - stellar
+      - polygon
+      - usd-coin
+      - tether
+  
+  marinade:
+    enabled: true
+  
+  aggrelend:
+    enabled: true
+    tokens:
+      - SOL
+      - USDC
+      - ETH
+
+output:
+  directory: "./output"
+  
+logging:
+  level: "info"  # debug, info, warn, error
