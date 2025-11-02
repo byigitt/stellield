@@ -1,13 +1,13 @@
 # Setup Guide
 
-This guide will help you set up and run the Stellar-Solana Cross-Chain Yield Aggregator PoC.
+This guide will help you set up and run the Stellar-Ethereum Cross-Chain Yield Aggregator PoC.
 
 ## Prerequisites
 
 - Node.js >= 18.x
 - pnpm (recommended) or npm
 - Stellar testnet account
-- Solana devnet account
+- Ethereum Sepolia testnet account
 
 ## Installation
 
@@ -35,10 +35,10 @@ STELLAR_NETWORK=testnet
 STELLAR_HORIZON_URL=https://horizon-testnet.stellar.org
 STELLAR_PRIVATE_KEY=YOUR_STELLAR_SECRET_KEY_HERE
 
-# Solana Configuration
-SOLANA_NETWORK=devnet
-SOLANA_RPC_URL=https://api.devnet.solana.com
-SOLANA_PRIVATE_KEY=YOUR_SOLANA_BASE58_PRIVATE_KEY_HERE
+# Ethereum Configuration
+ETHEREUM_RPC_URL=https://eth-sepolia.g.alchemy.com/v2/YOUR_API_KEY
+ETHEREUM_CHAIN_ID=11155111
+ETHEREUM_PRIVATE_KEY=YOUR_ETHEREUM_PRIVATE_KEY_HERE
 
 # Other configuration...
 ```
@@ -52,29 +52,29 @@ SOLANA_PRIVATE_KEY=YOUR_SOLANA_BASE58_PRIVATE_KEY_HERE
 3. Click "Get test network lumens" to fund your account
 4. Copy your **Secret Key** to `.env` as `STELLAR_PRIVATE_KEY`
 
-### Solana Devnet Account
+### Ethereum Sepolia Account
 
-**Option 1: Using Solana CLI**
+**Option 1: Using MetaMask**
+
+1. Install [MetaMask](https://metamask.io/) browser extension
+2. Create a new wallet or import an existing one
+3. Switch to Sepolia testnet in MetaMask (Settings → Networks → Show test networks)
+4. Export your private key:
+   - Click on the three dots → Account details → Export Private Key
+   - Copy your private key to `.env` as `ETHEREUM_PRIVATE_KEY`
+5. Get Sepolia ETH from faucets:
+   - [Alchemy Sepolia Faucet](https://sepoliafaucet.com/)
+   - [Infura Sepolia Faucet](https://www.infura.io/faucet/sepolia)
+6. Get Sepolia USDC (if available) or bridge from other testnets
+
+**Option 2: Using Hardhat/Node**
 
 ```bash
-# Install Solana CLI
-sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
-
-# Generate a keypair
-solana-keygen new --outfile ~/my-solana-wallet.json
-
-# Get your private key in base58
-solana-keygen pubkey ~/my-solana-wallet.json
-
-# Request airdrop
-solana airdrop 2 YOUR_PUBLIC_KEY --url devnet
+# Generate a new Ethereum wallet using Node.js
+node -e "const ethers = require('ethers'); const wallet = ethers.Wallet.createRandom(); console.log('Address:', wallet.address); console.log('Private Key:', wallet.privateKey);"
 ```
 
-**Option 2: Using Web Faucet**
-
-1. Generate a keypair using a tool like [Solana Keygen Online](https://solanakeygen.com/)
-2. Get devnet SOL from [Solana Faucet](https://faucet.solana.com/)
-3. Copy your base58-encoded private key to `.env` as `SOLANA_PRIVATE_KEY`
+Then fund it using the faucets above.
 
 ## Verification
 
@@ -86,8 +86,8 @@ pnpm example:balances
 
 This will display:
 - Stellar account balances (XLM, USDC)
-- Solana account balances (SOL, USDC, mSOL)
-- Marinade Finance information
+- Ethereum account balances (ETH, USDC, aUSDC)
+- Aave Protocol information
 
 ## Running Examples
 
@@ -97,7 +97,7 @@ This will display:
 pnpm example:balances
 ```
 
-### Deposit Flow (XLM → USDC → Bridge → Stake)
+### Deposit Flow (XLM → USDC → Bridge → Supply to Aave)
 
 ```bash
 pnpm example:deposit
@@ -107,18 +107,18 @@ This will:
 1. Swap XLM to USDC on Stellar
 2. Burn USDC on Stellar (CCTP)
 3. Get attestation from Circle
-4. Mint USDC on Solana
-5. Stake with Marinade Finance
+4. Mint USDC on Ethereum
+5. Supply USDC to Aave Protocol (receive aUSDC)
 
-### Withdrawal Flow (Unstake → Bridge → Swap → XLM)
+### Withdrawal Flow (Withdraw from Aave → Bridge → Swap → XLM)
 
 ```bash
 pnpm example:withdraw
 ```
 
 This will:
-1. Unstake mSOL from Marinade
-2. Burn USDC on Solana (CCTP)
+1. Withdraw USDC from Aave (with earned yield)
+2. Burn USDC on Ethereum (CCTP)
 3. Get attestation from Circle
 4. Mint USDC on Stellar
 5. Swap USDC back to XLM
@@ -139,7 +139,7 @@ pnpm start
 stellar-smart-contract-test/
 ├── src/
 │   ├── stellar/          # Stellar blockchain integration
-│   ├── solana/           # Solana blockchain integration
+│   ├── ethereum/         # Ethereum blockchain integration
 │   ├── bridge/           # CCTP bridge utilities
 │   ├── orchestrator/     # Flow orchestration
 │   ├── config/           # Configuration management
@@ -159,17 +159,17 @@ stellar-smart-contract-test/
 - Ensure your account has been funded with test lumens
 - Check you're using the correct network (testnet)
 
-### "Invalid Solana private key format"
+### "Invalid Ethereum private key format"
 
-- Ensure your `SOLANA_PRIVATE_KEY` is base58-encoded
-- Don't include brackets or quotes in the key
-- The key should be a single long string
+- Ensure your `ETHEREUM_PRIVATE_KEY` starts with `0x`
+- Don't include extra quotes or whitespace
+- The key should be 66 characters (including `0x` prefix)
 
 ### "Insufficient balance"
 
 - Request more test tokens:
   - Stellar: Use the [Laboratory](https://laboratory.stellar.org/#account-creator?network=test)
-  - Solana: Use the [Faucet](https://faucet.solana.com/)
+  - Ethereum: Use [Alchemy Faucet](https://sepoliafaucet.com/) or [Infura Faucet](https://www.infura.io/faucet/sepolia)
 
 ### CCTP Integration Issues
 
@@ -189,7 +189,7 @@ stellar-smart-contract-test/
 ## Next Steps
 
 1. Test the deposit flow with small amounts
-2. Wait for yield accumulation (Marinade APY ~6-7%)
+2. Wait for yield accumulation (Aave APY varies by market conditions)
 3. Test the withdrawal flow
 4. Integrate with your existing backend
 5. Add proper error handling and retry logic
@@ -207,8 +207,8 @@ For issues or questions:
 ## Additional Resources
 
 - [Stellar Documentation](https://developers.stellar.org/)
-- [Solana Documentation](https://docs.solana.com/)
+- [Ethereum Documentation](https://ethereum.org/en/developers/docs/)
 - [Circle CCTP Documentation](https://developers.circle.com/stablecoins/docs/cctp-getting-started)
-- [Marinade Finance](https://marinade.finance/)
+- [Aave Protocol Documentation](https://docs.aave.com/)
 - [Mercury Protocol](https://mercuryprotocol.io/)
 
